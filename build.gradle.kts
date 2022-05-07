@@ -27,6 +27,7 @@ dependencies {
     implementation("org.lwjgl", "lwjgl", "3.3.1", classifier = "natives-windows")
     implementation("org.lwjgl", "lwjgl-nfd", "3.3.1")
     implementation("org.lwjgl", "lwjgl-nfd", "3.3.1", classifier = "natives-windows")
+    implementation("br.com.devsrsouza.compose.icons.jetbrains", "tabler-icons", "1.0.0")
 }
 
 java {
