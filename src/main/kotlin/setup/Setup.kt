@@ -8,9 +8,9 @@ import dev.nycode.omsilauncher.setup.screens.StartSetupScreen
 import dev.nycode.omsilauncher.setup.screens.SteamProcessScreen
 
 @Composable
-fun Setup(closeSetup: () -> Unit) {
+fun Setup(closeSetup: () -> Unit, configuration: Configuration) {
     var currentSetupScreen by remember { mutableStateOf(SetupScreen.GAME_DIRECTORY) }
-    val config = remember { mutableStateOf(Configuration(null)) }
+    val config = remember { mutableStateOf(configuration) }
     val switchScreen: (SetupScreen) -> Unit = {
         currentSetupScreen = it
     }

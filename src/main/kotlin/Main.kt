@@ -40,7 +40,7 @@ fun main(args: Array<String>) {
         MaterialTheme {
             Window(onCloseRequest = ::exitApplication) {
                 if (isSetup) {
-                    Setup(::closeSetup)
+                    Setup(::closeSetup, configuration)
                 } else {
                     Application()
                 }

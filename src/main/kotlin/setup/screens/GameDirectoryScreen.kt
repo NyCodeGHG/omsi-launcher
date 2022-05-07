@@ -12,17 +12,14 @@ import dev.nycode.omsilauncher.components.ClickablePath
 import dev.nycode.omsilauncher.config.Configuration
 import dev.nycode.omsilauncher.setup.SetupScreen
 import dev.nycode.omsilauncher.util.chooseDirectory
-import dev.nycode.omsilauncher.util.getOmsiSteamLibrary
 import dev.nycode.omsilauncher.util.isSteamRunning
 import kotlinx.coroutines.launch
-import java.nio.file.Path
-import kotlin.io.path.absolutePathString
 
 @Composable
 fun GameDirectoryScreen(switchScreen: (SetupScreen) -> Unit, config: MutableState<Configuration>) {
     val scope = rememberCoroutineScope()
     var configuration by config
-    var gameFileDirectory by remember<MutableState<Path?>> { mutableStateOf(getOmsiSteamLibrary()) }
+    var gameFileDirectory by remember { mutableStateOf(configuration.rootInstallation) }
     Box(Modifier.fillMaxSize()) {
         Text("Setup", fontSize = 35.sp, modifier = Modifier.align(Alignment.TopCenter))
         Column(Modifier.align(Alignment.Center)) {
