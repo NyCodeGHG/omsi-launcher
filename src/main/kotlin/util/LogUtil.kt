@@ -1,8 +1,8 @@
 package dev.nycode.omsilauncher.util
 
+import mu.KLogger
 import mu.KotlinLogging
-import org.slf4j.Logger
 
-fun logger(): Logger {
+fun logger(): KLogger {
     return KotlinLogging.logger(StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).callerClass.name)
 }
