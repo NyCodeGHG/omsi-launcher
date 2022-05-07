@@ -4,10 +4,11 @@ plugins {
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.serialization") version "1.6.21"
     id("org.jetbrains.compose") version "1.2.0-alpha01-dev679"
+    id("com.github.gmazzo.buildconfig") version "3.0.3"
 }
 
 group = "dev.nycode"
-version = "1.0.0"
+version = "0.1.0-alpha"
 
 repositories {
     google()
@@ -40,4 +41,11 @@ compose.desktop {
     application {
         mainClass = "dev.nycode.omsilauncher.MainKt"
     }
+}
+
+buildConfig {
+    packageName("dev.nycode.omsilauncher.build")
+    buildConfigField("String", "APP_VERSION", "\"${project.version}\"")
+    buildConfigField("String", "APP_BRANCH", "\"${project.getGitBranch()}\"")
+    buildConfigField("String", "APP_COMMIT", "\"${project.getGitCommit()}\"")
 }

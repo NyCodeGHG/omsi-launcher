@@ -6,3 +6,8 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+/vcs.xml
+/misc.xml
+/discord.xml
+/modules
+/gradle.xml

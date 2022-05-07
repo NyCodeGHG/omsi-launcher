@@ -9,6 +9,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import dev.nycode.omsilauncher.config.readConfig
 import dev.nycode.omsilauncher.setup.Setup
+import dev.nycode.omsilauncher.util.getApplicationTitle
 import dev.nycode.omsilauncher.util.logger
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
@@ -17,7 +18,7 @@ import kotlinx.cli.default
 private val logger = logger()
 
 fun main(args: Array<String>) {
-    logger.debug("Starting omsi-launcher.")
+    logger.debug("Starting ${getApplicationTitle()}.")
     val arguments = parseArgs(args)
     val configuration = readConfig()
     val setup = configuration.rootInstallation == null || arguments.forceSetup
@@ -38,7 +39,7 @@ fun main(args: Array<String>) {
             isSetup = false
         }
         MaterialTheme {
-            Window(onCloseRequest = ::exitApplication) {
+            Window(onCloseRequest = ::exitApplication, title = getApplicationTitle()) {
                 if (isSetup) {
                     Setup(::closeSetup, configuration)
                 } else {
