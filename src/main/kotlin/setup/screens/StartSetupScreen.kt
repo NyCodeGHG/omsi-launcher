@@ -12,23 +12,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.nycode.omsilauncher.components.ClickablePath
 import dev.nycode.omsilauncher.config.Configuration
+import dev.nycode.omsilauncher.config.saveConfig
 import dev.nycode.omsilauncher.util.getOmsiInstallPath
 
 @Composable
-fun StartSetupScreen(config: MutableState<Configuration>) = Box(Modifier.fillMaxSize()) {
-    Column(Modifier.padding(20.dp).align(Alignment.TopStart)) {
-        SizedText("Launcher Directory:", FontWeight.Bold)
-        LittleSpacer()
-        ClickablePath(config.value.rootInstallation!!)
-        BigSpacer()
-        SizedText("OMSI Installation:", FontWeight.Bold)
-        LittleSpacer()
-        ClickablePath(getOmsiInstallPath())
+fun StartSetupScreen(config: MutableState<Configuration>, closeSetup: () -> Unit) =
+    Box(Modifier.fillMaxSize()) {
+        Column(Modifier.padding(20.dp).align(Alignment.TopStart)) {
+            SizedText("Launcher Directory:", FontWeight.Bold)
+            LittleSpacer()
+            ClickablePath(config.value.rootInstallation!!)
+            BigSpacer()
+            SizedText("OMSI Installation:", FontWeight.Bold)
+            LittleSpacer()
+            ClickablePath(getOmsiInstallPath())
+        }
+        fun startSetup() {
+            saveConfig(config.value)
+            closeSetup()
+        }
+        Button(::startSetup, modifier = Modifier.align(Alignment.BottomEnd).padding(20.dp)) {
+            Text("Setup")
+        }
     }
-    Button({}, modifier = Modifier.align(Alignment.BottomEnd).padding(20.dp)) {
-        Text("Setup")
-    }
-}
 
 @Composable
 private fun SizedText(text: String, fontWeight: FontWeight? = null) =
