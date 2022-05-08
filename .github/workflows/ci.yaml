@@ -2,6 +2,8 @@ on:
   push:
   pull_request:
 
+permissions: write-all
+
 jobs:
   gradle_validation:
     name: "Validate Gradle wrapper"
