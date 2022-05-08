@@ -56,7 +56,7 @@ fun Application() {
                     .padding(end = 12.dp, bottom = 12.dp)
             ) {
                 instances.forEach {
-                    InstanceListEntry(it)
+                    InstanceListEntry(it, scope)
                 }
 
                 Column(Modifier.fillMaxSize()) {

@@ -49,6 +49,10 @@ fn run() -> std::io::Result<()> {
             &backup_name.to_str().unwrap()
         );
     }
+    if target.is_symlink() {
+        info!("Deleting old symlink {}", &target.file_name().unwrap().to_str().unwrap());
+        fs::remove_dir(target)?;
+    }
 
     info!(
         "Symlinking {} to {}",

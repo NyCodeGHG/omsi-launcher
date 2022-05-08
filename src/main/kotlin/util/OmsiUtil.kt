@@ -9,16 +9,12 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.awt.Desktop
-import java.net.URI
-import java.nio.file.LinkOption
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
-import kotlin.io.path.createSymbolicLinkPointingTo
 import kotlin.io.path.div
-import kotlin.io.path.isDirectory
-import kotlin.io.path.moveTo
+import kotlin.io.path.isSymbolicLink
+import kotlin.io.path.readSymbolicLink
 
 private val logger = logger()
 
@@ -61,25 +57,20 @@ private suspend fun doNativeCall(name: String, vararg parameters: String) = with
     }
 }
 
-fun activateInstallationSafe(path: Path) {
+suspend fun activateInstallationSafe(path: Path) {
     val omsi = getOmsiInstallPath()
-    // we want to detect, whether the installation is a link to a launcher installation
-    // If it is we can just safely overwrite it
-    if (omsi.isDirectory(LinkOption.NOFOLLOW_LINKS)) {
-        logger.warn { "Existing OMSI installation found, backing it up" }
-        omsi.moveTo(getOmsiSteamLibrary() / "OMSI 2 - backup - ${System.currentTimeMillis()}")
-    }
-    logger.debug { """Creating global "OMSI 2" symlink to $path""" }
-    omsi.createSymbolicLinkPointingTo(path)
+    if (omsi.isSymbolicLink() && omsi.readSymbolicLink() == path) return
+    doNativeCall("activate-omsi.exe", omsi.absolutePathString(), path.absolutePathString())
 }
 
-fun activateAndStartInstallationSafe(path: Path) {
+suspend fun activateAndStartInstallationSafe(path: Path, flags: List<LaunchFlag>) {
     activateInstallationSafe(path)
-    startOmsi()
+    startOmsi(flags)
 }
 
 fun startOmsi(flags: List<LaunchFlag> = emptyList()) {
-    val flagsString = flags.joinToString(separator = " ", prefix = "// ")
+    val flagsString = if (flags.isEmpty()) "" else "// " + flags.joinToString(separator = " ") { it.option }
 
-    Desktop.getDesktop().browse(URI("steam://rungameid/$OMSI_STEAM_ID$flagsString"))
+    Runtime.getRuntime()
+        .exec(arrayOf("rundll32", "url.dll,FileProtocolHandler", "steam://rungameid/$OMSI_STEAM_ID$flagsString"))
 }
