@@ -8,8 +8,10 @@ use log::{info, warn};
 use structopt::*;
 
 use crate::launcher::with_privileges;
+use crate::privileges::can_create_symlinks;
 
 mod launcher;
+mod privileges;
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "activate-omsi", about = "Activates a specific Omsi instance")]
@@ -27,7 +29,11 @@ struct Opt {
 
 fn main() -> std::io::Result<()> {
     simple_logger::SimpleLogger::new().env().init().unwrap();
-    with_privileges(run)
+    if can_create_symlinks() {
+        run()
+    } else {
+        with_privileges(run)
+    }
 }
 
 fn run() -> std::io::Result<()> {
@@ -50,7 +56,10 @@ fn run() -> std::io::Result<()> {
         );
     }
     if target.is_symlink() {
-        info!("Deleting old symlink {}", &target.file_name().unwrap().to_str().unwrap());
+        info!(
+            "Deleting old symlink {}",
+            &target.file_name().unwrap().to_str().unwrap()
+        );
         fs::remove_dir(target)?;
     }
 

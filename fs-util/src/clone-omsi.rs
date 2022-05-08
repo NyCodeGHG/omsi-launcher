@@ -6,8 +6,10 @@ use log::info;
 use structopt::*;
 
 use crate::launcher::with_privileges;
+use crate::privileges::can_create_symlinks;
 
 mod launcher;
+mod privileges;
 
 #[derive(Debug, StructOpt)]
 #[structopt(
@@ -29,7 +31,11 @@ struct Opt {
 
 fn main() -> std::io::Result<()> {
     simple_logger::SimpleLogger::new().env().init().unwrap();
-    with_privileges(run)
+    if can_create_symlinks() {
+        run()
+    } else {
+        with_privileges(run)
+    }
 }
 
 fn run() -> std::io::Result<()> {
