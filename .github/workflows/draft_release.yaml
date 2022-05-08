@@ -1,0 +1,98 @@
+name: Draft Release
+on:
+  workflow_dispatch:
+
+jobs:
+  gradle_validation:
+    name: "Validate Gradle wrapper"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gradle/wrapper-validation-action@v1
+  build_metadata:
+    name: "Compile release metadata"
+    runs-on: ubuntu-20.04
+    needs: gradle_validation
+    outputs:
+      version: ${{ steps.properties.outputs.version }}
+    steps:
+      - name: Fetch Sources
+        uses: actions/checkout@v2.3.4
+      - name: Setup Java
+        uses: actions/setup-java@v3.1.1
+        with:
+          distribution: temurin
+          java-version: 18
+      - name: Export Properties
+        id: properties
+        shell: bash
+        run: |
+          PROPERTIES="$(./gradlew properties --console=plain -q)"
+          VERSION="$(echo "$PROPERTIES" | grep "^version:" | cut -f2- -d ' ')"
+          echo "::set-output name=version::$VERSION"
+  build_installers:
+    name: Compile & Validate Rust code
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: main
+      - name: Setup rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '18'
+      - name: Setup MSbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+      - name: Compile and check code
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: packageMsi
+      - name: Create Code Signing Certificate
+        run: |
+          New-Item -ItemType directory -Path certificate
+          Set-Content -Path certificate\certificate.txt -Value '${{ secrets.WINDOWS_CERTIFICATE }}'
+          certutil -decode certificate\certificate.txt certificate\certificate.pfx
+      - name: Sign MSI
+        working-directory: build/compose/binaries/main/msi
+        run: |
+          mv omsi-launcher-*.msi omsi-launcher.msi
+          & 'C:/Program Files (x86)/Windows Kits/10/bin/10.0.17763.0/x86/signtool.exe' sign /f certificate\certificate.pfx /p '${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}' /t http://timestamp.sectigo.com/ /d omsi-launcher omsi-launcher.msi
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: windows_distribution
+          path: build/compose/binaries/main/msi/omsi-launcher.msi
+  draft_release:
+    name: Draft new Release
+    runs-on: ubuntu-20.04
+    needs: [build_metadata, build_installers]
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: windows_distribution
+          path: release_files
+      - name: Generate SHA-256 Checksums
+        working-directory: release_files
+        run: |
+          sha256sum omsi-launcher.msi > omsi-launcher.msi.sha256
+      - name: Add version to filename
+        env:
+          VERSION: ${{ needs.build_metadata.outputs.version }}
+        run: |
+          mv omsi-launcher.msi omsi-launcher-$VERSION.msi
+          mv omsi-launcher.msi.sha256 omsi-launcher-$VERSION.msi.sha256
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body: "<please update in UI>"
+          draft: true
+          tag_name: v${{ needs.build_metadata.outputs.version }}
+          release_name: ${{ needs.build_metadata.outputs.version }}
+          files: release_files/*
+
+

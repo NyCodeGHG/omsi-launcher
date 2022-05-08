@@ -1,0 +1,28 @@
+on:
+  release:
+    types:
+      - released
+
+jobs:
+  # Credit: https://github.com/cli/cli/blob/351cd622e7499ab94b57ec5dbbcd2143c3761192/.github/workflows/releases.yml#L200-L214
+  winget:
+    name: Update winget manifest
+    runs-on: windows-2019
+    steps:
+      - name: Setup winget-create
+        shell: pwsh
+        env:
+          WINGETCREATE_VERSION: v1.0.4.0
+        run: iwr https://github.com/microsoft/winget-create/releases/download/${env:WINGETCREATE_VERSION}/wingetcreate.exe -OutFile wingetcreate.exe
+      - name: Bump Winget manifest
+        shell: pwsh
+        env:
+          WINGET_GITHUB_TOKEN: ${{ secrets.WINGET_UPLOAD_GITHUB_TOKEN }}
+        run: |
+          $tagname = $env:GITHUB_REF.Replace("refs/tags/", "")
+          $version = $tagname.Replace("v", "")
+          $url = "https://github.com/Nycode/omsi-launcher/releases/download/${tagname}/omsi-launcher-${version}.msi"
+          .\wingetcreate.exe update OmsiLauncher.OmsiLauncher -u $url --version $version
+          if ($version -notmatch "-") {
+            .\wingetcreate.exe submit .\manifests\m\OmsiLauncher\OmsiLauncher\${version}\ --token $env:WINGET_GITHUB_TOKEN
+          }
