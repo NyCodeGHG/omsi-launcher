@@ -42,7 +42,8 @@ dependencies {
 tasks {
     withType<KotlinCompile> {
         kotlinOptions {
-            freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlinx.serialization.ExperimentalSerializationApi"
+            freeCompilerArgs =
+                freeCompilerArgs + "-opt-in=kotlinx.serialization.ExperimentalSerializationApi"
         }
     }
 
@@ -58,13 +59,16 @@ tasks {
                 didWork = false
                 return@doLast
             }
-            val readChannel = Channels.newChannel(
+            Channels.newChannel(
                 URL("https://github.com//NyCodeGHG/omsi-elevate/releases/latest/download/omsi-elevate.exe")
                     .openStream()
-            )
-            val outputChannel = FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE)
+            ).use { readChannel ->
+                FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE)
+                    .use { outputChannel ->
+                        outputChannel.transferFrom(readChannel, 0, Long.MAX_VALUE)
+                    }
+            }
 
-            outputChannel.transferFrom(readChannel, 0, Long.MAX_VALUE)
         }
     }
 
@@ -105,6 +109,10 @@ compose.desktop {
 
             appResourcesRootDir.set(buildDir.resolve("binaries"))
             licenseFile.set(project.file("LICENSE"))
+            windows {
+                menu = true
+                dirChooser = true
+            }
         }
     }
 }
