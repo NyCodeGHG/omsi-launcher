@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 use log::info;
 use structopt::*;
 
-use crate::launcher::with_privileges;
+use crate::launcher::with_symlink_permission;
 use crate::privileges::can_create_symlinks;
 
 mod launcher;
@@ -31,11 +31,7 @@ struct Opt {
 
 fn main() -> std::io::Result<()> {
     simple_logger::SimpleLogger::new().env().init().unwrap();
-    if can_create_symlinks() {
-        run()
-    } else {
-        with_privileges(run)
-    }
+    with_symlink_permission(run)
 }
 
 fn run() -> std::io::Result<()> {

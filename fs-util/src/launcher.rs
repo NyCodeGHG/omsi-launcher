@@ -1,8 +1,21 @@
+use crate::can_create_symlinks;
 use deelevate::{BridgeServer, PrivilegeLevel, Token};
+use std::io::Result;
 
-pub fn with_privileges<T>(run: T) -> std::io::Result<()>
+pub fn with_symlink_permission<T>(run: T) -> Result<()>
 where
-    T: Fn() -> std::io::Result<()>,
+    T: Fn() -> Result<()>,
+{
+    if can_create_symlinks() {
+        run()
+    } else {
+        with_privileges(run)
+    }
+}
+
+pub fn with_privileges<T>(run: T) -> Result<()>
+where
+    T: Fn() -> Result<()>,
 {
     let token = Token::with_current_process()?;
     match token.privilege_level()? {
