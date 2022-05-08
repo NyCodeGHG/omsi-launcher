@@ -1,25 +1,12 @@
 package dev.nycode.omsilauncher
 
 import androidx.compose.foundation.VerticalScrollbar
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.NavigationRail
-import androidx.compose.material.NavigationRailItem
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -31,19 +18,19 @@ import compose.icons.tablericons.Stack
 import dev.nycode.omsilauncher.components.InstanceListEntry
 import dev.nycode.omsilauncher.config.resolveAppDataPath
 import dev.nycode.omsilauncher.instance.Instance
-import dev.nycode.omsilauncher.instance.instances
-import dev.nycode.omsilauncher.instance.saveInstances
+import dev.nycode.omsilauncher.instance.createNewInstance
+import dev.nycode.omsilauncher.instance.instanceViewModel
 import dev.nycode.omsilauncher.omsi.OmsiProcessUpdate
 import dev.nycode.omsilauncher.omsi.receiveOmsiProcessUpdates
-import dev.nycode.omsilauncher.util.createInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 import kotlin.random.Random
 
 @Composable
 fun Application() {
     val lyricist = rememberStrings()
-    val instances by remember { instances }
+    val instances by remember { instanceViewModel }
     val scope = rememberCoroutineScope()
     val omsiState by receiveOmsiProcessUpdates().collectAsState(
         OmsiProcessUpdate.NOT_RUNNING,
@@ -78,13 +65,12 @@ fun Application() {
                                 scope.launch(Dispatchers.IO) {
                                     val randomName = "Omsi" + Random.nextInt()
                                     val instance = Instance(
+                                        UUID.randomUUID(),
                                         randomName,
                                         resolveAppDataPath(randomName),
                                         Instance.PatchVersion.BI_ARTICULATED_BUS_VERSION
                                     )
-                                    createInstance(instance)
-
-                                    saveInstances(instances + instance) // TODO: improve update logic
+                                    createNewInstance(instance)
                                 }
                             },
                             enabled = omsiState != OmsiProcessUpdate.RUNNING

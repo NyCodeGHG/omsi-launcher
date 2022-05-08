@@ -5,6 +5,7 @@ import compose.icons.TablerIcons
 import compose.icons.tablericons.Bus
 import compose.icons.tablericons.Train
 import dev.nycode.omsilauncher.serialization.SerializablePath
+import dev.nycode.omsilauncher.serialization.SerializableUUID
 import dev.nycode.omsilauncher.util.activateAndStartInstallationSafe
 import kotlinx.serialization.Serializable
 import java.nio.file.Path
@@ -13,6 +14,7 @@ import kotlin.io.path.div
 
 @Serializable
 data class Instance(
+    val id: SerializableUUID,
     val name: String,
     val directory: SerializablePath,
     val patchVersion: PatchVersion,
@@ -26,6 +28,17 @@ data class Instance(
             }
         }
         activateAndStartInstallationSafe(directory, flags)
+    }
+
+    fun toViewModel(): InstanceViewModel {
+        return InstanceViewModel(id, name, patchVersion, options)
+    }
+
+    fun applyFromViewModel(model: InstanceViewModel): Instance {
+        return copy(id = model.id,
+            name = model.name,
+            patchVersion = model.patchVersion,
+            options = model.options)
     }
 
     @Serializable
