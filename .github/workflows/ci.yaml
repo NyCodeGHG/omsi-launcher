@@ -10,6 +10,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: gradle/wrapper-validation-action@v1
   check_kotlin:
+    name: Compile & Validate Kotlin code
     runs-on: ubuntu-20.04
     needs: gradle_validation
     steps:
@@ -23,6 +24,7 @@ jobs:
         with:
           arguments: classes check
   check_rust:
+    name: Compile & Validate Rust code
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v3
@@ -34,13 +36,13 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release --all-features
+          args: --release --all-features --manifest-path fs-util/Cargo.toml
       - name: Setup clippy
         run: rustup component add clippy
       - name: Check clippy
         uses: actions-rs/clippy-check@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-features
+          args: --all-features --manifest-path fs-util/Cargo.toml
 
 
