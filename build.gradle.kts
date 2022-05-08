@@ -52,7 +52,7 @@ tasks {
         }
     }
 
-    val compileRust = task<Exec>("compileRust") {
+    val compileRust = register<Exec>("compileRust") {
         rust("cargo", "build", "--release")
     }
 
