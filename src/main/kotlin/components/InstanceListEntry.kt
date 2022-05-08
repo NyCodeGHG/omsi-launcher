@@ -1,14 +1,7 @@
 package dev.nycode.omsilauncher.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
@@ -30,6 +23,7 @@ import compose.icons.tablericons.PlayerPlay
 import compose.icons.tablericons.Tools
 import compose.icons.tablericons.Trash
 import dev.nycode.omsilauncher.instance.Instance
+import dev.nycode.omsilauncher.omsi.OmsiProcessUpdate
 import dev.nycode.omsilauncher.ui.CustomColors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,7 +31,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.skia.Image.Companion as SkiaImage
 
 @Composable
-fun InstanceListEntry(instance: Instance, scope: CoroutineScope) {
+fun InstanceListEntry(instance: Instance, scope: CoroutineScope, omsiState: OmsiProcessUpdate) {
     val image = remember { imageFromResource("ecitaro.jpg") }
     Card(Modifier.padding(5.dp), elevation = 3.dp) {
         Row(Modifier.fillMaxWidth().height(125.dp)) {
@@ -57,7 +51,8 @@ fun InstanceListEntry(instance: Instance, scope: CoroutineScope) {
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = CustomColors.success,
                             contentColor = Color.White
-                        )
+                        ),
+                        enabled = omsiState == OmsiProcessUpdate.NOT_RUNNING
                     ) {
                         Icon(TablerIcons.PlayerPlay, "Run Instance")
                         Spacer(Modifier.padding(5.dp))
@@ -73,18 +68,27 @@ fun InstanceListEntry(instance: Instance, scope: CoroutineScope) {
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = MaterialTheme.colors.primary,
                             contentColor = Color.White
-                        )
+                        ),
+                        enabled = omsiState == OmsiProcessUpdate.NOT_RUNNING
                     ) {
                         Icon(TablerIcons.Tools, "Run Editor")
                         Spacer(Modifier.padding(5.dp))
                         Text("Launch Editor")
                     }
+                    Spacer(Modifier.padding(5.dp))
+                    Icon(instance.patchVersion.icon,
+                        "instance patch version",
+                        modifier = Modifier.align(Alignment.Bottom).size(50.dp))
                 }
                 Box(modifier = Modifier.align(Alignment.TopEnd).padding(10.dp).fillMaxHeight()) {
-                    IconButton({}, modifier = Modifier.align(Alignment.TopEnd)) {
+                    IconButton({},
+                        modifier = Modifier.align(Alignment.TopEnd),
+                        enabled = omsiState == OmsiProcessUpdate.NOT_RUNNING) {
                         Icon(TablerIcons.Pencil, "Edit")
                     }
-                    IconButton({}, modifier = Modifier.align(Alignment.BottomEnd)) {
+                    IconButton({},
+                        modifier = Modifier.align(Alignment.BottomEnd),
+                        enabled = omsiState == OmsiProcessUpdate.NOT_RUNNING) {
                         Icon(TablerIcons.Trash, "Delete", tint = MaterialTheme.colors.error)
                     }
                 }

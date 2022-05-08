@@ -15,12 +15,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.NavigationRail
 import androidx.compose.material.NavigationRailItem
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -31,6 +26,8 @@ import dev.nycode.omsilauncher.config.resolveAppDataPath
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.instances
 import dev.nycode.omsilauncher.instance.saveInstances
+import dev.nycode.omsilauncher.omsi.OmsiProcessUpdate
+import dev.nycode.omsilauncher.omsi.receiveOmsiProcessUpdates
 import dev.nycode.omsilauncher.util.createInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,6 +37,8 @@ import kotlin.random.Random
 fun Application() {
     var instances by remember { mutableStateOf(instances) }
     val scope = rememberCoroutineScope()
+    val omsiState by receiveOmsiProcessUpdates().collectAsState(OmsiProcessUpdate.NOT_RUNNING,
+        Dispatchers.IO)
 
     Row(Modifier.fillMaxSize()) {
         NavigationRail {
@@ -55,11 +54,10 @@ fun Application() {
                     .verticalScroll(stateVertical)
                     .padding(end = 12.dp, bottom = 12.dp)
             ) {
-                instances.forEach {
-                    InstanceListEntry(it, scope)
-                }
-
                 Column(Modifier.fillMaxSize()) {
+                    instances.forEach {
+                        InstanceListEntry(it, scope, omsiState)
+                    }
                     // TODO: Make this look similar to a card
                     Button({
                         scope.launch(Dispatchers.IO) {

@@ -18,11 +18,17 @@ suspend fun awaitSteamDeath() {
 }
 
 fun isOmsiRunning(): Boolean {
+    return omsiProcesses().any()
+}
+
+private val omsiRegex = Regex("Omsi(?:_(?:current|older))?\\.exe")
+
+fun omsiProcesses(): Sequence<ProcessHandle> {
     return ProcessHandle.allProcesses()
         .asSequence()
-        .map { it.info().command().orElse(null) }
-        .filterNotNull()
-        .any { "Omsi.exe" in it }
+        .filter { handle ->
+            handle.info().command().orElse(null)?.let { omsiRegex.containsMatchIn(it) } == true
+        }
 }
 
 private fun steamProcesses(): Sequence<ProcessHandle> {

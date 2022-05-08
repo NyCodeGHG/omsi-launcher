@@ -1,5 +1,9 @@
 package dev.nycode.omsilauncher.instance
 
+import androidx.compose.ui.graphics.vector.ImageVector
+import compose.icons.TablerIcons
+import compose.icons.tablericons.Bus
+import compose.icons.tablericons.Train
 import dev.nycode.omsilauncher.serialization.SerializablePath
 import dev.nycode.omsilauncher.util.activateAndStartInstallationSafe
 import kotlinx.serialization.Serializable
@@ -12,7 +16,7 @@ data class Instance(
     val name: String,
     val directory: SerializablePath,
     val patchVersion: PatchVersion,
-    val options: Options = Options()
+    val options: Options = Options(),
 ) {
     suspend fun start(editor: Boolean = false) {
         val flags = buildList {
@@ -29,7 +33,7 @@ data class Instance(
         val saveLogs: Boolean = false,
         val debugMode: Boolean = false,
         val logLevel: LogLevel = LogLevel.DEFAULT,
-        val screenMode: ScreenMode = ScreenMode.DEFAULT
+        val screenMode: ScreenMode = ScreenMode.DEFAULT,
     ) {
 
         @Serializable
@@ -63,10 +67,9 @@ data class Instance(
         }
     }
 
-    @Serializable
-    enum class PatchVersion(val executable: String) {
-        BI_ARTICULATED_BUS_VERSION("Omsi_current.exe"),
-        TRAM_VERSION("Omsi_older.exe");
+    enum class PatchVersion(val executable: String, val icon: ImageVector) {
+        BI_ARTICULATED_BUS_VERSION("Omsi_current.exe", TablerIcons.Bus),
+        TRAM_VERSION("Omsi_older.exe", TablerIcons.Train);
 
         val relativePath: Path
             get() = Path("_Straßenbahn") / executable
