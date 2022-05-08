@@ -15,10 +15,17 @@ import androidx.compose.material.Icon
 import androidx.compose.material.NavigationRail
 import androidx.compose.material.NavigationRailItem
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cafe.adriel.lyricist.LocalStrings
+import cafe.adriel.lyricist.ProvideStrings
+import cafe.adriel.lyricist.rememberStrings
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Stack
 import dev.nycode.omsilauncher.components.InstanceListEntry
@@ -35,6 +42,7 @@ import kotlin.random.Random
 
 @Composable
 fun Application() {
+    val lyricist = rememberStrings()
     val instances by remember { instances }
     val scope = rememberCoroutineScope()
     val omsiState by receiveOmsiProcessUpdates().collectAsState(
@@ -42,48 +50,51 @@ fun Application() {
         Dispatchers.IO
     )
 
-    Row(Modifier.fillMaxSize()) {
-        NavigationRail {
-            NavigationRailItem(
-                true,
-                onClick = {},
-                icon = { Icon(TablerIcons.Stack, "Instances") },
-                label = { Text("Instances") }
-            )
-        }
-        Box(modifier = Modifier.fillMaxSize()) {
-            val stateVertical = rememberScrollState(0)
-            Box(
-                Modifier.fillMaxSize()
-                    .verticalScroll(stateVertical)
-                    .padding(end = 12.dp, bottom = 12.dp)
-            ) {
-                Column(Modifier.fillMaxSize()) {
-                    instances.forEach {
-                        InstanceListEntry(it, scope, omsiState)
-                    }
-                    // TODO: Make this look similar to a card
-                    Button({
-                        scope.launch(Dispatchers.IO) {
-                            val randomName = "Omsi" + Random.nextInt()
-                            val instance = Instance(
-                                randomName,
-                                resolveAppDataPath(randomName),
-                                Instance.PatchVersion.BI_ARTICULATED_BUS_VERSION
-                            )
-                            createInstance(instance)
-
-                            saveInstances(instances + instance) // TODO: improve update logic
+    ProvideStrings(lyricist, LocalStrings) {
+        val strings = LocalStrings.current
+        Row(Modifier.fillMaxSize()) {
+            NavigationRail {
+                NavigationRailItem(
+                    true,
+                    onClick = {},
+                    icon = { Icon(TablerIcons.Stack, strings.instances) },
+                    label = { Text(strings.instances) }
+                )
+            }
+            Box(modifier = Modifier.fillMaxSize()) {
+                val stateVertical = rememberScrollState(0)
+                Box(
+                    Modifier.fillMaxSize()
+                        .verticalScroll(stateVertical)
+                        .padding(end = 12.dp, bottom = 12.dp)
+                ) {
+                    Column(Modifier.fillMaxSize()) {
+                        instances.forEach {
+                            InstanceListEntry(it, scope, omsiState)
                         }
-                    }) {
-                        Text("Add new")
+                        // TODO: Make this look similar to a card
+                        Button({
+                            scope.launch(Dispatchers.IO) {
+                                val randomName = "Omsi" + Random.nextInt()
+                                val instance = Instance(
+                                    randomName,
+                                    resolveAppDataPath(randomName),
+                                    Instance.PatchVersion.BI_ARTICULATED_BUS_VERSION
+                                )
+                                createInstance(instance)
+
+                                saveInstances(instances + instance) // TODO: improve update logic
+                            }
+                        }) {
+                            Text(strings.addNewInstance)
+                        }
                     }
                 }
+                VerticalScrollbar(
+                    modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                    adapter = rememberScrollbarAdapter(stateVertical)
+                )
             }
-            VerticalScrollbar(
-                modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
-                adapter = rememberScrollbarAdapter(stateVertical)
-            )
         }
     }
 }

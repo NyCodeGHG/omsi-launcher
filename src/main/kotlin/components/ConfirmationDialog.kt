@@ -11,14 +11,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import cafe.adriel.lyricist.LocalStrings
 
 @Composable
 fun ConfirmationDialog(
     text: String,
     onCloseRequest: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-) =
-    Dialog({ onCloseRequest(false) }, title = "Deletion Confirmation") {
+) {
+    val strings = LocalStrings.current
+    Dialog({ onCloseRequest(false) }, title = strings.deleteConfirmation) {
         Box(modifier.fillMaxSize()) {
             Text(
                 text,
@@ -29,14 +31,15 @@ fun ConfirmationDialog(
                 Button({
                     onCloseRequest(true)
                 }) {
-                    Text("Yes")
+                    Text(strings.yes)
                 }
                 Spacer(Modifier.width(20.dp))
                 Button({
                     onCloseRequest(false)
                 }) {
-                    Text("No")
+                    Text(strings.no)
                 }
             }
         }
     }
+}

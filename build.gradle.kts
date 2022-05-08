@@ -14,6 +14,7 @@ plugins {
     id("com.github.gmazzo.buildconfig") version "3.0.3"
     id("local-properties")
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+    id("com.google.devtools.ksp") version "1.6.21-1.0.5"
 }
 
 group = "dev.nycode"
@@ -38,6 +39,18 @@ dependencies {
     implementation("org.lwjgl", "lwjgl-nfd", "3.3.1")
     implementation("org.lwjgl", "lwjgl-nfd", "3.3.1", classifier = "natives-windows")
     implementation("br.com.devsrsouza.compose.icons.jetbrains", "tabler-icons", "1.0.0")
+
+    implementation("cafe.adriel.lyricist", "lyricist", "1.2.0")
+
+    ksp("cafe.adriel.lyricist", "lyricist-processor", "1.2.0")
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir(file("$buildDir/generated/ksp/main/kotlin/"))
+        }
+    }
 }
 
 ktlint {
