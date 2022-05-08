@@ -15,7 +15,7 @@ pub fn can_create_symlinks() -> bool {
     fs::File::create(&first_path).unwrap();
     let second = temp_dir.join(format!("{}_1", timestamp));
     let result = windows_fs::symlink_file(&first_path, &second).is_ok();
-    fs::remove_file(second).unwrap();
-    fs::remove_file(first_path).unwrap();
+    fs::remove_file(second).ok();
+    fs::remove_file(first_path).ok();
     result
 }
