@@ -25,13 +25,13 @@ fun main(args: Array<String>) {
     val setup = configuration == null || arguments.forceSetup
     when {
         setup && !arguments.forceSetup -> {
-            logger.debug("Root Installation Directory is set. Skipping setup.")
+            logger.info("Root Installation Directory is not set. Starting setup.")
         }
         setup -> {
             logger.info("Force Setup flag is set. Forcing setup.")
         }
         else -> {
-            logger.info("Root Installation Directory is not set. Starting setup.")
+            logger.debug("Root Installation Directory is set. Skipping setup.")
         }
     }
 
