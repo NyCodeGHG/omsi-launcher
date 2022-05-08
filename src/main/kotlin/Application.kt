@@ -85,7 +85,7 @@ fun Application() {
 
                                 saveInstances(instances + instance) // TODO: improve update logic
                             }
-                        }) {
+                        }, enabled = omsiState != OmsiProcessUpdate.RUNNING) {
                             Text(strings.addNewInstance)
                         }
                     }
