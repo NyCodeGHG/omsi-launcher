@@ -61,11 +61,14 @@ fun StartSetupScreen(config: MutableState<SetupState>, closeSetup: () -> Unit) {
             gameDirectory.resolve("Omsi.exe").deleteExisting()
             setupStep = "Saving configuration."
             saveConfig(currentConfig)
-            logger.info { "Creating instances.json" }
-            setupStep = "Creating instances.json"
-            rootInstallation.resolve("instances.json")
-                .createFile()
-                .writeText("[]")
+            val instancesFile = rootInstallation.resolve("instances.json")
+            if (instancesFile.notExists()) {
+                logger.info { "Creating instances.json" }
+                setupStep = "Creating instances.json"
+                instancesFile
+                    .createFile()
+                    .writeText("[]")
+            }
             closeSetup()
         }
         Button(::startSetup,
