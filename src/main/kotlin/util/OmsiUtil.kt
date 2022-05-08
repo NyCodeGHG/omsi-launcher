@@ -5,16 +5,10 @@ import dev.nycode.omsilauncher.config.gameDirectory
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.LaunchFlag
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.future.await
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.nio.file.Path
-import kotlin.io.path.Path
-import kotlin.io.path.absolutePathString
-import kotlin.io.path.div
-import kotlin.io.path.isSymbolicLink
-import kotlin.io.path.readSymbolicLink
+import kotlin.io.path.*
 
 private val logger = logger()
 
@@ -32,30 +26,21 @@ suspend fun createInstance(instance: Instance) {
 /**
  * Creates a new identical [Path] in [to], which will have the same directories and symlinks to the original items.
  */
-private suspend fun doNativeCall(name: String, vararg parameters: String) = withContext(Dispatchers.IO) {
-    val absoluteExecutable = (Path("bin") / name).absolutePathString()
-    val process = Runtime.getRuntime().exec(arrayOf(absoluteExecutable, *parameters))
+private suspend fun doNativeCall(name: String, vararg parameters: String) =
+    withContext(Dispatchers.IO) {
+        logger.debug { "Attempting native call: $name ${parameters.joinToString(" ")}" }
+        val absoluteExecutable = (Path("bin") / name).absolutePathString()
+        val process = ProcessBuilder().command(absoluteExecutable, *parameters)
+            .redirectError(ProcessBuilder.Redirect.INHERIT)
+            .redirectOutput(ProcessBuilder.Redirect.INHERIT)
+            .start()
 
-    val logReaders = coroutineScope {
-        launch {
-            process.inputStream.bufferedReader().lines().forEach {
-                logger.debug(it)
-            }
+        process.onExit().await()
+        if (process.exitValue() != 0) {
+            error("Unexpected exit code from ${name}: ${process.exitValue()}")
         }
-        launch {
-            process.errorStream.bufferedReader().lines().forEach {
-                logger.error(it)
-            }
-        }
+        logger.debug { "Successfully finished native call." }
     }
-
-
-    process.onExit().await()
-    logReaders.cancel()
-    if (process.exitValue() != 0) {
-        error("Unexpected exit code from ${name}: ${process.exitValue()}")
-    }
-}
 
 suspend fun activateInstallationSafe(path: Path) {
     val omsi = getOmsiInstallPath()
@@ -69,8 +54,11 @@ suspend fun activateAndStartInstallationSafe(path: Path, flags: List<LaunchFlag>
 }
 
 fun startOmsi(flags: List<LaunchFlag> = emptyList()) {
-    val flagsString = if (flags.isEmpty()) "" else "// " + flags.joinToString(separator = " ") { it.option }
+    val flagsString =
+        if (flags.isEmpty()) "" else "// " + flags.joinToString(separator = " ") { it.option }
 
     Runtime.getRuntime()
-        .exec(arrayOf("rundll32", "url.dll,FileProtocolHandler", "steam://rungameid/$OMSI_STEAM_ID$flagsString"))
+        .exec(arrayOf("rundll32",
+            "url.dll,FileProtocolHandler",
+            "steam://rungameid/$OMSI_STEAM_ID$flagsString"))
 }
