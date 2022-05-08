@@ -44,7 +44,7 @@ private suspend fun doNativeCall(name: String, vararg parameters: String) =
 
         process.onExit().await()
         if (process.exitValue() != 0) {
-            error("Unexpected exit code from ${name}: ${process.exitValue()}")
+            error("Unexpected exit code from $name: ${process.exitValue()}")
         }
         logger.debug { "Successfully finished native call." }
     }

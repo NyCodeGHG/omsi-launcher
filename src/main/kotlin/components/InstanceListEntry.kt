@@ -71,21 +71,27 @@ fun InstanceListEntry(instance: Instance, scope: CoroutineScope, omsiState: Omsi
                         Text("Launch Editor")
                     }
                     Spacer(Modifier.padding(5.dp))
-                    Icon(instance.patchVersion.icon,
+                    Icon(
+                        instance.patchVersion.icon,
                         "instance patch version",
-                        modifier = Modifier.align(Alignment.Bottom).size(50.dp))
+                        modifier = Modifier.align(Alignment.Bottom).size(50.dp)
+                    )
                 }
                 Box(modifier = Modifier.align(Alignment.TopEnd).padding(10.dp).fillMaxHeight()) {
-                    IconButton({},
+                    IconButton(
+                        {},
                         modifier = Modifier.align(Alignment.TopEnd),
-                        enabled = omsiState == OmsiProcessUpdate.NOT_RUNNING) {
+                        enabled = omsiState == OmsiProcessUpdate.NOT_RUNNING
+                    ) {
                         Icon(TablerIcons.Pencil, "Edit")
                     }
-                    IconButton({
-                        deleteDialog = true
-                    },
+                    IconButton(
+                        {
+                            deleteDialog = true
+                        },
                         modifier = Modifier.align(Alignment.BottomEnd),
-                        enabled = omsiState == OmsiProcessUpdate.NOT_RUNNING) {
+                        enabled = omsiState == OmsiProcessUpdate.NOT_RUNNING
+                    ) {
                         Icon(TablerIcons.Trash, "Delete", tint = MaterialTheme.colors.error)
                     }
                 }

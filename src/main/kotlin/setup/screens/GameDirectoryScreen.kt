@@ -23,8 +23,10 @@ fun GameDirectoryScreen(switchScreen: (SetupScreen) -> Unit, config: MutableStat
     Box(Modifier.fillMaxSize()) {
         Text("Setup", fontSize = 35.sp, modifier = Modifier.align(Alignment.TopCenter))
         Column(Modifier.align(Alignment.Center)) {
-            Text("Choose a directory where your instances and the base game files should be stored.",
-                modifier = Modifier.align(Alignment.CenterHorizontally))
+            Text(
+                "Choose a directory where your instances and the base game files should be stored.",
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
             Button({
                 scope.launch {
                     gameFileDirectory = chooseDirectory(gameFileDirectory)
@@ -32,24 +34,27 @@ fun GameDirectoryScreen(switchScreen: (SetupScreen) -> Unit, config: MutableStat
             }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text("Select Game File Directory")
             }
-            Spacer(Modifier.padding(5.dp))
-            if (gameFileDirectory != null) {
-                ClickablePath(gameFileDirectory!!)
-            } else {
-                Text("No Game Directory selected.")
+                Spacer(Modifier.padding(5.dp))
+                if (gameFileDirectory != null) {
+                    ClickablePath(gameFileDirectory!!)
+                } else {
+                    Text("No Game Directory selected.")
+                }
             }
-        }
-        Button({
-            configuration = configuration.copy(launcherPath = gameFileDirectory)
-            if (isSteamRunning()) {
-                switchScreen(SetupScreen.STEAM)
-            } else {
-                switchScreen(SetupScreen.START_SETUP)
+            Button(
+                {
+                    configuration = configuration.copy(launcherPath = gameFileDirectory)
+                    if (isSteamRunning()) {
+                        switchScreen(SetupScreen.STEAM)
+                    } else {
+                        switchScreen(SetupScreen.START_SETUP)
+                    }
+                },
+                modifier = Modifier.align(Alignment.BottomEnd).padding(10.dp),
+                enabled = gameFileDirectory != null
+            ) {
+                Text("Continue")
             }
-        },
-            modifier = Modifier.align(Alignment.BottomEnd).padding(10.dp),
-            enabled = gameFileDirectory != null) {
-            Text("Continue")
         }
     }
-}
+    

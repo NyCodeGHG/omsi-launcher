@@ -37,15 +37,19 @@ import kotlin.random.Random
 fun Application() {
     val instances by remember { instances }
     val scope = rememberCoroutineScope()
-    val omsiState by receiveOmsiProcessUpdates().collectAsState(OmsiProcessUpdate.NOT_RUNNING,
-        Dispatchers.IO)
+    val omsiState by receiveOmsiProcessUpdates().collectAsState(
+        OmsiProcessUpdate.NOT_RUNNING,
+        Dispatchers.IO
+    )
 
     Row(Modifier.fillMaxSize()) {
         NavigationRail {
-            NavigationRailItem(true,
+            NavigationRailItem(
+                true,
                 onClick = {},
                 icon = { Icon(TablerIcons.Stack, "Instances") },
-                label = { Text("Instances") })
+                label = { Text("Instances") }
+            )
         }
         Box(modifier = Modifier.fillMaxSize()) {
             val stateVertical = rememberScrollState(0)
@@ -74,7 +78,6 @@ fun Application() {
                     }) {
                         Text("Add new")
                     }
-
                 }
             }
             VerticalScrollbar(

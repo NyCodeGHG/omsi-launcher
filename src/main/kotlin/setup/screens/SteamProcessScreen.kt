@@ -28,19 +28,22 @@ fun SteamProcessScreen(switchScreen: (SetupScreen) -> Unit) = Box(Modifier.fillM
         onDispose {}
     }
     Column(Modifier.align(Alignment.Center)) {
-        Text("Please close Steam™ while setting up the launcher.",
+        Text(
+            "Please close Steam™ while setting up the launcher.",
             Modifier.align(Alignment.CenterHorizontally),
-            fontSize = 20.sp)
+            fontSize = 20.sp
+        )
         CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally).padding(10.dp))
-        Button({
-            closingSteam = true
-            scope.launch {
-                if (!tryCloseSteam()) {
-                    steamErrorDialog = true
-                    closingSteam = false
+        Button(
+            {
+                closingSteam = true
+                scope.launch {
+                    if (!tryCloseSteam()) {
+                        steamErrorDialog = true
+                        closingSteam = false
+                    }
                 }
-            }
-        },
+            },
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.error),
             modifier = Modifier.align(Alignment.CenterHorizontally),
             enabled = !closingSteam
@@ -48,11 +51,13 @@ fun SteamProcessScreen(switchScreen: (SetupScreen) -> Unit) = Box(Modifier.fillM
             Text("Close Steam")
         }
         if (steamErrorDialog) {
-            ErrorDialog("We were not able to close Steam gracefully. Please close it manually. The setup will continue automatically.",
+            ErrorDialog(
+                "We were not able to close Steam gracefully. Please close it manually. The setup will continue automatically.",
                 {
                     steamErrorDialog = false
                 },
-                "Cannot close Steam.")
+                "Cannot close Steam."
+            )
         }
     }
 }
@@ -65,8 +70,10 @@ fun ErrorDialog(text: String, onCloseRequest: () -> Unit, title: String) =
                 Text(text, Modifier.align(Alignment.CenterVertically))
             }
             Row(Modifier.fillMaxWidth().align(Alignment.BottomCenter)) {
-                Button(onCloseRequest,
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.error)) {
+                Button(
+                    onCloseRequest,
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.error)
+                ) {
                     Text("Ok")
                 }
             }

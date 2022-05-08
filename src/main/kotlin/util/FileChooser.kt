@@ -30,8 +30,10 @@ suspend fun chooseDirectory(basePath: Path? = null): Path? {
 private suspend fun chooseDirectoryNative(basePath: Path?) = withContext(Dispatchers.IO) {
     val pathPointer = MemoryUtil.memAllocPointer(1)
     try {
-        return@withContext when (val code =
-            NativeFileDialog.NFD_PickFolder(basePath?.absolutePathString(), pathPointer)) {
+        return@withContext when (
+            val code =
+                NativeFileDialog.NFD_PickFolder(basePath?.absolutePathString(), pathPointer)
+        ) {
             NativeFileDialog.NFD_OKAY -> {
                 val path = pathPointer.stringUTF8
                 NativeFileDialog.nNFD_Free(pathPointer[0])
@@ -40,7 +42,7 @@ private suspend fun chooseDirectoryNative(basePath: Path?) = withContext(Dispatc
             }
             NativeFileDialog.NFD_CANCEL -> null
             NativeFileDialog.NFD_ERROR -> error("An error occurred while executing NativeFileDialog.NFD_PickFolder")
-            else -> error("Unknown return code '${code}' from NativeFileDialog.NFD_PickFolder")
+            else -> error("Unknown return code '$code' from NativeFileDialog.NFD_PickFolder")
         }
     } finally {
         MemoryUtil.memFree(pathPointer)
@@ -60,6 +62,6 @@ private suspend fun chooseDirectorySwing(basePath: Path?) = withContext(Dispatch
         JFileChooser.APPROVE_OPTION -> chooser.selectedFile.absolutePath
         JFileChooser.CANCEL_OPTION -> null
         JFileChooser.ERROR_OPTION -> error("An error occurred while executing JFileChooser::showOpenDialog")
-        else -> error("Unknown return code '${code}' from JFileChooser::showOpenDialog")
+        else -> error("Unknown return code '$code' from JFileChooser::showOpenDialog")
     }
 }

@@ -20,7 +20,8 @@ fun ConfirmationDialog(
 ) =
     Dialog({ onCloseRequest(false) }) {
         Box(modifier.fillMaxSize()) {
-            Text(text,
+            Text(
+                text,
                 Modifier.align(Alignment.Center).padding(20.dp),
                 textAlign = TextAlign.Center, fontSize = 20.sp, fontWeight = FontWeight.Bold
             )

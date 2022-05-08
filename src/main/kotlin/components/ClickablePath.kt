@@ -10,7 +10,10 @@ import kotlin.io.path.absolutePathString
 
 @Composable
 fun ClickablePath(path: Path, fontWeight: FontWeight? = null, modifier: Modifier = Modifier) {
-    Text(path.absolutePathString(), fontWeight = fontWeight, modifier = modifier.clickable {
-        Runtime.getRuntime().exec(arrayOf("explorer", path.absolutePathString()))
-    })
+    Text(
+        path.absolutePathString(), fontWeight = fontWeight,
+        modifier = modifier.clickable {
+            Runtime.getRuntime().exec(arrayOf("explorer", path.absolutePathString()))
+        }
+    )
 }

@@ -4,8 +4,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.net.URL
 import java.nio.channels.Channels
 import java.nio.channels.FileChannel
-import java.nio.file.StandardOpenOption
 import java.nio.file.Files
+import java.nio.file.StandardOpenOption
 
 plugins {
     kotlin("jvm") version "1.6.21"
@@ -13,6 +13,7 @@ plugins {
     id("org.jetbrains.compose") version "1.2.0-alpha01-dev679"
     id("com.github.gmazzo.buildconfig") version "3.0.3"
     id("local-properties")
+    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
 }
 
 group = "dev.nycode"
@@ -37,6 +38,10 @@ dependencies {
     implementation("org.lwjgl", "lwjgl-nfd", "3.3.1")
     implementation("org.lwjgl", "lwjgl-nfd", "3.3.1", classifier = "natives-windows")
     implementation("br.com.devsrsouza.compose.icons.jetbrains", "tabler-icons", "1.0.0")
+}
+
+ktlint {
+    disabledRules.add("no-wildcard-imports")
 }
 
 tasks {
@@ -68,7 +73,6 @@ tasks {
                         outputChannel.transferFrom(readChannel, 0, Long.MAX_VALUE)
                     }
             }
-
         }
     }
 

@@ -74,7 +74,6 @@ data class Instance(
         val relativePath: Path
             get() = Path("_Straßenbahn") / executable
     }
-
 }
 
 @Serializable

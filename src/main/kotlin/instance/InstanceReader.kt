@@ -6,7 +6,6 @@ import dev.nycode.omsilauncher.config.configJson
 import dev.nycode.omsilauncher.config.resolveAppDataPath
 import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.json.encodeToStream
-import java.nio.file.FileVisitOption
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.deleteExisting

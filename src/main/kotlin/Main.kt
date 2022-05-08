@@ -59,10 +59,12 @@ fun main(args: Array<String>) {
 fun parseArgs(args: Array<String>): ApplicationArgs {
     logger.debug("Parsing application arguments.")
     val parser = ArgParser("omsi-launcher")
-    val forceSetup by parser.option(ArgType.Boolean,
+    val forceSetup by parser.option(
+        ArgType.Boolean,
         shortName = "f",
         description = "Force Setup.",
-        fullName = "force-setup")
+        fullName = "force-setup"
+    )
         .default(false)
     parser.parse(args)
     return ApplicationArgs(forceSetup)

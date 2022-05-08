@@ -71,9 +71,11 @@ fun StartSetupScreen(config: MutableState<SetupState>, closeSetup: () -> Unit) {
             }
             closeSetup()
         }
-        Button(::startSetup,
+        Button(
+            ::startSetup,
             modifier = Modifier.align(Alignment.BottomEnd).padding(20.dp),
-            enabled = !setupRunning) {
+            enabled = !setupRunning
+        ) {
             Text("Setup")
         }
     }

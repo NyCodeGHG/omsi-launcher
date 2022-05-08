@@ -10,8 +10,10 @@ import java.nio.file.Path
 
 data class SetupState(val launcherPath: Path?) {
     fun toConfiguration(): Configuration {
-        return Configuration(launcherPath
-            ?: error("Cannot convert to Configuration when launcherPath is null"))
+        return Configuration(
+            launcherPath
+                ?: error("Cannot convert to Configuration when launcherPath is null")
+        )
     }
 }
 
