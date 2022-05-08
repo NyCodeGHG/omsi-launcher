@@ -35,7 +35,7 @@ import kotlin.random.Random
 
 @Composable
 fun Application() {
-    var instances by remember { mutableStateOf(instances) }
+    val instances by remember { instances }
     val scope = rememberCoroutineScope()
     val omsiState by receiveOmsiProcessUpdates().collectAsState(OmsiProcessUpdate.NOT_RUNNING,
         Dispatchers.IO)
@@ -68,9 +68,8 @@ fun Application() {
                                 Instance.PatchVersion.BI_ARTICULATED_BUS_VERSION
                             )
                             createInstance(instance)
-                            instances = instances + instance
 
-                            saveInstances(instances) // TODO: improve update logic
+                            saveInstances(instances + instance) // TODO: improve update logic
                         }
                     }) {
                         Text("Add new")

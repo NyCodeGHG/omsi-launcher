@@ -2,15 +2,8 @@ package dev.nycode.omsilauncher.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,6 +16,7 @@ import compose.icons.tablericons.PlayerPlay
 import compose.icons.tablericons.Tools
 import compose.icons.tablericons.Trash
 import dev.nycode.omsilauncher.instance.Instance
+import dev.nycode.omsilauncher.instance.deleteInstance
 import dev.nycode.omsilauncher.omsi.OmsiProcessUpdate
 import dev.nycode.omsilauncher.ui.CustomColors
 import kotlinx.coroutines.CoroutineScope
@@ -33,6 +27,7 @@ import org.jetbrains.skia.Image.Companion as SkiaImage
 @Composable
 fun InstanceListEntry(instance: Instance, scope: CoroutineScope, omsiState: OmsiProcessUpdate) {
     val image = remember { imageFromResource("ecitaro.jpg") }
+    var deleteDialog by remember { mutableStateOf(false) }
     Card(Modifier.padding(5.dp), elevation = 3.dp) {
         Row(Modifier.fillMaxWidth().height(125.dp)) {
             Image(image, "ecitaro")
@@ -86,7 +81,9 @@ fun InstanceListEntry(instance: Instance, scope: CoroutineScope, omsiState: Omsi
                         enabled = omsiState == OmsiProcessUpdate.NOT_RUNNING) {
                         Icon(TablerIcons.Pencil, "Edit")
                     }
-                    IconButton({},
+                    IconButton({
+                        deleteDialog = true
+                    },
                         modifier = Modifier.align(Alignment.BottomEnd),
                         enabled = omsiState == OmsiProcessUpdate.NOT_RUNNING) {
                         Icon(TablerIcons.Trash, "Delete", tint = MaterialTheme.colors.error)
@@ -94,6 +91,16 @@ fun InstanceListEntry(instance: Instance, scope: CoroutineScope, omsiState: Omsi
                 }
             }
         }
+    }
+    if (deleteDialog) {
+        ConfirmationDialog("Are you sure you want to delete ${instance.name}?", { delete ->
+            deleteDialog = false
+            if (delete) {
+                scope.launch(Dispatchers.IO) {
+                    deleteInstance(instance)
+                }
+            }
+        })
     }
 }
 
