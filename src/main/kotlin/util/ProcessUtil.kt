@@ -17,6 +17,14 @@ suspend fun awaitSteamDeath() {
         .awaitAll()
 }
 
+fun isOmsiRunning(): Boolean {
+    return ProcessHandle.allProcesses()
+        .asSequence()
+        .map { it.info().command().orElse(null) }
+        .filterNotNull()
+        .any { "Omsi.exe" in it }
+}
+
 private fun steamProcesses(): Sequence<ProcessHandle> {
     val steamPath = getSteamInstallPath()
     return ProcessHandle.allProcesses()

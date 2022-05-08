@@ -11,9 +11,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.nycode.omsilauncher.components.ClickablePath
-import dev.nycode.omsilauncher.config.Configuration
 import dev.nycode.omsilauncher.config.gameDirectory
 import dev.nycode.omsilauncher.config.saveConfig
+import dev.nycode.omsilauncher.setup.SetupState
 import dev.nycode.omsilauncher.util.getOmsiInstallPath
 import dev.nycode.omsilauncher.util.logger
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +23,7 @@ import kotlin.io.path.*
 private val logger = logger()
 
 @Composable
-fun StartSetupScreen(config: MutableState<Configuration>, closeSetup: () -> Unit) {
+fun StartSetupScreen(config: MutableState<SetupState>, closeSetup: () -> Unit) {
     var setupStep: String? by remember { mutableStateOf(null as String?) }
     var setupRunning: Boolean by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -32,7 +32,7 @@ fun StartSetupScreen(config: MutableState<Configuration>, closeSetup: () -> Unit
         Column(Modifier.padding(20.dp).align(Alignment.TopStart)) {
             SizedText("Launcher Directory:", FontWeight.Bold)
             LittleSpacer()
-            ClickablePath(config.value.rootInstallation!!)
+            ClickablePath(config.value.launcherPath!!)
             BigSpacer()
             SizedText("OMSI Installation:", FontWeight.Bold)
             LittleSpacer()
@@ -45,11 +45,9 @@ fun StartSetupScreen(config: MutableState<Configuration>, closeSetup: () -> Unit
             }
         }
         fun startSetup() = scope.launch(Dispatchers.IO) {
-            val currentConfig = config.value
+            val currentConfig = config.value.toConfiguration()
             val rootInstallation = currentConfig.rootInstallation
-                ?: error("rootInstallation is not set. This shouldn't happen.")
             val gameDirectory = currentConfig.gameDirectory
-                ?: error("gameDirectory is not set. This shouldn't happen.")
             setupRunning = true
             if (gameDirectory.exists()) {
                 TODO("Show dialog")

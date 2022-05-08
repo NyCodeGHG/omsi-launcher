@@ -14,15 +14,14 @@ private val json = Json {
 
 private val logger = logger()
 
-fun readConfig(): Configuration {
+fun readConfig(): Configuration? {
     logger.debug("Reading configuration directory.")
 
     val launcherConfig = getLauncherConfigFile()
     if (launcherConfig.notExists()) {
         logger.debug("Launcher configuration file does not exist!")
         launcherConfig.createFile()
-        val defaultConfig = Configuration(null)
-        launcherConfig.writeText(json.encodeToString(defaultConfig))
+        return null
     }
 
     return json.decodeFromString(launcherConfig.readText())

@@ -1,6 +1,9 @@
 package dev.nycode.omsilauncher.util
 
+import dev.nycode.omsilauncher.config.gameDirectory
+import dev.nycode.omsilauncher.config.readConfig
 import dev.nycode.omsilauncher.instance.Instance
+import dev.nycode.omsilauncher.instance.LaunchFlag
 import java.awt.Desktop
 import java.net.URI
 import java.nio.file.Files
@@ -12,12 +15,21 @@ private val logger = logger()
 
 const val OMSI_STEAM_ID = 252530
 
+fun createInstance(instance: Instance) {
+    val config = readConfig()!!
+
+    // Mirror base game files
+    config.rootInstallation.mirrorFolder(instance.directory)
+    // Mirror desired patch
+    instance.executable.createSymbolicLinkPointingTo(config.gameDirectory.resolve(instance.patchVersion.relativePath))
+}
+
 /**
  * Creates a new identical [Path] in [to], which will have the same directories and symlinks to the original items.
  */
 fun Path.mirrorFolder(to: Path) {
     /**
-     * Adapts current [Path] to target folder
+     * Adapts current [Path] to target folder.
      */
     fun Path.adapt() = to / relativize(this@mirrorFolder)
 
@@ -51,4 +63,8 @@ fun activateAndStartInstallationSafe(path: Path) {
     startOmsi()
 }
 
-fun startOmsi() = Desktop.getDesktop().browse(URI("steam://rungameid/$OMSI_STEAM_ID"))
+fun startOmsi(flags: List<LaunchFlag> = emptyList()) {
+    val flagsString = flags.joinToString(separator = " ", prefix = "// ")
+
+    Desktop.getDesktop().browse(URI("steam://rungameid/$OMSI_STEAM_ID$flagsString"))
+}

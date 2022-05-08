@@ -9,17 +9,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.nycode.omsilauncher.components.ClickablePath
-import dev.nycode.omsilauncher.config.Configuration
 import dev.nycode.omsilauncher.setup.SetupScreen
+import dev.nycode.omsilauncher.setup.SetupState
 import dev.nycode.omsilauncher.util.chooseDirectory
 import dev.nycode.omsilauncher.util.isSteamRunning
 import kotlinx.coroutines.launch
 
 @Composable
-fun GameDirectoryScreen(switchScreen: (SetupScreen) -> Unit, config: MutableState<Configuration>) {
+fun GameDirectoryScreen(switchScreen: (SetupScreen) -> Unit, config: MutableState<SetupState>) {
     val scope = rememberCoroutineScope()
     var configuration by config
-    var gameFileDirectory by remember { mutableStateOf(configuration.rootInstallation) }
+    var gameFileDirectory by remember { mutableStateOf(configuration.launcherPath) }
     Box(Modifier.fillMaxSize()) {
         Text("Setup", fontSize = 35.sp, modifier = Modifier.align(Alignment.TopCenter))
         Column(Modifier.align(Alignment.Center)) {
@@ -40,7 +40,7 @@ fun GameDirectoryScreen(switchScreen: (SetupScreen) -> Unit, config: MutableStat
             }
         }
         Button({
-            configuration = configuration.copy(rootInstallation = gameFileDirectory)
+            configuration = configuration.copy(launcherPath = gameFileDirectory)
             if (isSteamRunning()) {
                 switchScreen(SetupScreen.STEAM)
             } else {

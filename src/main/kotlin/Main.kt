@@ -21,7 +21,7 @@ fun main(args: Array<String>) {
     logger.debug("Starting ${getApplicationTitle()}.")
     val arguments = parseArgs(args)
     val configuration = readConfig()
-    val setup = configuration.rootInstallation == null || arguments.forceSetup
+    val setup = configuration == null || arguments.forceSetup
     when {
         setup && !arguments.forceSetup -> {
             logger.debug("Root Installation Directory is set. Skipping setup.")

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import java.nio.file.Path
 
 @Serializable
-data class Configuration(val rootInstallation: SerializablePath?)
+data class Configuration(val rootInstallation: SerializablePath)
 
-val Configuration.gameDirectory: Path?
-    get() = rootInstallation?.resolve("game")
+val Configuration.gameDirectory: Path
+    get() = rootInstallation.resolve("game")
