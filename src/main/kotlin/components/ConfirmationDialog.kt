@@ -18,7 +18,7 @@ fun ConfirmationDialog(
     onCloseRequest: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) =
-    Dialog({ onCloseRequest(false) }) {
+    Dialog({ onCloseRequest(false) }, title = "Deletion Confirmation") {
         Box(modifier.fillMaxSize()) {
             Text(
                 text,
