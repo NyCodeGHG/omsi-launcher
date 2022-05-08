@@ -114,8 +114,7 @@ dependencies = [
 [[package]]
 name = "deelevate"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1c7397f8c48906dd9b5afc75001368c979418e5dff5575998a831eb2319b424e"
+source = "git+https://github.com/NyCodeGHG/omsi-elevate#07935016d52cacb4ce870e7c46e8e2a7a7ca4f5b"
 dependencies = [
  "lazy_static",
  "pathsearch",

@@ -1,5 +1,11 @@
 import org.jetbrains.compose.compose
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.net.URL
+import java.nio.channels.Channels
+import java.nio.channels.FileChannel
+import java.nio.file.StandardOpenOption
+import java.nio.file.Files
 
 plugins {
     kotlin("jvm") version "1.6.21"
@@ -10,7 +16,7 @@ plugins {
 }
 
 group = "dev.nycode"
-version = "0.1.0-alpha"
+version = "0.1.0"
 
 repositories {
     google()
@@ -44,11 +50,41 @@ tasks {
         rust("cargo", "build", "--release")
     }
 
-    task<Copy>("copyIntoBinFolder") {
-        dependsOn(compileRust)
+    val downloadElevate = task("downloadElevateExe") {
+        val path = projectDir.toPath().resolve("bin").resolve("omsi-elevate.exe")
+        outputs.files(path)
+        doLast {
+            if (Files.exists(path) && !gradle.startParameter.isRerunTasks) {
+                didWork = false
+                return@doLast
+            }
+            val readChannel = Channels.newChannel(
+                URL("https://github.com/NyCodeGHG/omsi-elevate/releases/download/Continuous/omsi-elevate.exe")
+                    .openStream()
+            )
+            val outputChannel = FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE)
+
+            outputChannel.transferFrom(readChannel, 0, Long.MAX_VALUE)
+        }
+    }
+
+    val binFolder = task<Copy>("copyIntoBinFolder") {
+        dependsOn(compileRust, downloadElevate)
         from("fs-util/target/release")
         into("bin")
         include("*.exe")
+    }
+
+    val copyResources = task<Copy>("copyBinariesIntoBuildFolder") {
+        dependsOn(compileRust, downloadElevate)
+        from(binFolder)
+        into(buildDir.resolve("binaries").resolve("windows"))
+    }
+
+    afterEvaluate {
+        "packageMsi" {
+            dependsOn(copyResources)
+        }
     }
 }
 
@@ -61,6 +97,15 @@ java {
 compose.desktop {
     application {
         mainClass = "dev.nycode.omsilauncher.MainKt"
+        jvmArgs += listOf("-Ddev.nycode.omsi_launcher.release")
+
+        nativeDistributions {
+            modules("java.naming")
+            targetFormats(TargetFormat.Msi)
+
+            appResourcesRootDir.set(buildDir.resolve("binaries"))
+            licenseFile.set(project.file("LICENSE"))
+        }
     }
 }
 

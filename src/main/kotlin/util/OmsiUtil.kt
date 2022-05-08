@@ -8,11 +8,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.withContext
 import java.nio.file.Path
-import kotlin.io.path.*
+import kotlin.io.path.Path
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.div
+import kotlin.io.path.isSymbolicLink
+import kotlin.io.path.readSymbolicLink
 
 private val logger = logger()
 
 const val OMSI_STEAM_ID = 252530
+
+private val releaseMode = System.getProperty("dev.nycode.omsi_launcher.release") != null
 
 suspend fun createInstance(instance: Instance) {
     doNativeCall(
@@ -29,7 +35,8 @@ suspend fun createInstance(instance: Instance) {
 private suspend fun doNativeCall(name: String, vararg parameters: String) =
     withContext(Dispatchers.IO) {
         logger.debug { "Attempting native call: $name ${parameters.joinToString(" ")}" }
-        val absoluteExecutable = (Path("bin") / name).absolutePathString()
+        val basePath = if (releaseMode) Path("app") / "resources" else Path("bin")
+        val absoluteExecutable = (basePath / name).absolutePathString()
         val process = ProcessBuilder().command(absoluteExecutable, *parameters)
             .redirectError(ProcessBuilder.Redirect.INHERIT)
             .redirectOutput(ProcessBuilder.Redirect.INHERIT)
@@ -58,7 +65,11 @@ fun startOmsi(flags: List<LaunchFlag> = emptyList()) {
         if (flags.isEmpty()) "" else "// " + flags.joinToString(separator = " ") { it.option }
 
     Runtime.getRuntime()
-        .exec(arrayOf("rundll32",
-            "url.dll,FileProtocolHandler",
-            "steam://rungameid/$OMSI_STEAM_ID$flagsString"))
+        .exec(
+            arrayOf(
+                "rundll32",
+                "url.dll,FileProtocolHandler",
+                "steam://rungameid/$OMSI_STEAM_ID$flagsString"
+            )
+        )
 }

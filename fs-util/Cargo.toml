@@ -16,6 +16,6 @@ path = "src/activate-omsi.rs"
 [dependencies]
 structopt = "0.3"
 pathsearch = "0.2"
-deelevate = "0.2.0"
+deelevate = { git = "https://github.com/NyCodeGHG/omsi-elevate" }
 log = "0.4"
 simple_logger = "2.1"
