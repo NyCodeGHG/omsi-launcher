@@ -1,6 +1,7 @@
 package dev.nycode.omsilauncher.instance
 
 import dev.nycode.omsilauncher.serialization.SerializablePath
+import dev.nycode.omsilauncher.util.activateAndStartInstallationSafe
 import kotlinx.serialization.Serializable
 import java.nio.file.Path
 import kotlin.io.path.Path
@@ -11,10 +12,56 @@ data class Instance(
     val name: String,
     val directory: SerializablePath,
     val patchVersion: PatchVersion,
+    val options: Options = Options()
 ) {
+    suspend fun start(editor: Boolean = false) {
+        val flags = buildList {
+            addAll(options.toLaunchFlags())
+            if (editor) {
+                add(LaunchFlag.EDITOR)
+            }
+        }
+        activateAndStartInstallationSafe(directory, flags)
+    }
 
-    val executable: Path
-        get() = directory / "Omsi.exe"
+    @Serializable
+    data class Options(
+        val saveLogs: Boolean = false,
+        val debugMode: Boolean = false,
+        val logLevel: LogLevel = LogLevel.DEFAULT,
+        val screenMode: ScreenMode = ScreenMode.DEFAULT
+    ) {
+
+        @Serializable
+        enum class LogLevel(val launchFlag: LaunchFlag? = null) {
+            DEFAULT,
+            NO_LOG(LaunchFlag.NO_LOG),
+            FULL_LOG(LaunchFlag.LOG_ALL)
+        }
+
+        @Serializable
+        enum class ScreenMode(val launchFlag: LaunchFlag? = null) {
+            DEFAULT,
+            WINDOWED(LaunchFlag.WINDOWED),
+            FULL_SCREEN(LaunchFlag.FULLSCREEN)
+        }
+
+        fun toLaunchFlags(): List<LaunchFlag> = buildList {
+            if (saveLogs) {
+                add(LaunchFlag.SAVE_LOGS)
+            }
+            if (debugMode) {
+                add(LaunchFlag.DEBUG)
+            }
+            if (logLevel.launchFlag != null) {
+                add(logLevel.launchFlag)
+            }
+
+            if (screenMode.launchFlag != null) {
+                add(screenMode.launchFlag)
+            }
+        }
+    }
 
     @Serializable
     enum class PatchVersion(val executable: String) {
