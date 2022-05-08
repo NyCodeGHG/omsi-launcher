@@ -28,6 +28,15 @@ suspend fun createInstance(instance: Instance) {
         config.gameDirectory.resolve(instance.patchVersion.relativePath).absolutePathString()
     )
 }
+suspend fun reLinkOmsiExecutable(instance: Instance) {
+    doNativeCall(
+        "clone-omsi.exe",
+        config.gameDirectory.absolutePathString(),
+        instance.directory.absolutePathString(),
+        config.gameDirectory.resolve(instance.patchVersion.relativePath).absolutePathString(),
+        "--only-link-binary"
+    )
+}
 
 /**
  * Creates a new identical [Path] in [to], which will have the same directories and symlinks to the original items.

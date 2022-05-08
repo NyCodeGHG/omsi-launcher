@@ -27,6 +27,9 @@ struct Opt {
         parse(from_os_str)
     )]
     binary_path: PathBuf,
+
+    #[structopt(short, long, help = "Only links binary_path to Omsi.exe")]
+    only_link_binary: bool,
 }
 
 fn main() -> std::io::Result<()> {
@@ -37,12 +40,17 @@ fn main() -> std::io::Result<()> {
 fn run() -> std::io::Result<()> {
     let opt: Opt = Opt::from_args();
 
-    info!(
-        "Linking {} to {}",
-        &opt.base_game_folder.to_str().unwrap(),
-        &opt.omsi_instance_folder.to_str().unwrap()
-    );
-    mirror_folder(&opt.base_game_folder, &opt.omsi_instance_folder)?;
+    if !opt.only_link_binary {
+        info!(
+            "Linking {} to {}",
+            &opt.base_game_folder.to_str().unwrap(),
+            &opt.omsi_instance_folder.to_str().unwrap()
+        );
+        mirror_folder(&opt.base_game_folder, &opt.omsi_instance_folder)?;
+    } else {
+        info!("Only link binary flag present, skipping clone")
+    }
+
     let omsi_executable = &opt.omsi_instance_folder.join("Omsi.exe");
     info!(
         "Linking {} to {}",
