@@ -47,3 +47,5 @@ fs-util/target
 # test directory for activate-omsi.rs
 test-link
 test-link2
+
+local.properties

@@ -1,13 +1,14 @@
 use deelevate::{BridgeServer, PrivilegeLevel, Token};
 
-pub fn with_privileges<T>(run: T) -> std::io::Result<()> where T: Fn() -> std::io::Result<()> {
+pub fn with_privileges<T>(run: T) -> std::io::Result<()>
+where
+    T: Fn() -> std::io::Result<()>,
+{
     let token = Token::with_current_process()?;
     match token.privilege_level()? {
-        PrivilegeLevel::NotPrivileged => {
-            spawn_with_elevated_privileges()
-        }
+        PrivilegeLevel::NotPrivileged => spawn_with_elevated_privileges(),
         PrivilegeLevel::Elevated => run(),
-        PrivilegeLevel::HighIntegrityAdmin => run()
+        PrivilegeLevel::HighIntegrityAdmin => run(),
     }
 }
 

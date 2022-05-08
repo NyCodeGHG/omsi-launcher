@@ -1,5 +1,5 @@
 use std::os::windows::fs as windows_fs;
-use std::path::{PathBuf};
+use std::path::PathBuf;
 
 use structopt::*;
 
@@ -10,16 +10,13 @@ mod launcher;
 #[derive(Debug, StructOpt)]
 #[structopt(name = "activate-omsi", about = "Activates a specific Omsi instance")]
 struct Opt {
-    #[structopt(
-    help = "The Steam installation folder of OMSI",
-    parse(from_os_str)
-    )]
+    #[structopt(help = "The Steam installation folder of OMSI", parse(from_os_str))]
     omsi_installation_folder: PathBuf,
 
     // test13
     #[structopt(
-    help = "The folder of the instance you want to activate",
-    parse(from_os_str)
+        help = "The folder of the instance you want to activate",
+        parse(from_os_str)
     )]
     omsi_instance_folder: PathBuf,
 }

@@ -1,6 +1,6 @@
 use std::fs;
 use std::os::windows::fs as windows_fs;
-use std::path::{PathBuf};
+use std::path::PathBuf;
 
 use structopt::*;
 
@@ -9,23 +9,19 @@ use crate::launcher::with_privileges;
 mod launcher;
 
 #[derive(Debug, StructOpt)]
-#[structopt(name = "clone-omsi", about = "Clones the base game into a new instance folder")]
+#[structopt(
+    name = "clone-omsi",
+    about = "Clones the base game into a new instance folder"
+)]
 struct Opt {
-    #[structopt(
-    help = "The base game installation",
-    parse(from_os_str)
-    )]
+    #[structopt(help = "The base game installation", parse(from_os_str))]
     base_game_folder: PathBuf,
 
-    #[structopt(
-    help = "The path to the new desired instance",
-    parse(from_os_str)
-    )]
+    #[structopt(help = "The path to the new desired instance", parse(from_os_str))]
     omsi_instance_folder: PathBuf,
-
     #[structopt(
-    help = "Path to the Omsi.exe you want to use for this instance",
-    parse(from_os_str)
+        help = "Path to the Omsi.exe you want to use for this instance",
+        parse(from_os_str)
     )]
     binary_path: PathBuf,
 }
@@ -51,7 +47,7 @@ fn mirror_folder(from: PathBuf, to: PathBuf) -> std::io::Result<()> {
         let target_name = path.file_name().unwrap().to_str().unwrap();
         let target = to.join(target_name);
         if path.is_dir() {
-            mirror_folder(path, PathBuf::from(target)).unwrap()
+            mirror_folder(path, target).unwrap()
         } else {
             windows_fs::symlink_file(path, target)?
         }
