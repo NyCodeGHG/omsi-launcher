@@ -35,10 +35,12 @@ data class Instance(
     }
 
     fun applyFromViewModel(model: InstanceViewModel): Instance {
-        return copy(id = model.id,
+        return copy(
+            id = model.id,
             name = model.name,
             patchVersion = model.patchVersion,
-            options = model.options)
+            options = model.options
+        )
     }
 
     @Serializable
