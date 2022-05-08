@@ -59,7 +59,7 @@ tasks {
                 return@doLast
             }
             val readChannel = Channels.newChannel(
-                URL("https://github.com/NyCodeGHG/omsi-elevate/releases/download/Continuous/omsi-elevate.exe")
+                URL("https://github.com//NyCodeGHG/omsi-elevate/releases/latest/download/omsi-elevate.exe")
                     .openStream()
             )
             val outputChannel = FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE)
