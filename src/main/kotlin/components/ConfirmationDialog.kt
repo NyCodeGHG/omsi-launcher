@@ -20,7 +20,10 @@ fun ConfirmationDialog(
     modifier: Modifier = Modifier,
 ) {
     val strings = LocalStrings.current
-    Dialog({ onCloseRequest(false) }, title = strings.deleteConfirmation) {
+    Dialog(
+        { onCloseRequest(false) },
+        title = strings.deleteConfirmation
+    ) {
         Box(modifier.fillMaxSize()) {
             Text(
                 text,

@@ -1,18 +1,12 @@
 import org.jetbrains.compose.compose
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.net.URL
-import java.nio.channels.Channels
-import java.nio.channels.FileChannel
-import java.nio.file.Files
-import java.nio.file.StandardOpenOption
 
 plugins {
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.serialization") version "1.6.21"
     id("org.jetbrains.compose") version "1.2.0-alpha01-dev679"
     id("com.github.gmazzo.buildconfig") version "3.0.3"
-    id("local-properties")
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
     id("com.google.devtools.ksp") version "1.6.21-1.0.5"
 }
@@ -64,47 +58,9 @@ tasks {
                 freeCompilerArgs + "-opt-in=kotlinx.serialization.ExperimentalSerializationApi"
         }
     }
-
-    val compileRust = register<Exec>("compileRust") {
-        rust("cargo", "build", "--release")
-    }
-
-    val downloadElevate = task("downloadElevateExe") {
-        val path = projectDir.toPath().resolve("bin").resolve("omsi-elevate.exe")
-        outputs.files(path)
-        doLast {
-            if (Files.exists(path) && !gradle.startParameter.isRerunTasks) {
-                didWork = false
-                return@doLast
-            }
-            Channels.newChannel(
-                URL("https://github.com//NyCodeGHG/omsi-elevate/releases/latest/download/omsi-elevate.exe")
-                    .openStream()
-            ).use { readChannel ->
-                FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE)
-                    .use { outputChannel ->
-                        outputChannel.transferFrom(readChannel, 0, Long.MAX_VALUE)
-                    }
-            }
-        }
-    }
-
-    val binFolder = task<Copy>("copyIntoBinFolder") {
-        dependsOn(compileRust, downloadElevate)
-        from("fs-util/target/release")
-        into("bin")
-        include("*.exe")
-    }
-
-    val copyResources = task<Copy>("copyBinariesIntoBuildFolder") {
-        dependsOn(compileRust, downloadElevate)
-        from(binFolder)
-        into(buildDir.resolve("binaries").resolve("windows"))
-    }
-
     afterEvaluate {
         "packageMsi" {
-            dependsOn(copyResources)
+            dependsOn(":fs-util:copyBinariesIntoBuildFolder")
         }
     }
 }

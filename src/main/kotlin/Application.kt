@@ -73,19 +73,22 @@ fun Application() {
                             InstanceListEntry(it, scope, omsiState)
                         }
                         // TODO: Make this look similar to a card
-                        Button({
-                            scope.launch(Dispatchers.IO) {
-                                val randomName = "Omsi" + Random.nextInt()
-                                val instance = Instance(
-                                    randomName,
-                                    resolveAppDataPath(randomName),
-                                    Instance.PatchVersion.BI_ARTICULATED_BUS_VERSION
-                                )
-                                createInstance(instance)
+                        Button(
+                            {
+                                scope.launch(Dispatchers.IO) {
+                                    val randomName = "Omsi" + Random.nextInt()
+                                    val instance = Instance(
+                                        randomName,
+                                        resolveAppDataPath(randomName),
+                                        Instance.PatchVersion.BI_ARTICULATED_BUS_VERSION
+                                    )
+                                    createInstance(instance)
 
-                                saveInstances(instances + instance) // TODO: improve update logic
-                            }
-                        }, enabled = omsiState != OmsiProcessUpdate.RUNNING) {
+                                    saveInstances(instances + instance) // TODO: improve update logic
+                                }
+                            },
+                            enabled = omsiState != OmsiProcessUpdate.RUNNING
+                        ) {
                             Text(strings.addNewInstance)
                         }
                     }
