@@ -60,7 +60,7 @@ tasks {
     }
     afterEvaluate {
         "packageMsi" {
-            dependsOn(":fs-util:copyBinariesIntoBuildFolder")
+            dependsOn(":fs-util:copyRustBinaries")
         }
     }
 }

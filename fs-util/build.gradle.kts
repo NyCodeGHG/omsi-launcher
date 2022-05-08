@@ -3,16 +3,10 @@ plugins {
 }
 
 tasks {
-    val binFolder = task<Copy>("copyIntoBinFolder") {
+    task<Copy>("copyRustBinaries") {
         dependsOn(compileRust, downloadElevateHelper)
-        from("fs-util/target/release")
-        into("bin")
-        include("*.exe")
-    }
-
-    task<Copy>("copyBinariesIntoBuildFolder") {
-        dependsOn(compileRust, downloadElevateHelper)
-        from(binFolder)
+        from("target/release")
         into(buildDir.resolve("binaries").resolve("windows"))
+        include("*.exe")
     }
 }
