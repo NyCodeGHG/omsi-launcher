@@ -32,13 +32,12 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+          components: clippy
       - name: Build code
         uses: actions-rs/cargo@v1
         with:
           command: build
           args: --release --all-features --manifest-path fs-util/Cargo.toml
-      - name: Setup clippy
-        run: rustup component add clippy
       - name: Check clippy
         uses: actions-rs/clippy-check@v1
         with:
