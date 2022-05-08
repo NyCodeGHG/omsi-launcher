@@ -1,10 +1,12 @@
 import org.jetbrains.compose.compose
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.serialization") version "1.6.21"
     id("org.jetbrains.compose") version "1.2.0-alpha01-dev679"
     id("com.github.gmazzo.buildconfig") version "3.0.3"
+    id("local-properties")
 }
 
 group = "dev.nycode"
@@ -29,6 +31,25 @@ dependencies {
     implementation("org.lwjgl", "lwjgl-nfd", "3.3.1")
     implementation("org.lwjgl", "lwjgl-nfd", "3.3.1", classifier = "natives-windows")
     implementation("br.com.devsrsouza.compose.icons.jetbrains", "tabler-icons", "1.0.0")
+}
+
+tasks {
+    withType<KotlinCompile> {
+        kotlinOptions {
+            freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlinx.serialization.ExperimentalSerializationApi"
+        }
+    }
+
+    val compileRust = task<Exec>("compileRust") {
+        rust("cargo", "build", "--release")
+    }
+
+    task<Copy>("copyIntoBinFolder") {
+        dependsOn(compileRust)
+        from("fs-util/target/release")
+        into("bin")
+        include("*.exe")
+    }
 }
 
 java {

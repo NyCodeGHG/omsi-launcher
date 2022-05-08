@@ -40,3 +40,10 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+# rust
+fs-util/target
+
+# test directory for activate-omsi.rs
+test-link
+test-link2

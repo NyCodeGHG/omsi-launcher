@@ -1,0 +1,19 @@
+[package]
+name = "fs-util"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "clone-omsi"
+path = "src/clone-omsi.rs"
+
+[[bin]]
+name = "activate-omsi"
+path = "src/activate-omsi.rs"
+
+[dependencies]
+structopt = "0.3"
+pathsearch = "0.2"
+deelevate = "0.2.0"

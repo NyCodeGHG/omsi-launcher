@@ -1,48 +1,63 @@
 package dev.nycode.omsilauncher.util
 
+import dev.nycode.omsilauncher.config.config
 import dev.nycode.omsilauncher.config.gameDirectory
-import dev.nycode.omsilauncher.config.readConfig
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.LaunchFlag
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.future.await
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.awt.Desktop
 import java.net.URI
-import java.nio.file.Files
 import java.nio.file.LinkOption
 import java.nio.file.Path
-import kotlin.io.path.*
+import kotlin.io.path.Path
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.createSymbolicLinkPointingTo
+import kotlin.io.path.div
+import kotlin.io.path.isDirectory
+import kotlin.io.path.moveTo
 
 private val logger = logger()
 
 const val OMSI_STEAM_ID = 252530
 
-fun createInstance(instance: Instance) {
-    val config = readConfig()!!
-
-    // Mirror base game files
-    config.rootInstallation.mirrorFolder(instance.directory)
-    // Mirror desired patch
-    instance.executable.createSymbolicLinkPointingTo(config.gameDirectory.resolve(instance.patchVersion.relativePath))
+suspend fun createInstance(instance: Instance) {
+    doNativeCall(
+        "clone-omsi.exe",
+        config.gameDirectory.absolutePathString(),
+        instance.directory.absolutePathString(),
+        config.gameDirectory.resolve(instance.patchVersion.relativePath).absolutePathString()
+    )
 }
 
 /**
  * Creates a new identical [Path] in [to], which will have the same directories and symlinks to the original items.
  */
-fun Path.mirrorFolder(to: Path) {
-    /**
-     * Adapts current [Path] to target folder.
-     */
-    fun Path.adapt() = to / relativize(this@mirrorFolder)
+private suspend fun doNativeCall(name: String, vararg parameters: String) = withContext(Dispatchers.IO) {
+    val absoluteExecutable = (Path("bin") / name).absolutePathString()
+    val process = Runtime.getRuntime().exec(arrayOf(absoluteExecutable, *parameters))
 
-    Files.walk(this, 1).forEach {
-        val newPath = it.adapt()
-        if (it.isDirectory()) {
-            logger.debug { "Creating directory $it in $newPath" }
-            newPath.createDirectories()
-            it.mirrorFolder(newPath) // mirror children of new directory
-        } else {
-            logger.debug { "Sym-linking $it to $newPath" }
-            newPath.createSymbolicLinkPointingTo(it)
+    val logReaders = coroutineScope {
+        launch {
+            process.inputStream.bufferedReader().lines().forEach {
+                logger.debug(it)
+            }
         }
+        launch {
+            process.errorStream.bufferedReader().lines().forEach {
+                logger.error(it)
+            }
+        }
+    }
+
+
+    process.onExit().await()
+    logReaders.cancel()
+    if (process.exitValue() != 0) {
+        error("Unexpected exit code from ${name}: ${process.exitValue()}")
     }
 }
 

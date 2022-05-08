@@ -6,13 +6,21 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.nio.file.Path
-import kotlin.io.path.*
+import kotlin.io.path.createDirectory
+import kotlin.io.path.createFile
+import kotlin.io.path.div
+import kotlin.io.path.notExists
+import kotlin.io.path.readText
+import kotlin.io.path.writeText
 
-private val json = Json {
+val configJson = Json {
     prettyPrint = true
 }
 
 private val logger = logger()
+
+lateinit var config: Configuration
+    private set
 
 fun readConfig(): Configuration? {
     logger.debug("Reading configuration directory.")
@@ -24,8 +32,11 @@ fun readConfig(): Configuration? {
         return null
     }
 
-    return json.decodeFromString(launcherConfig.readText())
+    val readConfig = configJson.decodeFromString<Configuration>(launcherConfig.readText())
+    config = readConfig
+    return readConfig
 }
+fun resolveAppDataPath(path: String) = config.rootInstallation / path
 
 private fun getLauncherDirectory(): Path {
     val launcherDirectory = appDataDir.resolve("omsi-launcher")
@@ -47,5 +58,6 @@ fun saveConfig(configuration: Configuration) {
     if (configFile.notExists()) {
         configFile.createFile()
     }
-    configFile.writeText(json.encodeToString(configuration))
+    config = configuration
+    configFile.writeText(configJson.encodeToString(configuration))
 }
