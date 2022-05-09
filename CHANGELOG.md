@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Add internal support for 4 GB patch
 
 ### Changed
 - Update LICENSE software author

@@ -18,6 +18,7 @@ data class Instance(
     val name: String,
     val directory: SerializablePath,
     val patchVersion: PatchVersion,
+    val uses4GBPatch: Boolean,
     val options: Options = Options(),
 ) {
     suspend fun start(editor: Boolean = false) {
@@ -82,9 +83,12 @@ data class Instance(
         }
     }
 
-    enum class PatchVersion(val executable: String, val icon: ImageVector) {
-        BI_ARTICULATED_BUS_VERSION("Omsi_current.exe", TablerIcons.Bus),
-        TRAM_VERSION("Omsi_older.exe", TablerIcons.Train);
+    enum class PatchVersion(val type: String, val icon: ImageVector) {
+        BI_ARTICULATED_BUS_VERSION("current", TablerIcons.Bus),
+        TRAM_VERSION("older", TablerIcons.Train);
+
+        val executable: String
+            get() = "Omsi_$type.exe"
 
         val relativePath: Path
             get() = Path("_Straßenbahn") / executable

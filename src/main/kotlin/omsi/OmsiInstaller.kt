@@ -4,6 +4,7 @@ import dev.nycode.omsilauncher.config.config
 import dev.nycode.omsilauncher.config.gameDirectory
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.LaunchFlag
+import dev.nycode.omsilauncher.omsi.getOmsiBinary
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.withContext
@@ -25,7 +26,7 @@ suspend fun createInstance(instance: Instance) {
         "clone-omsi.exe",
         config.gameDirectory.absolutePathString(),
         instance.directory.absolutePathString(),
-        config.gameDirectory.resolve(instance.patchVersion.relativePath).absolutePathString()
+        getOmsiBinary(instance).absolutePathString()
     )
 }
 suspend fun reLinkOmsiExecutable(instance: Instance) {
@@ -33,7 +34,7 @@ suspend fun reLinkOmsiExecutable(instance: Instance) {
         "clone-omsi.exe",
         config.gameDirectory.absolutePathString(),
         instance.directory.absolutePathString(),
-        config.gameDirectory.resolve(instance.patchVersion.relativePath).absolutePathString(),
+        getOmsiBinary(instance).absolutePathString(),
         "--only-link-binary"
     )
 }
