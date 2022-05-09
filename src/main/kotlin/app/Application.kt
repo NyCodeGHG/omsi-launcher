@@ -16,6 +16,7 @@ import cafe.adriel.lyricist.rememberStrings
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Stack
 import dev.nycode.omsilauncher.config.config
+import dev.nycode.omsilauncher.config.resolveAppDataPath
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.omsi.OmsiProcessState
 import dev.nycode.omsilauncher.omsi.receiveOmsiProcessUpdates
@@ -40,7 +41,7 @@ fun Application() {
         OmsiProcessState.NOT_RUNNING,
         Dispatchers.IO
     )
-    ProvideStrings(lyricist, LocalStrings) {
+    ProvideStrings(lyricist) {
         val strings = LocalStrings.current
         Row(Modifier.fillMaxSize()) {
             NavigationRail {
