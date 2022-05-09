@@ -1,4 +1,4 @@
-package dev.nycode.omsilauncher
+package dev.nycode.omsilauncher.app
 
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
@@ -36,7 +36,7 @@ fun Application() {
         OmsiProcessUpdate.NOT_RUNNING,
         Dispatchers.IO
     )
-    ProvideStrings(lyricist, LocalStrings) {
+    ProvideStrings(lyricist) {
         val strings = LocalStrings.current
         Row(Modifier.fillMaxSize()) {
             NavigationRail {
