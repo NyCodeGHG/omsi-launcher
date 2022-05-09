@@ -8,6 +8,7 @@ jobs:
   winget:
     name: Update winget manifest
     runs-on: windows-2019
+    if: 1 == 2 # disable until UX is stable
     steps:
       - name: Setup winget-create
         shell: pwsh
