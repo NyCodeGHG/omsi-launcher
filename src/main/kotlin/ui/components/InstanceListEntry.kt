@@ -46,47 +46,12 @@ fun InstanceListEntry(
                 Row(modifier = Modifier.align(Alignment.TopStart).padding(10.dp)) {
                     Text(instance.name, fontSize = 30.sp)
                 }
-                Row(modifier = Modifier.align(Alignment.BottomStart).padding(10.dp)) {
-                    Button(
-                        {
-                            scope.launch(Dispatchers.IO) {
-                                instance.start()
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = CustomColors.success,
-                            contentColor = Color.White
-                        ),
-                        enabled = interactable
-                    ) {
-                        Icon(TablerIcons.PlayerPlay, strings.runInstance)
-                        Spacer(Modifier.padding(5.dp))
-                        Text(strings.launch)
-                    }
-                    Spacer(Modifier.padding(5.dp))
-                    Button(
-                        {
-                            scope.launch(Dispatchers.IO) {
-                                instance.start(true)
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = MaterialTheme.colors.primary,
-                            contentColor = Color.White
-                        ),
-                        enabled = interactable
-                    ) {
-                        Icon(TablerIcons.Tools, strings.runEditor)
-                        Spacer(Modifier.padding(5.dp))
-                        Text(strings.launchEditor)
-                    }
-                    Spacer(Modifier.padding(5.dp))
-                    Icon(
-                        instance.patchVersion.icon,
-                        strings.instancePatchVersion,
-                        modifier = Modifier.align(Alignment.Bottom).size(50.dp)
-                    )
-                }
+                InstanceButtonRow(
+                    modifier = Modifier.align(Alignment.BottomStart).padding(10.dp),
+                    instance,
+                    interactable,
+                    scope
+                )
                 Box(modifier = Modifier.align(Alignment.TopEnd).padding(10.dp).fillMaxHeight()) {
                     IconButton(
                         {},
@@ -117,6 +82,59 @@ fun InstanceListEntry(
                 }
             }
         })
+    }
+}
+
+@Composable
+private fun InstanceButtonRow(
+    modifier: Modifier = Modifier,
+    instance: Instance,
+    interactable: Boolean,
+    scope: CoroutineScope,
+) = Row(modifier) {
+    val strings = LocalStrings.current
+    if (instance.state == InstanceState.CREATING || instance.state == InstanceState.DELETING) {
+        LinearProgressIndicator(modifier = Modifier.padding(bottom = 5.dp))
+    } else {
+        Button(
+            {
+                scope.launch(Dispatchers.IO) {
+                    instance.start()
+                }
+            },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = CustomColors.success,
+                contentColor = Color.White
+            ),
+            enabled = interactable
+        ) {
+            Icon(TablerIcons.PlayerPlay, strings.runInstance)
+            Spacer(Modifier.padding(5.dp))
+            Text(strings.launch)
+        }
+        Spacer(Modifier.padding(5.dp))
+        Button(
+            {
+                scope.launch(Dispatchers.IO) {
+                    instance.start(true)
+                }
+            },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = MaterialTheme.colors.primary,
+                contentColor = Color.White
+            ),
+            enabled = interactable
+        ) {
+            Icon(TablerIcons.Tools, strings.runEditor)
+            Spacer(Modifier.padding(5.dp))
+            Text(strings.launchEditor)
+        }
+        Spacer(Modifier.padding(5.dp))
+        Icon(
+            instance.patchVersion.icon,
+            strings.instancePatchVersion,
+            modifier = Modifier.align(Alignment.Bottom).size(50.dp)
+        )
     }
 }
 
