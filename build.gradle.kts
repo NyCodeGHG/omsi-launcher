@@ -76,7 +76,7 @@ java {
 }
 
 changelog {
-    version.set(version.toString())
+    version.set(project.version.toString())
     path.set("${project.projectDir}/CHANGELOG.md")
     header.set(provider { "[${version.get()}] - ${date()}" })
     itemPrefix.set("-")

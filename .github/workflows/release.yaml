@@ -2,6 +2,7 @@ on:
   release:
     types:
       - released
+      - prereleased
 
 permissions:
   contents: write
