@@ -19,7 +19,7 @@ import compose.icons.tablericons.Trash
 import dev.nycode.omsilauncher.app.ApplicationState
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.InstanceState
-import dev.nycode.omsilauncher.omsi.OmsiProcessUpdate
+import dev.nycode.omsilauncher.omsi.OmsiProcessState
 import dev.nycode.omsilauncher.ui.CustomColors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,17 +28,18 @@ import org.jetbrains.skia.Image.Companion as SkiaImage
 
 @Composable
 fun InstanceListEntry(
+    modifier: Modifier,
     applicationState: ApplicationState,
     instance: Instance,
     scope: CoroutineScope,
-    omsiState: OmsiProcessUpdate,
+    omsiState: OmsiProcessState,
 ) {
     val image = remember { imageFromResource("ecitaro.jpg") }
     var deleteDialog by remember { mutableStateOf(false) }
     val strings = LocalStrings.current
     val interactable =
-        instance.state == InstanceState.READY && omsiState == OmsiProcessUpdate.NOT_RUNNING
-    Card(Modifier.padding(5.dp), elevation = 3.dp) {
+        instance.state == InstanceState.READY && omsiState == OmsiProcessState.NOT_RUNNING
+    Card(modifier, elevation = 3.dp) {
         Row(Modifier.fillMaxWidth().height(125.dp)) {
             Image(image, strings.eCitaro)
             Spacer(Modifier.padding(5.dp))

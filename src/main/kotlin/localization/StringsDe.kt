@@ -18,5 +18,6 @@ val StringsDe = Strings(
     no = "Nein",
     confirmDeletion = { instance ->
         "Bist du dir sicher, das du $instance löschen willst?"
-    }
+    },
+    instanceName = "Instanzname"
 )

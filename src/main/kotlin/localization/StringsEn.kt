@@ -18,5 +18,6 @@ val StringsEn = Strings(
     no = "No",
     confirmDeletion = { instance ->
         "Are you sure you want to delete $instance?"
-    }
+    },
+    instanceName = "Instance name"
 )

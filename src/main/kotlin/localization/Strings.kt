@@ -14,5 +14,6 @@ data class Strings(
     val deleteConfirmation: String,
     val yes: String,
     val no: String,
-    val confirmDeletion: (instance: String) -> String
+    val confirmDeletion: (instance: String) -> String,
+    val instanceName: String
 )

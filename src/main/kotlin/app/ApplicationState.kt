@@ -8,7 +8,10 @@ import kotlinx.coroutines.withContext
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
+import kotlin.io.path.createDirectories
+import kotlin.io.path.createFile
 import kotlin.io.path.deleteExisting
+import kotlin.io.path.notExists
 import kotlin.streams.asSequence
 
 class ApplicationState {
@@ -45,6 +48,10 @@ class ApplicationState {
             uses4GBPatch
         )
         instances = instances + instance
+        if (directory.notExists()) {
+            directory.createDirectories()
+        }
+        directory.resolve("launcher.lock").createFile()
         createInstance(instance)
         instances = instances - instance + instance.copy(state = InstanceState.READY)
         persistInstances(instances)

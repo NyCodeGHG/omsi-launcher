@@ -11,18 +11,18 @@ import kotlinx.coroutines.future.asDeferred
 import kotlinx.coroutines.isActive
 import kotlin.time.Duration.Companion.milliseconds
 
-enum class OmsiProcessUpdate {
+enum class OmsiProcessState {
     RUNNING,
     NOT_RUNNING
 }
 
-fun receiveOmsiProcessUpdates(): Flow<OmsiProcessUpdate> = flow {
+fun receiveOmsiProcessUpdates(): Flow<OmsiProcessState> = flow {
     while (currentCoroutineContext().isActive) {
         if (isOmsiRunning()) {
-            emit(OmsiProcessUpdate.RUNNING)
+            emit(OmsiProcessState.RUNNING)
             delay(200.milliseconds)
             omsiProcesses().map { it.onExit().asDeferred() }.toList().awaitAll()
-            emit(OmsiProcessUpdate.NOT_RUNNING)
+            emit(OmsiProcessState.NOT_RUNNING)
         } else {
             delay(200.milliseconds)
         }

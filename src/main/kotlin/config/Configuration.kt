@@ -10,4 +10,7 @@ data class Configuration(val rootInstallation: SerializablePath) : PersistentVal
 
     val gameDirectory: Path
         get() = rootInstallation.resolve("game")
+
+    val instancesDirectory: Path
+        get() = rootInstallation.resolve("instances")
 }

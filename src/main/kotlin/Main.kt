@@ -7,6 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import dev.nycode.omsilauncher.app.Application
 import dev.nycode.omsilauncher.config.readConfig
 import dev.nycode.omsilauncher.ui.setup.Setup
 import dev.nycode.omsilauncher.util.getApplicationTitle
