@@ -3,6 +3,9 @@ on:
     types:
       - released
 
+permissions:
+  contents: write
+
 jobs:
   # Credit: https://github.com/cli/cli/blob/351cd622e7499ab94b57ec5dbbcd2143c3761192/.github/workflows/releases.yml#L200-L214
   winget:
@@ -27,3 +30,28 @@ jobs:
           if ($version -notmatch "-") {
             .\wingetcreate.exe submit .\manifests\m\OmsiLauncher\OmsiLauncher\${version}\ --token $env:WINGET_GITHUB_TOKEN
           }
+      # Patch changelog, commit and push to the current repository
+  changelog:
+    name: Update Changelog
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: temurin
+          java-version: 18
+      - name: Fetch Sources
+        uses: actions/checkout@v2.3.4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - name: Patch Changelog
+        run: ./gradlew patchChangelog
+      - name: Commit files
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "Update changelog" -a
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          branch: main

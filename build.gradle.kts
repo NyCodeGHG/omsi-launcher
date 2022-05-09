@@ -1,3 +1,4 @@
+import org.jetbrains.changelog.date
 import org.jetbrains.compose.compose
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -9,10 +10,11 @@ plugins {
     id("com.github.gmazzo.buildconfig") version "3.0.3"
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
     id("com.google.devtools.ksp") version "1.6.21-1.0.5"
+    id("org.jetbrains.changelog") version "1.3.1"
 }
 
 group = "dev.nycode"
-version = "0.1.0"
+version = "0.2.0"
 
 repositories {
     google()
@@ -71,6 +73,16 @@ java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(18))
     }
+}
+
+changelog {
+    version.set(version.toString())
+    path.set("${project.projectDir}/CHANGELOG.md")
+    header.set(provider { "[${version.get()}] - ${date()}" })
+    itemPrefix.set("-")
+    keepUnreleasedSection.set(true)
+    unreleasedTerm.set("[Unreleased]")
+    groups.set(listOf("Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"))
 }
 
 compose.desktop {

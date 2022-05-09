@@ -18,6 +18,7 @@ jobs:
     needs: gradle_validation
     outputs:
       version: ${{ steps.properties.outputs.version }}
+      changelog: ${{ steps.properties.outputs.changelog }}
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v2.3.4
@@ -32,7 +33,12 @@ jobs:
         run: |
           PROPERTIES="$(./gradlew properties --console=plain -q)"
           VERSION="$(echo "$PROPERTIES" | grep "^version:" | cut -f2- -d ' ')"
+          CHANGELOG="$(./gradlew getChangelog --unreleased --no-header --console=plain -q)"
+          CHANGELOG="${CHANGELOG//'%'/'%25'}"
+          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
+          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
           echo "::set-output name=version::$VERSION"
+          echo "::set-output name=changelog::$CHANGELOG"
   build_installers:
     name: Compile & Validate Rust code
     runs-on: windows-2022
@@ -90,10 +96,10 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          body: "<please update in UI>"
+          body: ${{ needs.build_metadata.outputs.changelog }}
           draft: true
           tag_name: v${{ needs.build_metadata.outputs.version }}
-          release_name: ${{ needs.build_metadata.outputs.version }}
+          name: ${{ needs.build_metadata.outputs.version }}
           files: release_files/*
 
 
