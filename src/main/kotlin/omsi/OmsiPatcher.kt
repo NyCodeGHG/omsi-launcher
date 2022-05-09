@@ -29,7 +29,8 @@ fun getOmsiBinary(edition: Instance.PatchVersion, patched: Boolean): Path {
 }
 
 private fun getPatchedBinary(edition: Instance.PatchVersion): Path {
-    val path = config.gameDirectory / edition.relativePath.parent / (edition.type + ".4gbpatch.exe")
+    val path = config.gameDirectory / edition.relativePath.parent /
+            ("Omsi_" + edition.type + ".4gbpatch.exe")
     if (path.exists()) {
         return path
     }
