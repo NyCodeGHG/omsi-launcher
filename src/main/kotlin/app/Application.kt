@@ -15,7 +15,6 @@ import cafe.adriel.lyricist.ProvideStrings
 import cafe.adriel.lyricist.rememberStrings
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Stack
-import dev.nycode.omsilauncher.app.rememberApplicationState
 import dev.nycode.omsilauncher.config.resolveAppDataPath
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.omsi.OmsiProcessUpdate
