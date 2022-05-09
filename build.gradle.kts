@@ -96,6 +96,7 @@ compose.desktop {
 
             appResourcesRootDir.set(project("fs-util").buildDir.resolve("binaries"))
             licenseFile.set(project.file("LICENSE"))
+            vendor = "omsi-launcher Contributors"
             windows {
                 menu = true
                 dirChooser = true

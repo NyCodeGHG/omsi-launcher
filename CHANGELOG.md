@@ -4,6 +4,8 @@
 ### Added
 
 ### Changed
+- Update LICENSE software author
+- Update program vendor
 
 ### Deprecated
 
