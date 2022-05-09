@@ -1,5 +1,6 @@
 use std::fmt::Debug;
 use std::fs;
+use std::fs::File;
 use std::os::windows::fs as windows_fs;
 use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -32,9 +33,50 @@ fn main() -> std::io::Result<()> {
     with_symlink_permission(run)
 }
 
+const OMSI_APP_ID: i32 = 252530;
+
 fn run() -> std::io::Result<()> {
     let opt: Opt = Opt::from_args();
 
+    let current_manifest = opt
+        .omsi_installation_folder
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .join(format!("appmanifest_{}.acf", OMSI_APP_ID));
+
+    if opt.omsi_installation_folder.is_symlink() && current_manifest.exists() {
+        let current_actual_installation = opt.omsi_installation_folder.read_link()?;
+        info!(
+            "Backing up old manifest to {}",
+            current_actual_installation.to_str().unwrap()
+        );
+
+        fs::rename(
+            &current_manifest,
+            current_actual_installation.join("manifest.acf"),
+        )?;
+    } else {
+        warn!("OMSI folder is not symlink, manifest restoration failed")
+    }
+
+    symlink_global_omsi_entry_point(&opt)?;
+    let new_manifest = opt.omsi_instance_folder.join("manifest.acf");
+    info!(
+        "Copying new manifest {} to {}",
+        &new_manifest.to_str().unwrap(),
+        &current_manifest.to_str().unwrap()
+    );
+
+    if !current_manifest.exists() {
+        File::create(&current_manifest)?;
+    }
+
+    fs::copy(&new_manifest, &current_manifest).map(|_| ())
+}
+
+fn symlink_global_omsi_entry_point(opt: &Opt) -> std::io::Result<()> {
     let target = &opt.omsi_installation_folder;
     if target.is_dir() && !target.is_symlink() {
         warn!("OMSI Installation folder is not a symlink. Creating a backup.");

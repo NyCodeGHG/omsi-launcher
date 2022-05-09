@@ -59,6 +59,15 @@ fn run() -> std::io::Result<()> {
     );
     windows_fs::symlink_file(&opt.binary_path, omsi_executable)?;
 
+    let base_manifest = opt.base_game_folder.join("manifest.acf");
+    let destination = opt.omsi_instance_folder.join("manifest.acf");
+    info!(
+        "Copying base manifest {} to {}",
+        &base_manifest.to_str().unwrap(),
+        &destination.to_str().unwrap()
+    );
+
+    fs::copy(base_manifest, destination)?;
     Ok(())
 }
 
@@ -73,7 +82,7 @@ fn mirror_folder(from: &PathBuf, to: &Path) -> std::io::Result<()> {
         let target = to.join(target_name);
         if path.is_dir() {
             mirror_folder(&path, &target).unwrap()
-        } else {
+        } else if target.file_name().unwrap() != "manifest.acf" {
             windows_fs::symlink_file(path, target)?
         }
     }

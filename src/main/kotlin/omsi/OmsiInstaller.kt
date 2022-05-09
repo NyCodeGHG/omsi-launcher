@@ -10,7 +10,9 @@ import kotlinx.coroutines.withContext
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
+import kotlin.io.path.copyTo
 import kotlin.io.path.div
+import kotlin.io.path.exists
 import kotlin.io.path.isSymbolicLink
 import kotlin.io.path.readSymbolicLink
 
@@ -28,6 +30,7 @@ suspend fun createInstance(instance: Instance) {
         getOmsiBinary(instance).absolutePathString()
     )
 }
+
 suspend fun reLinkOmsiExecutable(instance: Instance) {
     doNativeCall(
         "clone-omsi.exe",
@@ -44,7 +47,8 @@ suspend fun reLinkOmsiExecutable(instance: Instance) {
 private suspend fun doNativeCall(name: String, vararg parameters: String) =
     withContext(Dispatchers.IO) {
         logger.debug { "Attempting native call: $name ${parameters.joinToString(" ")}" }
-        val basePath = if (releaseMode) Path("app") / "resources" else Path("bin")
+        val basePath =
+            if (releaseMode) Path("app") / "resources" else Path("fs-util") / "build" / "binaries" / "windows"
         val absoluteExecutable = (basePath / name).absolutePathString()
         val process = ProcessBuilder().command(absoluteExecutable, *parameters)
             .redirectError(ProcessBuilder.Redirect.INHERIT)
@@ -60,7 +64,14 @@ private suspend fun doNativeCall(name: String, vararg parameters: String) =
 
 suspend fun activateInstallationSafe(path: Path) {
     val omsi = getOmsiInstallPath()
-    if (omsi.isSymbolicLink() && omsi.readSymbolicLink() == path) return
+    if (omsi.isSymbolicLink() && omsi.readSymbolicLink() == path) {
+        val currentManifest = omsi.parent(2) / "appmanifest_${OMSI_STEAM_ID}.acf"
+        if (currentManifest.exists()) {
+            logger.debug { "Backing up $currentManifest to current installation $path" }
+            currentManifest.copyTo(path / "manifest.acf", true)
+            return
+        }
+    }
     doNativeCall("activate-omsi.exe", omsi.absolutePathString(), path.absolutePathString())
 }
 

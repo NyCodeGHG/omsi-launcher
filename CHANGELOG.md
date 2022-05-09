@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Added
 - Add internal support for 4 GB patch
+- Synchronise Steam manifest between instances
 
 ### Changed
 - Update LICENSE software author
