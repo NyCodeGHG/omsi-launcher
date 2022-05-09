@@ -1,4 +1,4 @@
-package dev.nycode.omsilauncher.components
+package dev.nycode.omsilauncher.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -16,9 +16,8 @@ import compose.icons.tablericons.Pencil
 import compose.icons.tablericons.PlayerPlay
 import compose.icons.tablericons.Tools
 import compose.icons.tablericons.Trash
-import dev.nycode.omsilauncher.instance.InstanceViewModel
-import dev.nycode.omsilauncher.instance.deleteInstance
-import dev.nycode.omsilauncher.instance.getInstanceById
+import dev.nycode.omsilauncher.app.ApplicationState
+import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.omsi.OmsiProcessUpdate
 import dev.nycode.omsilauncher.ui.CustomColors
 import kotlinx.coroutines.CoroutineScope
@@ -28,7 +27,8 @@ import org.jetbrains.skia.Image.Companion as SkiaImage
 
 @Composable
 fun InstanceListEntry(
-    instance: InstanceViewModel,
+    applicationState: ApplicationState,
+    instance: Instance,
     scope: CoroutineScope,
     omsiState: OmsiProcessUpdate,
 ) {
@@ -47,7 +47,7 @@ fun InstanceListEntry(
                     Button(
                         {
                             scope.launch(Dispatchers.IO) {
-                                getInstanceById(instance.id)?.start()
+                                instance.start()
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
@@ -64,7 +64,7 @@ fun InstanceListEntry(
                     Button(
                         {
                             scope.launch(Dispatchers.IO) {
-                                getInstanceById(instance.id)?.start(true)
+                                instance.start(true)
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
@@ -110,7 +110,7 @@ fun InstanceListEntry(
             deleteDialog = false
             if (delete) {
                 scope.launch(Dispatchers.IO) {
-                    getInstanceById(instance.id)?.let(::deleteInstance)
+                    applicationState.deleteInstance(instance)
                 }
             }
         })

@@ -15,13 +15,12 @@ import cafe.adriel.lyricist.ProvideStrings
 import cafe.adriel.lyricist.rememberStrings
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Stack
-import dev.nycode.omsilauncher.components.InstanceListEntry
+import dev.nycode.omsilauncher.app.rememberApplicationState
 import dev.nycode.omsilauncher.config.resolveAppDataPath
 import dev.nycode.omsilauncher.instance.Instance
-import dev.nycode.omsilauncher.instance.createNewInstance
-import dev.nycode.omsilauncher.instance.instanceViewModel
 import dev.nycode.omsilauncher.omsi.OmsiProcessUpdate
 import dev.nycode.omsilauncher.omsi.receiveOmsiProcessUpdates
+import dev.nycode.omsilauncher.ui.components.InstanceListEntry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
@@ -30,13 +29,13 @@ import kotlin.random.Random
 @Composable
 fun Application() {
     val lyricist = rememberStrings()
-    val instances by remember { instanceViewModel }
     val scope = rememberCoroutineScope()
+    val applicationState = rememberApplicationState()
+    val instances = applicationState.instances
     val omsiState by receiveOmsiProcessUpdates().collectAsState(
         OmsiProcessUpdate.NOT_RUNNING,
         Dispatchers.IO
     )
-
     ProvideStrings(lyricist, LocalStrings) {
         val strings = LocalStrings.current
         Row(Modifier.fillMaxSize()) {
@@ -57,20 +56,19 @@ fun Application() {
                 ) {
                     Column(Modifier.fillMaxSize()) {
                         instances.forEach {
-                            InstanceListEntry(it, scope, omsiState)
+                            InstanceListEntry(applicationState, it, scope, omsiState)
                         }
                         // TODO: Make this look similar to a card
                         Button(
                             {
                                 scope.launch(Dispatchers.IO) {
                                     val randomName = "Omsi" + Random.nextInt()
-                                    val instance = Instance(
+                                    applicationState.createNewInstance(
                                         UUID.randomUUID(),
                                         randomName,
                                         resolveAppDataPath(randomName),
                                         Instance.PatchVersion.BI_ARTICULATED_BUS_VERSION
                                     )
-                                    createNewInstance(instance)
                                 }
                             },
                             enabled = omsiState != OmsiProcessUpdate.RUNNING

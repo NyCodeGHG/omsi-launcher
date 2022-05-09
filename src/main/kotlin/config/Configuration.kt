@@ -5,7 +5,9 @@ import kotlinx.serialization.Serializable
 import java.nio.file.Path
 
 @Serializable
-data class Configuration(val rootInstallation: SerializablePath)
+data class Configuration(val rootInstallation: SerializablePath) : PersistentValue<Configuration> {
+    override fun toSavedData(): Configuration = this
 
-val Configuration.gameDirectory: Path
-    get() = rootInstallation.resolve("game")
+    val gameDirectory: Path
+        get() = rootInstallation.resolve("game")
+}

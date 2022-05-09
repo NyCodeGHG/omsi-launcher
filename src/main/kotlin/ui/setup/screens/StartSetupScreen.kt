@@ -1,4 +1,4 @@
-package dev.nycode.omsilauncher.setup.screens
+package dev.nycode.omsilauncher.ui.setup.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -10,10 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.nycode.omsilauncher.components.ClickablePath
-import dev.nycode.omsilauncher.config.gameDirectory
 import dev.nycode.omsilauncher.config.saveConfig
-import dev.nycode.omsilauncher.setup.SetupState
+import dev.nycode.omsilauncher.ui.components.ClickablePath
+import dev.nycode.omsilauncher.ui.setup.SetupState
 import dev.nycode.omsilauncher.util.getOmsiInstallPath
 import dev.nycode.omsilauncher.util.logger
 import kotlinx.coroutines.Dispatchers

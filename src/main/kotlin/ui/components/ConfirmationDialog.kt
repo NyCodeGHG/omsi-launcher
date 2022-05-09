@@ -1,4 +1,4 @@
-package dev.nycode.omsilauncher.components
+package dev.nycode.omsilauncher.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
