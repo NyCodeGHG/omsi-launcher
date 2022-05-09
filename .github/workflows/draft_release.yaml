@@ -1,6 +1,13 @@
 name: Draft Release
 on:
   workflow_dispatch:
+    inputs:
+      pre_release:
+        description: "Whether this is a pre_release"
+        type: boolean
+        default: false
+        required: true
+
 
 permissions:
   contents: write
@@ -98,6 +105,7 @@ jobs:
         with:
           body: ${{ needs.build_metadata.outputs.changelog }}
           draft: true
+          prerelease: ${{ github.event.inputs.pre_release }}
           tag_name: v${{ needs.build_metadata.outputs.version }}
           name: ${{ needs.build_metadata.outputs.version }}
           files: release_files/*
