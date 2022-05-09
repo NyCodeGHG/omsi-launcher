@@ -82,7 +82,7 @@ compose.desktop {
             modules("java.naming")
             targetFormats(TargetFormat.Msi)
 
-            appResourcesRootDir.set(buildDir.resolve("binaries"))
+            appResourcesRootDir.set(project("fs-util").buildDir.resolve("binaries"))
             licenseFile.set(project.file("LICENSE"))
             windows {
                 menu = true

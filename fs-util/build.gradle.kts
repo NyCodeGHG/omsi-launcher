@@ -5,7 +5,7 @@ plugins {
 tasks {
     task<Copy>("copyRustBinaries") {
         dependsOn(compileRust, downloadElevateHelper)
-        from("target/release")
+        from("target/release", downloadElevateHelper)
         into(buildDir.resolve("binaries").resolve("windows"))
         include("*.exe")
     }
