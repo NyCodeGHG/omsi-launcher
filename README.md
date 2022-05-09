@@ -50,6 +50,35 @@ So when starting an instance through the launcher it will create a symlink
 at `<SteamLibrary>\OMSI 2` pointing to the
 instance you want to launch, this way Steam will actually run `<selected instance>\Omsi.exe`
 
+<details>
+<summary>Nerdy explanation of how we store which AddOns are enabled for each instance</summary>
+
+Steam keeps track of which AddOns you have installed at `<library>\steamapps\appmanifest_252530.acf` (`252530` being
+Omsi's Steam id)
+
+Since Steam overwrites this file if it is a symlink, we needed a different approach.
+
+Instead, when creating the base game installation we know copy the base manifest into `<launcher>\game\manifest.acf`,
+each time we create a new instance, we copy that file into `<instance>\manifest.acf`
+
+Then if you launch an instance we check:
+
+- Does `<Steam library>\OMSI 2` already symlink to that instance
+    - If yes:
+        - Copy `appmanifest_252530.acf` into  `<instance>\manifest.acf`
+    - If not (but symlink):
+        - Resolve that symlink to the previous instance
+        - Copy the current `appmanifest_252530.acf` to the resolved instance
+        - Copy the manifest of the instance we want to start to `appmanifest_252530.acf`
+    - If not (but directory)
+        - Copy the manifest of the instance we want to start to `appmanifest_252530.acf`
+
+That way no only OMSI will only see the selected AddOns
+(as they're the only addons physically present in the instance folder)
+also Steam will show them and not download any additional ones
+
+</details>
+
 # Folder structure
 
 Base game: When starting the launcher for the first time, it asks you to set up your "base game
@@ -79,3 +108,14 @@ of the launcher, set
 during setup
 `<installation>\instances.json`: This stores all set instances with their launch flags and patch
 version
+
+<details>
+    <summary>Trivia we found whilst making this</summary>
+
+- You can symlink `<steam library>\OMSI 2` to wherever you want and Steam will launch it.
+- You can symlink anything in your `OMSI 2` directory and Omsi will load everything
+- Steam stores it's install location at: `HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Valve\Steam` Value: `InstallPath`
+- Omsi stores it's install location at: `HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\aerosoft\OMSI 2` Value: `Product_Path`
+
+
+</details>
