@@ -10,7 +10,7 @@ jobs:
     name: "Validate Gradle wrapper"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: gradle/wrapper-validation-action@v1
   build_metadata:
     name: "Compile release metadata"
@@ -21,7 +21,7 @@ jobs:
       changelog: ${{ steps.properties.outputs.changelog }}
     steps:
       - name: Fetch Sources
-        uses: actions/checkout@v2.4.2
+        uses: actions/checkout@v3.0.2
       - name: Setup Java
         uses: actions/setup-java@v3.3.0
         with:
@@ -68,7 +68,7 @@ jobs:
           mv build/compose/binaries/main/msi/omsi-launcher-*.msi omsi-launcher.msi
           & 'C:/Program Files (x86)/Windows Kits/10/bin/10.0.17763.0/x86/signtool.exe' sign /f certificate\certificate.pfx /p '${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}' /t http://timestamp.sectigo.com/ /d omsi-launcher omsi-launcher.msi
       - name: Upload artifact
-        uses: actions/upload-artifact@v2.3.1
+        uses: actions/upload-artifact@v3.0.0
         with:
           name: windows_distribution
           path: omsi-launcher.msi

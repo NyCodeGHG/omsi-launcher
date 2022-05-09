@@ -33,8 +33,17 @@ class ApplicationState {
         directory: Path,
         patchVersion: Instance.PatchVersion,
         options: InstanceOptions = InstanceOptions(),
+        uses4GBPatch: Boolean,
     ) = withContext(Dispatchers.IO) {
-        val instance = Instance(id, name, directory, patchVersion, options, InstanceState.CREATING)
+        val instance = Instance(
+            id,
+            name,
+            directory,
+            patchVersion,
+            options,
+            InstanceState.CREATING,
+            uses4GBPatch
+        )
         instances = instances + instance
         createInstance(instance)
         instances = instances - instance + instance.copy(state = InstanceState.READY)

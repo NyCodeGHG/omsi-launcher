@@ -67,7 +67,8 @@ fun Application() {
                                         UUID.randomUUID(),
                                         randomName,
                                         resolveAppDataPath(randomName),
-                                        Instance.PatchVersion.BI_ARTICULATED_BUS_VERSION
+                                        Instance.PatchVersion.BI_ARTICULATED_BUS_VERSION,
+                                        uses4GBPatch = true
                                     )
                                 }
                             },

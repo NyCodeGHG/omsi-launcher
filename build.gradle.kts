@@ -41,6 +41,8 @@ dependencies {
     ksp("cafe.adriel.lyricist", "lyricist-processor", "1.2.0")
     implementation(platform("dev.schlaubi:stdx-bom:1.1.0"))
     implementation("dev.schlaubi", "stdx-serialization")
+
+    implementation("io.sigpipe", "jbsdiff", "1.0")
 }
 
 sourceSets {

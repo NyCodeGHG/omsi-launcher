@@ -11,8 +11,17 @@ data class SavedInstance(
     val directory: SerializablePath,
     val patchVersion: Instance.PatchVersion,
     val options: InstanceOptions,
+    val uses4GBPatch: Boolean,
 ) {
     fun toInstance(): Instance {
-        return Instance(id, name, directory, patchVersion, options, InstanceState.READY)
+        return Instance(
+            id,
+            name,
+            directory,
+            patchVersion,
+            options,
+            InstanceState.READY,
+            uses4GBPatch
+        )
     }
 }

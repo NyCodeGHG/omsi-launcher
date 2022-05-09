@@ -20,6 +20,7 @@ data class Instance(
     val patchVersion: PatchVersion,
     val options: InstanceOptions = InstanceOptions(),
     val state: InstanceState,
+    val uses4GBPatch: Boolean,
 ) : PersistentValue<SavedInstance> {
     suspend fun start(editor: Boolean = false) {
         val flags = buildList {
@@ -31,16 +32,19 @@ data class Instance(
         activateAndStartInstallationSafe(directory, flags)
     }
 
-    enum class PatchVersion(val executable: String, val icon: ImageVector) {
-        BI_ARTICULATED_BUS_VERSION("Omsi_current.exe", TablerIcons.Bus),
-        TRAM_VERSION("Omsi_older.exe", TablerIcons.Train);
+    enum class PatchVersion(val type: String, val icon: ImageVector) {
+        BI_ARTICULATED_BUS_VERSION("current", TablerIcons.Bus),
+        TRAM_VERSION("older", TablerIcons.Train);
+
+        val executable: String
+            get() = "Omsi_$type.exe"
 
         val relativePath: Path
             get() = Path("_Straßenbahn") / executable
     }
 
     override fun toSavedData(): SavedInstance {
-        return SavedInstance(id, name, directory, patchVersion, options)
+        return SavedInstance(id, name, directory, patchVersion, options, uses4GBPatch)
     }
 }
 
