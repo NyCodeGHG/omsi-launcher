@@ -18,6 +18,7 @@ import compose.icons.tablericons.Tools
 import compose.icons.tablericons.Trash
 import dev.nycode.omsilauncher.app.ApplicationState
 import dev.nycode.omsilauncher.instance.Instance
+import dev.nycode.omsilauncher.instance.InstanceState
 import dev.nycode.omsilauncher.omsi.OmsiProcessUpdate
 import dev.nycode.omsilauncher.ui.CustomColors
 import kotlinx.coroutines.CoroutineScope
@@ -35,6 +36,8 @@ fun InstanceListEntry(
     val image = remember { imageFromResource("ecitaro.jpg") }
     var deleteDialog by remember { mutableStateOf(false) }
     val strings = LocalStrings.current
+    val interactable =
+        instance.state == InstanceState.READY && omsiState == OmsiProcessUpdate.NOT_RUNNING
     Card(Modifier.padding(5.dp), elevation = 3.dp) {
         Row(Modifier.fillMaxWidth().height(125.dp)) {
             Image(image, strings.eCitaro)
@@ -54,7 +57,7 @@ fun InstanceListEntry(
                             backgroundColor = CustomColors.success,
                             contentColor = Color.White
                         ),
-                        enabled = omsiState == OmsiProcessUpdate.NOT_RUNNING
+                        enabled = interactable
                     ) {
                         Icon(TablerIcons.PlayerPlay, strings.runInstance)
                         Spacer(Modifier.padding(5.dp))
@@ -71,7 +74,7 @@ fun InstanceListEntry(
                             backgroundColor = MaterialTheme.colors.primary,
                             contentColor = Color.White
                         ),
-                        enabled = omsiState == OmsiProcessUpdate.NOT_RUNNING
+                        enabled = interactable
                     ) {
                         Icon(TablerIcons.Tools, strings.runEditor)
                         Spacer(Modifier.padding(5.dp))
@@ -88,7 +91,7 @@ fun InstanceListEntry(
                     IconButton(
                         {},
                         modifier = Modifier.align(Alignment.TopEnd),
-                        enabled = omsiState == OmsiProcessUpdate.NOT_RUNNING
+                        enabled = interactable
                     ) {
                         Icon(TablerIcons.Pencil, strings.edit)
                     }
@@ -97,7 +100,7 @@ fun InstanceListEntry(
                             deleteDialog = true
                         },
                         modifier = Modifier.align(Alignment.BottomEnd),
-                        enabled = omsiState == OmsiProcessUpdate.NOT_RUNNING
+                        enabled = interactable
                     ) {
                         Icon(TablerIcons.Trash, strings.delete, tint = MaterialTheme.colors.error)
                     }
