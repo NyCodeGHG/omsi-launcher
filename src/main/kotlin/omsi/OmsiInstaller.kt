@@ -65,7 +65,7 @@ private suspend fun doNativeCall(name: String, vararg parameters: String) =
 suspend fun activateInstallationSafe(path: Path) {
     val omsi = getOmsiInstallPath()
     if (omsi.isSymbolicLink() && omsi.readSymbolicLink() == path) {
-        val currentManifest = omsi.parent(2) / "appmanifest_${OMSI_STEAM_ID}.acf"
+        val currentManifest = omsi.parent(2) / "appmanifest_$OMSI_STEAM_ID.acf"
         if (currentManifest.exists()) {
             logger.debug { "Backing up $currentManifest to current installation $path" }
             currentManifest.copyTo(path / "manifest.acf", true)
