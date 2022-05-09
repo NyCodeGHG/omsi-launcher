@@ -21,13 +21,16 @@ fun isOmsiRunning(): Boolean {
     return omsiProcesses().any()
 }
 
-private val omsiRegex = Regex("Omsi(?:_(?:current|older))?\\.exe")
+// https://regex101.com/r/feVkcU/1
+private val omsiRegex = Regex("""Omsi(?:_(?:current|older))?(?:\.4gbpatch)?\.exe""")
 
 fun omsiProcesses(): Sequence<ProcessHandle> {
     return ProcessHandle.allProcesses()
         .asSequence()
         .filter { handle ->
-            handle.info().command().orElse(null)?.let { omsiRegex.containsMatchIn(it) } == true
+            handle.info().command().orElse(null)?.let {
+                omsiRegex.containsMatchIn(it)
+            } == true
         }
 }
 

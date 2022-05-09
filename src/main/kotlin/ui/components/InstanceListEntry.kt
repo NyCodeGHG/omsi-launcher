@@ -1,4 +1,4 @@
-package dev.nycode.omsilauncher.components
+package dev.nycode.omsilauncher.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -16,9 +16,9 @@ import compose.icons.tablericons.Pencil
 import compose.icons.tablericons.PlayerPlay
 import compose.icons.tablericons.Tools
 import compose.icons.tablericons.Trash
-import dev.nycode.omsilauncher.instance.InstanceViewModel
-import dev.nycode.omsilauncher.instance.deleteInstance
-import dev.nycode.omsilauncher.instance.getInstanceById
+import dev.nycode.omsilauncher.app.ApplicationState
+import dev.nycode.omsilauncher.instance.Instance
+import dev.nycode.omsilauncher.instance.InstanceState
 import dev.nycode.omsilauncher.omsi.OmsiProcessUpdate
 import dev.nycode.omsilauncher.ui.CustomColors
 import kotlinx.coroutines.CoroutineScope
@@ -28,13 +28,16 @@ import org.jetbrains.skia.Image.Companion as SkiaImage
 
 @Composable
 fun InstanceListEntry(
-    instance: InstanceViewModel,
+    applicationState: ApplicationState,
+    instance: Instance,
     scope: CoroutineScope,
     omsiState: OmsiProcessUpdate,
 ) {
     val image = remember { imageFromResource("ecitaro.jpg") }
     var deleteDialog by remember { mutableStateOf(false) }
     val strings = LocalStrings.current
+    val interactable =
+        instance.state == InstanceState.READY && omsiState == OmsiProcessUpdate.NOT_RUNNING
     Card(Modifier.padding(5.dp), elevation = 3.dp) {
         Row(Modifier.fillMaxWidth().height(125.dp)) {
             Image(image, strings.eCitaro)
@@ -47,14 +50,14 @@ fun InstanceListEntry(
                     Button(
                         {
                             scope.launch(Dispatchers.IO) {
-                                getInstanceById(instance.id)?.start()
+                                instance.start()
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = CustomColors.success,
                             contentColor = Color.White
                         ),
-                        enabled = omsiState == OmsiProcessUpdate.NOT_RUNNING
+                        enabled = interactable
                     ) {
                         Icon(TablerIcons.PlayerPlay, strings.runInstance)
                         Spacer(Modifier.padding(5.dp))
@@ -64,14 +67,14 @@ fun InstanceListEntry(
                     Button(
                         {
                             scope.launch(Dispatchers.IO) {
-                                getInstanceById(instance.id)?.start(true)
+                                instance.start(true)
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = MaterialTheme.colors.primary,
                             contentColor = Color.White
                         ),
-                        enabled = omsiState == OmsiProcessUpdate.NOT_RUNNING
+                        enabled = interactable
                     ) {
                         Icon(TablerIcons.Tools, strings.runEditor)
                         Spacer(Modifier.padding(5.dp))
@@ -88,7 +91,7 @@ fun InstanceListEntry(
                     IconButton(
                         {},
                         modifier = Modifier.align(Alignment.TopEnd),
-                        enabled = omsiState == OmsiProcessUpdate.NOT_RUNNING
+                        enabled = interactable
                     ) {
                         Icon(TablerIcons.Pencil, strings.edit)
                     }
@@ -97,7 +100,7 @@ fun InstanceListEntry(
                             deleteDialog = true
                         },
                         modifier = Modifier.align(Alignment.BottomEnd),
-                        enabled = omsiState == OmsiProcessUpdate.NOT_RUNNING
+                        enabled = interactable
                     ) {
                         Icon(TablerIcons.Trash, strings.delete, tint = MaterialTheme.colors.error)
                     }
@@ -110,7 +113,7 @@ fun InstanceListEntry(
             deleteDialog = false
             if (delete) {
                 scope.launch(Dispatchers.IO) {
-                    getInstanceById(instance.id)?.let(::deleteInstance)
+                    applicationState.deleteInstance(instance)
                 }
             }
         })

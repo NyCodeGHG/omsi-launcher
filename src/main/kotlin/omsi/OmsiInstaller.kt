@@ -1,7 +1,6 @@
 package dev.nycode.omsilauncher.util
 
 import dev.nycode.omsilauncher.config.config
-import dev.nycode.omsilauncher.config.gameDirectory
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.LaunchFlag
 import dev.nycode.omsilauncher.omsi.getOmsiBinary

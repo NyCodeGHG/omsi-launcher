@@ -1,4 +1,4 @@
-package dev.nycode.omsilauncher.setup
+package dev.nycode.omsilauncher.ui.setup
 
 enum class SetupScreen {
     GAME_DIRECTORY,

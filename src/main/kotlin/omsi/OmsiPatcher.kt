@@ -1,7 +1,6 @@
 package dev.nycode.omsilauncher.omsi
 
 import dev.nycode.omsilauncher.config.config
-import dev.nycode.omsilauncher.config.gameDirectory
 import dev.nycode.omsilauncher.instance.Instance
 import io.sigpipe.jbsdiff.Patch
 import java.nio.file.Path
@@ -31,7 +30,7 @@ fun getOmsiBinary(edition: Instance.PatchVersion, patched: Boolean): Path {
 
 private fun getPatchedBinary(edition: Instance.PatchVersion): Path {
     val path = config.gameDirectory / edition.relativePath.parent /
-            ("Omsi_" + edition.type + ".4gbpatch.exe")
+        ("Omsi_" + edition.type + ".4gbpatch.exe")
     if (path.exists()) {
         return path
     }

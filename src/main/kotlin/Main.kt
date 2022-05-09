@@ -8,8 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import dev.nycode.omsilauncher.config.readConfig
-import dev.nycode.omsilauncher.instance.initializeInstances
-import dev.nycode.omsilauncher.setup.Setup
+import dev.nycode.omsilauncher.ui.setup.Setup
 import dev.nycode.omsilauncher.util.getApplicationTitle
 import dev.nycode.omsilauncher.util.logger
 import kotlinx.cli.ArgParser
@@ -34,15 +33,10 @@ fun main(args: Array<String>) {
             logger.debug("Root Installation Directory is set. Skipping setup.")
         }
     }
-
-    if (!setup) {
-        initializeInstances()
-    }
     application {
         var isSetup by remember { mutableStateOf(setup) }
         fun closeSetup() {
             isSetup = false
-            initializeInstances()
         }
         MaterialTheme {
             Window(onCloseRequest = ::exitApplication, title = getApplicationTitle()) {

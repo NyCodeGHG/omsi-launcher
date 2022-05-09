@@ -1,4 +1,4 @@
-package dev.nycode.omsilauncher.components
+package dev.nycode.omsilauncher.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material.Text

@@ -1,11 +1,11 @@
-package dev.nycode.omsilauncher.setup
+package dev.nycode.omsilauncher.ui.setup
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.*
 import dev.nycode.omsilauncher.config.Configuration
-import dev.nycode.omsilauncher.setup.screens.GameDirectoryScreen
-import dev.nycode.omsilauncher.setup.screens.StartSetupScreen
-import dev.nycode.omsilauncher.setup.screens.SteamProcessScreen
+import dev.nycode.omsilauncher.ui.setup.screens.GameDirectoryScreen
+import dev.nycode.omsilauncher.ui.setup.screens.StartSetupScreen
+import dev.nycode.omsilauncher.ui.setup.screens.SteamProcessScreen
 import java.nio.file.Path
 
 data class SetupState(val launcherPath: Path?) {

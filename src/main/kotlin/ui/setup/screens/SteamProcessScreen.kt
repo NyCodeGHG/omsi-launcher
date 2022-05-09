@@ -1,4 +1,4 @@
-package dev.nycode.omsilauncher.setup.screens
+package dev.nycode.omsilauncher.ui.setup.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import dev.nycode.omsilauncher.setup.SetupScreen
+import dev.nycode.omsilauncher.ui.setup.SetupScreen
 import dev.nycode.omsilauncher.util.awaitSteamDeath
 import dev.nycode.omsilauncher.util.tryCloseSteam
 import kotlinx.coroutines.launch
