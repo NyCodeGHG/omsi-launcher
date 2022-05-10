@@ -30,14 +30,7 @@ import dev.nycode.omsilauncher.util.logger
 import dev.nycode.omsilauncher.util.parent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.io.path.copyTo
-import kotlin.io.path.createFile
-import kotlin.io.path.deleteExisting
-import kotlin.io.path.div
-import kotlin.io.path.exists
-import kotlin.io.path.moveTo
-import kotlin.io.path.notExists
-import kotlin.io.path.writeText
+import kotlin.io.path.*
 
 private val logger = logger()
 
@@ -77,7 +70,7 @@ fun StartSetupScreen(config: MutableState<SetupState>, closeSetup: () -> Unit) {
             logger.info { "Successfully moved files from $omsiInstallPath to $gameDirectory." }
             logger.info { "Deleting Omsi.exe" }
             // Delete Omsi.exe as we want to symlink to "_Straßenbahn" patches
-            gameDirectory.resolve("Omsi.exe").deleteExisting()
+            gameDirectory.resolve("Omsi.exe").deleteIfExists()
             setupStep = "Copying manifest"
             val manifest = omsiInstallPath.parent(2) / "appmanifest_$OMSI_STEAM_ID.acf"
             manifest.copyTo(gameDirectory / "manifest.acf")
