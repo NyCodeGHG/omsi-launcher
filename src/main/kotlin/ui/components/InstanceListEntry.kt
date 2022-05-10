@@ -75,14 +75,18 @@ fun InstanceListEntry(
         }
     }
     if (deleteDialog) {
-        ConfirmationDialog(strings.confirmDeletion(instance.name), { delete ->
-            deleteDialog = false
-            if (delete) {
-                scope.launch(Dispatchers.IO) {
-                    applicationState.deleteInstance(instance)
+        ConfirmationDialog(strings.confirmDeletion(instance.name),
+            { delete ->
+                deleteDialog = false
+                if (delete) {
+                    scope.launch(Dispatchers.IO) {
+                        applicationState.deleteInstance(instance)
+                    }
                 }
-            }
-        })
+            },
+            yesText = strings.yes,
+            noText = strings.no,
+            title = strings.confirmDeletion(instance.name))
     }
 }
 
