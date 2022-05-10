@@ -20,12 +20,11 @@ where
     let token = Token::with_current_process()?;
     match token.privilege_level()? {
         PrivilegeLevel::NotPrivileged => spawn_with_elevated_privileges(),
-        PrivilegeLevel::Elevated => run(),
-        PrivilegeLevel::HighIntegrityAdmin => run(),
+        PrivilegeLevel::Elevated | PrivilegeLevel::HighIntegrityAdmin => run(),
     }
 }
 
-fn spawn_with_elevated_privileges() -> std::io::Result<()> {
+fn spawn_with_elevated_privileges() -> Result<()> {
     let token = Token::with_current_process()?;
     let level = token.privilege_level()?;
 
