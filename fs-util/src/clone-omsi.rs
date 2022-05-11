@@ -6,7 +6,6 @@ use log::info;
 use structopt::*;
 
 use crate::launcher::with_symlink_permission;
-use crate::privileges::can_create_symlinks;
 
 mod launcher;
 mod privileges;

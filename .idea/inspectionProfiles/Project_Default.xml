@@ -4,5 +4,6 @@
     <inspection_tool class="RsUnresolvedReference" enabled="true" level="ERROR" enabled_by_default="true">
       <option name="ignoreWithoutQuickFix" value="false" />
     </inspection_tool>
+    <inspection_tool class="RsUnusedImport" enabled="true" level="WARNING" enabled_by_default="true" />
   </profile>
 </component>

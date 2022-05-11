@@ -1,4 +1,4 @@
-use crate::can_create_symlinks;
+use crate::privileges::can_create_symlinks;
 use deelevate::{BridgeServer, PrivilegeLevel, Token};
 use std::io::Result;
 
