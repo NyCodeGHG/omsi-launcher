@@ -1,11 +1,14 @@
-package dev.nycode.omsilauncher.app
+package dev.nycode.omsilauncher.ui.instance
 
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.Card
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,14 +16,13 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.lyricist.LocalStrings
 import cafe.adriel.lyricist.ProvideStrings
 import cafe.adriel.lyricist.rememberStrings
-import compose.icons.TablerIcons
-import compose.icons.tablericons.Stack
 import dev.nycode.omsilauncher.config.config
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.omsi.OmsiProcessState
 import dev.nycode.omsilauncher.omsi.receiveOmsiProcessUpdates
 import dev.nycode.omsilauncher.ui.components.InstanceListEntry
 import dev.nycode.omsilauncher.ui.components.PathInputField
+import dev.nycode.omsilauncher.util.isOmsiRunning
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,66 +33,54 @@ import kotlin.io.path.listDirectoryEntries
 import kotlin.io.path.notExists
 
 @Composable
-fun Application() {
+fun InstanceScreen() {
     val lyricist = rememberStrings()
     val scope = rememberCoroutineScope()
-    val applicationState = rememberApplicationState()
-    val instances = applicationState.instances
+    val instanceState = rememberApplicationInstanceState()
+    val instances = instanceState.instances
     val omsiState by receiveOmsiProcessUpdates().collectAsState(
-        OmsiProcessState.NOT_RUNNING,
+        if (isOmsiRunning()) OmsiProcessState.RUNNING else OmsiProcessState.NOT_RUNNING,
         Dispatchers.IO
     )
     ProvideStrings(lyricist) {
-        val strings = LocalStrings.current
-        Row(Modifier.fillMaxSize()) {
-            NavigationRail {
-                NavigationRailItem(
-                    true,
-                    onClick = {},
-                    icon = { Icon(TablerIcons.Stack, strings.instances) },
-                    label = { Text(strings.instances) }
-                )
-            }
-            Box(modifier = Modifier.fillMaxSize()) {
-                val stateVertical = rememberScrollState(0)
-                Box(
-                    Modifier.fillMaxSize()
-                        .verticalScroll(stateVertical)
-                        .padding(end = 12.dp, bottom = 12.dp)
-                ) {
-                    Column(Modifier.fillMaxSize()) {
-                        instances.forEach {
-                            InstanceListEntry(
-                                Modifier.padding(5.dp),
-                                applicationState,
-                                it,
-                                scope,
-                                omsiState
-                            )
-                        }
-                        InstanceCreationCard(
+        Box(modifier = Modifier.fillMaxSize()) {
+            val stateVertical = rememberScrollState(0)
+            Box(
+                Modifier.fillMaxSize()
+                    .verticalScroll(stateVertical)
+                    .padding(end = 12.dp, bottom = 12.dp)
+            ) {
+                Column(Modifier.fillMaxSize()) {
+                    instances.forEach {
+                        InstanceListEntry(
                             Modifier.padding(5.dp),
+                            instanceState,
+                            it,
                             scope,
-                            applicationState,
-                            { name, patchVersion, directory ->
-                                directory.parent.createDirectories()
-                                applicationState.createNewInstance(
-                                    UUID.randomUUID(),
-                                    name,
-                                    directory,
-                                    patchVersion,
-                                    uses4GBPatch = true
-                                )
-                            },
                             omsiState
                         )
                     }
+                    InstanceCreationCard(
+                        Modifier.padding(5.dp),
+                        scope,
+                        { name, patchVersion, directory ->
+                            directory.parent.createDirectories()
+                            instanceState.createNewInstance(
+                                UUID.randomUUID(),
+                                name,
+                                directory,
+                                patchVersion,
+                                uses4GBPatch = true
+                            )
+                        },
+                        omsiState
+                    )
                 }
-                VerticalScrollbar(
-                    modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
-                    adapter = rememberScrollbarAdapter(stateVertical)
-                )
             }
+            VerticalScrollbar(
+                modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+                adapter = rememberScrollbarAdapter(stateVertical)
+            )
         }
     }
 }
@@ -120,7 +110,6 @@ class InstanceCreationState {
 fun InstanceCreationCard(
     modifier: Modifier,
     scope: CoroutineScope,
-    applicationState: ApplicationState,
     createInstance: suspend (name: String, patchVersion: Instance.PatchVersion, directory: Path) -> Unit,
     omsiState: OmsiProcessState,
 ) = Card(modifier = modifier.fillMaxWidth().height(400.dp), elevation = 3.dp) {

@@ -20,11 +20,11 @@ fun receiveOmsiProcessUpdates(): Flow<OmsiProcessState> = flow {
     while (currentCoroutineContext().isActive) {
         if (isOmsiRunning()) {
             emit(OmsiProcessState.RUNNING)
-            delay(200.milliseconds)
+            delay(100.milliseconds)
             omsiProcesses().map { it.onExit().asDeferred() }.toList().awaitAll()
             emit(OmsiProcessState.NOT_RUNNING)
         } else {
-            delay(200.milliseconds)
+            delay(20.milliseconds)
         }
     }
 }

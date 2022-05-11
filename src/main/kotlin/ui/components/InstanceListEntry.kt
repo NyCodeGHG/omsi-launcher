@@ -16,11 +16,11 @@ import compose.icons.tablericons.Pencil
 import compose.icons.tablericons.PlayerPlay
 import compose.icons.tablericons.Tools
 import compose.icons.tablericons.Trash
-import dev.nycode.omsilauncher.app.ApplicationState
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.InstanceState
 import dev.nycode.omsilauncher.omsi.OmsiProcessState
 import dev.nycode.omsilauncher.ui.CustomColors
+import dev.nycode.omsilauncher.ui.instance.ApplicationInstanceState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,7 +29,7 @@ import org.jetbrains.skia.Image.Companion as SkiaImage
 @Composable
 fun InstanceListEntry(
     modifier: Modifier,
-    applicationState: ApplicationState,
+    instanceState: ApplicationInstanceState,
     instance: Instance,
     scope: CoroutineScope,
     omsiState: OmsiProcessState,
@@ -81,7 +81,7 @@ fun InstanceListEntry(
                 deleteDialog = false
                 if (delete) {
                     scope.launch(Dispatchers.IO) {
-                        applicationState.deleteInstance(instance)
+                        instanceState.deleteInstance(instance)
                     }
                 }
             },

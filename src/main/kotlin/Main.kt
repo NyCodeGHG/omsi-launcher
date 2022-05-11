@@ -1,15 +1,6 @@
 package dev.nycode.omsilauncher
 
-import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
-import dev.nycode.omsilauncher.app.Application
 import dev.nycode.omsilauncher.config.readConfig
-import dev.nycode.omsilauncher.ui.setup.Setup
 import dev.nycode.omsilauncher.util.getApplicationTitle
 import dev.nycode.omsilauncher.util.logger
 import kotlinx.cli.ArgParser
@@ -34,21 +25,7 @@ fun main(args: Array<String>) {
             logger.debug("Root Installation Directory is set. Skipping setup.")
         }
     }
-    application {
-        var isSetup by remember { mutableStateOf(setup) }
-        fun closeSetup() {
-            isSetup = false
-        }
-        MaterialTheme {
-            Window(onCloseRequest = ::exitApplication, title = getApplicationTitle()) {
-                if (isSetup) {
-                    Setup(::closeSetup, configuration)
-                } else {
-                    Application()
-                }
-            }
-        }
-    }
+    runLauncher(setup, configuration)
 }
 
 fun parseArgs(args: Array<String>): ApplicationArgs {

@@ -1,4 +1,4 @@
-package dev.nycode.omsilauncher.app
+package dev.nycode.omsilauncher.ui.instance
 
 import androidx.compose.runtime.*
 import dev.nycode.omsilauncher.instance.*
@@ -14,7 +14,7 @@ import kotlin.io.path.deleteExisting
 import kotlin.io.path.notExists
 import kotlin.streams.asSequence
 
-class ApplicationState {
+class ApplicationInstanceState {
 
     var instances: List<Instance> by mutableStateOf(loadInstances())
         private set
@@ -65,4 +65,4 @@ class ApplicationState {
 }
 
 @Composable
-fun rememberApplicationState() = remember { ApplicationState() }
+fun rememberApplicationInstanceState() = remember { ApplicationInstanceState() }
