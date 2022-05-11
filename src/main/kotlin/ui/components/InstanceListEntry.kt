@@ -75,7 +75,8 @@ fun InstanceListEntry(
         }
     }
     if (deleteDialog) {
-        ConfirmationDialog(strings.confirmDeletion(instance.name),
+        ConfirmationDialog(
+            strings.confirmDeletion(instance.name),
             { delete ->
                 deleteDialog = false
                 if (delete) {
@@ -86,7 +87,8 @@ fun InstanceListEntry(
             },
             yesText = strings.yes,
             noText = strings.no,
-            title = strings.confirmDeletion(instance.name))
+            title = strings.confirmDeletion(instance.name)
+        )
     }
 }
 
