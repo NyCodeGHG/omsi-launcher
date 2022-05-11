@@ -4,6 +4,7 @@
 ### Added
 - Add internal support for 4 GB patch
 - Synchronise Steam manifest between instances
+- Add internal routing system
 
 ### Changed
 - Update LICENSE software author
@@ -12,6 +13,7 @@
 ### Deprecated
 
 ### Removed
+- Old routing system based on enums
 
 ### Fixed
 
