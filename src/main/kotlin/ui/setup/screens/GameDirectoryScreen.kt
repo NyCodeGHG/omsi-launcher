@@ -9,14 +9,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.nycode.omsilauncher.ui.components.ClickablePath
-import dev.nycode.omsilauncher.ui.setup.SetupScreen
+import dev.nycode.omsilauncher.ui.routing.RouterState
 import dev.nycode.omsilauncher.ui.setup.SetupState
+import dev.nycode.omsilauncher.ui.setup.StartSetupRoute
+import dev.nycode.omsilauncher.ui.setup.SteamRoute
 import dev.nycode.omsilauncher.util.chooseDirectory
 import dev.nycode.omsilauncher.util.isSteamRunning
 import kotlinx.coroutines.launch
 
 @Composable
-fun GameDirectoryScreen(switchScreen: (SetupScreen) -> Unit, config: MutableState<SetupState>) {
+fun GameDirectoryScreen(routerState: RouterState, config: MutableState<SetupState>) {
     val scope = rememberCoroutineScope()
     var configuration by config
     var gameFileDirectory by remember { mutableStateOf(configuration.launcherPath) }
@@ -45,9 +47,9 @@ fun GameDirectoryScreen(switchScreen: (SetupScreen) -> Unit, config: MutableStat
                 {
                     configuration = configuration.copy(launcherPath = gameFileDirectory)
                     if (isSteamRunning()) {
-                        switchScreen(SetupScreen.STEAM)
+                        routerState.currentRoute = SteamRoute
                     } else {
-                        switchScreen(SetupScreen.START_SETUP)
+                        routerState.currentRoute = StartSetupRoute
                     }
                 },
                 modifier = Modifier.align(Alignment.BottomEnd).padding(10.dp),

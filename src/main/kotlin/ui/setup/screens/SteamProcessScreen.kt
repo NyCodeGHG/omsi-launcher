@@ -8,7 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import dev.nycode.omsilauncher.ui.setup.SetupScreen
+import dev.nycode.omsilauncher.ui.routing.RouterState
+import dev.nycode.omsilauncher.ui.setup.StartSetupRoute
 import dev.nycode.omsilauncher.util.awaitSteamDeath
 import dev.nycode.omsilauncher.util.tryCloseSteam
 import kotlinx.coroutines.launch
@@ -16,14 +17,14 @@ import kotlinx.coroutines.launch
 private val steamAwaitKey = Any()
 
 @Composable
-fun SteamProcessScreen(switchScreen: (SetupScreen) -> Unit) = Box(Modifier.fillMaxSize()) {
+fun SteamProcessScreen(routerState: RouterState) = Box(Modifier.fillMaxSize()) {
     val scope = rememberCoroutineScope()
     var closingSteam by remember { mutableStateOf(false) }
     var steamErrorDialog by remember { mutableStateOf(false) }
     DisposableEffect(steamAwaitKey) {
         scope.launch {
             awaitSteamDeath()
-            switchScreen(SetupScreen.START_SETUP)
+            routerState.currentRoute = StartSetupRoute
         }
         onDispose {}
     }

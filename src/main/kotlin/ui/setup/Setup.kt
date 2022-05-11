@@ -1,8 +1,10 @@
 package dev.nycode.omsilauncher.ui.setup
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.*
 import dev.nycode.omsilauncher.config.Configuration
+import dev.nycode.omsilauncher.ui.routing.Router
+import dev.nycode.omsilauncher.ui.routing.RouterKey
+import dev.nycode.omsilauncher.ui.routing.rememberRouterState
 import dev.nycode.omsilauncher.ui.setup.screens.GameDirectoryScreen
 import dev.nycode.omsilauncher.ui.setup.screens.StartSetupScreen
 import dev.nycode.omsilauncher.ui.setup.screens.SteamProcessScreen
@@ -17,18 +19,23 @@ data class SetupState(val launcherPath: Path?) {
     }
 }
 
+val GameDirectoryRoute = RouterKey(name = "GameDirectory")
+val SteamRoute = RouterKey(name = "Steam")
+val StartSetupRoute = RouterKey(name = "StartSetup")
+
 @Composable
 fun Setup(closeSetup: () -> Unit, configuration: Configuration?) {
-    var currentSetupScreen by remember { mutableStateOf(SetupScreen.GAME_DIRECTORY) }
     val config = remember { mutableStateOf(SetupState(configuration?.rootInstallation)) }
-    val switchScreen: (SetupScreen) -> Unit = {
-        currentSetupScreen = it
-    }
-    Box {
-        when (currentSetupScreen) {
-            SetupScreen.GAME_DIRECTORY -> GameDirectoryScreen(switchScreen, config)
-            SetupScreen.STEAM -> SteamProcessScreen(switchScreen)
-            SetupScreen.START_SETUP -> StartSetupScreen(config, closeSetup)
+    val routerState = rememberRouterState(GameDirectoryRoute)
+    Router(routerState) {
+        route(GameDirectoryRoute) {
+            GameDirectoryScreen(routerState, config)
+        }
+        route(SteamRoute) {
+            SteamProcessScreen(routerState)
+        }
+        route(StartSetupRoute) {
+            StartSetupScreen(config, closeSetup)
         }
     }
 }
