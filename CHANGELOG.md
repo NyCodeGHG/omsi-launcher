@@ -7,6 +7,7 @@
 - Add internal routing system
 - Add explanation for base game instance in setup
 - Add instance activate button
+- Add UAC error dialog
 
 ### Changed
 - Update LICENSE software author

@@ -12,13 +12,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.lyricist.LocalStrings
 import compose.icons.TablerIcons
-import compose.icons.tablericons.Pencil
-import compose.icons.tablericons.PlayerPlay
-import compose.icons.tablericons.Tools
-import compose.icons.tablericons.Trash
+import compose.icons.tablericons.*
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.InstanceState
 import dev.nycode.omsilauncher.omsi.OmsiProcessState
+import dev.nycode.omsilauncher.omsi.UserAccessControlCancelledException
 import dev.nycode.omsilauncher.ui.CustomColors
 import dev.nycode.omsilauncher.ui.instance.ApplicationInstanceState
 import kotlinx.coroutines.CoroutineScope
@@ -33,7 +31,8 @@ fun InstanceListEntry(
     instance: Instance,
     scope: CoroutineScope,
     omsiState: OmsiProcessState,
-    instanceActive: Boolean
+    instanceActive: Boolean,
+    showUACDialog: () -> Unit,
 ) {
     val image = remember { imageFromResource("ecitaro.jpg") }
     var deleteDialog by remember { mutableStateOf(false) }
@@ -53,7 +52,8 @@ fun InstanceListEntry(
                     instance,
                     interactable,
                     scope,
-                    instanceActive
+                    instanceActive,
+                    showUACDialog
                 )
                 Box(modifier = Modifier.align(Alignment.TopEnd).padding(10.dp).fillMaxHeight()) {
                     IconButton(
@@ -100,16 +100,22 @@ private fun InstanceButtonRow(
     instance: Instance,
     interactable: Boolean,
     scope: CoroutineScope,
-    instanceActive: Boolean
+    instanceActive: Boolean,
+    showUACDialog: () -> Unit,
 ) = Row(modifier) {
     val strings = LocalStrings.current
     if (instance.state == InstanceState.CREATING || instance.state == InstanceState.DELETING) {
         LinearProgressIndicator(modifier = Modifier.padding(bottom = 5.dp))
     } else {
+        suspend fun Instance.withUACAction(action: suspend Instance.() -> Unit) = try {
+            action()
+        } catch (exception: UserAccessControlCancelledException) {
+            showUACDialog()
+        }
         Button(
             {
                 scope.launch(Dispatchers.IO) {
-                    instance.start()
+                    instance.withUACAction(Instance::start)
                 }
             },
             colors = ButtonDefaults.buttonColors(
@@ -119,14 +125,14 @@ private fun InstanceButtonRow(
             enabled = interactable
         ) {
             Icon(TablerIcons.PlayerPlay, strings.runInstance)
-//            Spacer(Modifier.width(5.dp))
-//            Text(strings.launch)
         }
         Spacer(Modifier.width(5.dp))
         Button(
             {
                 scope.launch(Dispatchers.IO) {
-                    instance.start(true)
+                    instance.withUACAction {
+                        start(true)
+                    }
                 }
             },
             colors = ButtonDefaults.buttonColors(
@@ -136,14 +142,14 @@ private fun InstanceButtonRow(
             enabled = interactable
         ) {
             Icon(TablerIcons.Tools, strings.runEditor)
-//            Spacer(Modifier.padding(5.dp))
-//            Text(strings.launchEditor)
         }
         Spacer(Modifier.width(5.dp))
         Button(
             {
                 scope.launch(Dispatchers.IO) {
-                    instance.activate()
+                    instance.withUACAction {
+                        activate()
+                    }
                 }
             },
             colors = ButtonDefaults.buttonColors(
@@ -152,9 +158,7 @@ private fun InstanceButtonRow(
             ),
             enabled = !instanceActive
         ) {
-            Icon(TablerIcons.Pencil, strings.activateInstance)
-            Spacer(Modifier.padding(5.dp))
-            Text(strings.activate)
+            Icon(TablerIcons.Click, strings.activateInstance)
         }
         Spacer(Modifier.width(5.dp))
         Icon(

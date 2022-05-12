@@ -15,13 +15,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -32,6 +26,7 @@ import dev.nycode.omsilauncher.instance.getCurrentInstancePath
 import dev.nycode.omsilauncher.instance.receiveCurrentInstancePath
 import dev.nycode.omsilauncher.omsi.OmsiProcessState
 import dev.nycode.omsilauncher.omsi.receiveOmsiProcessUpdates
+import dev.nycode.omsilauncher.ui.components.ErrorDialog
 import dev.nycode.omsilauncher.ui.components.InstanceListEntry
 import dev.nycode.omsilauncher.ui.components.PathInputField
 import dev.nycode.omsilauncher.util.isOmsiRunning
@@ -54,6 +49,17 @@ fun InstanceScreen() {
         Dispatchers.IO
     )
     val currentInstancePath by receiveCurrentInstancePath().collectAsState(getCurrentInstancePath())
+    var showUACError by remember { mutableStateOf(false) }
+    if (showUACError) {
+        ErrorDialog(
+            true,
+            {
+                showUACError = false
+            },
+            "you have to click yes. idiot.",
+            "don't buy apple products."
+        )
+    }
     Box(modifier = Modifier.fillMaxSize()) {
         val stateVertical = rememberScrollState(0)
         Box(
@@ -70,7 +76,9 @@ fun InstanceScreen() {
                         scope,
                         omsiState,
                         it.directory == currentInstancePath
-                    )
+                    ) {
+                        showUACError = true
+                    }
                 }
                 InstanceCreationCard(
                     Modifier.padding(5.dp),

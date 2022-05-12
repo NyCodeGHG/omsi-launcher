@@ -5,10 +5,10 @@ import compose.icons.TablerIcons
 import compose.icons.tablericons.Bus
 import compose.icons.tablericons.Train
 import dev.nycode.omsilauncher.config.PersistentValue
-import dev.nycode.omsilauncher.serialization.SerializablePath
-import dev.nycode.omsilauncher.serialization.SerializableUUID
 import dev.nycode.omsilauncher.omsi.activateAndStartInstallationSafe
 import dev.nycode.omsilauncher.omsi.activateInstallationSafe
+import dev.nycode.omsilauncher.serialization.SerializablePath
+import dev.nycode.omsilauncher.serialization.SerializableUUID
 import kotlinx.serialization.Serializable
 import java.nio.file.Path
 import kotlin.io.path.Path
