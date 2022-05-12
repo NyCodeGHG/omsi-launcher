@@ -24,7 +24,7 @@ repositories {
 
 dependencies {
     implementation(compose.desktop.currentOs)
-    implementation("org.jetbrains.kotlinx", "kotlinx-serialization-json", "1.3.2")
+    implementation("org.jetbrains.kotlinx", "kotlinx-serialization-json", "1.3.3")
     implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.6.1")
     implementation("org.jetbrains.kotlinx", "kotlinx-cli", "0.3.4")
     implementation("io.github.microutils", "kotlin-logging", "2.1.21")
