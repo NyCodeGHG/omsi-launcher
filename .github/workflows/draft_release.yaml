@@ -55,6 +55,16 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+      - name: Cache Rust
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
@@ -71,7 +81,7 @@ jobs:
           Set-Content -Path certificate\certificate.txt -Value '${{ secrets.WINDOWS_CERTIFICATE }}'
           certutil -decode certificate\certificate.txt certificate\certificate.pfx
       - name: Sign Binaries
-        working-directory: fs-util\binaries\windows
+        working-directory: fs-util\build\binaries\windows
         run: |
           signtool sign /f certificate\certificate.pfx /p '${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}' /t http://timestamp.sectigo.com/ /d omsi-launcher omsi-elevate.exe clone-omsi.exe activate-omsi.exe
       - name: Compile and check code
@@ -117,5 +127,3 @@ jobs:
           tag_name: v${{ needs.build_metadata.outputs.version }}
           name: ${{ needs.build_metadata.outputs.version }}
           files: release_files/*
-
-
