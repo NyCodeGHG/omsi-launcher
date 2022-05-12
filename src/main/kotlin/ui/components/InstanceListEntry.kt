@@ -33,6 +33,7 @@ fun InstanceListEntry(
     instance: Instance,
     scope: CoroutineScope,
     omsiState: OmsiProcessState,
+    instanceActive: Boolean
 ) {
     val image = remember { imageFromResource("ecitaro.jpg") }
     var deleteDialog by remember { mutableStateOf(false) }
@@ -51,7 +52,8 @@ fun InstanceListEntry(
                     modifier = Modifier.align(Alignment.BottomStart).padding(10.dp),
                     instance,
                     interactable,
-                    scope
+                    scope,
+                    instanceActive
                 )
                 Box(modifier = Modifier.align(Alignment.TopEnd).padding(10.dp).fillMaxHeight()) {
                     IconButton(
@@ -98,6 +100,7 @@ private fun InstanceButtonRow(
     instance: Instance,
     interactable: Boolean,
     scope: CoroutineScope,
+    instanceActive: Boolean
 ) = Row(modifier) {
     val strings = LocalStrings.current
     if (instance.state == InstanceState.CREATING || instance.state == InstanceState.DELETING) {
@@ -116,10 +119,10 @@ private fun InstanceButtonRow(
             enabled = interactable
         ) {
             Icon(TablerIcons.PlayerPlay, strings.runInstance)
-            Spacer(Modifier.padding(5.dp))
-            Text(strings.launch)
+//            Spacer(Modifier.width(5.dp))
+//            Text(strings.launch)
         }
-        Spacer(Modifier.padding(5.dp))
+        Spacer(Modifier.width(5.dp))
         Button(
             {
                 scope.launch(Dispatchers.IO) {
@@ -133,10 +136,27 @@ private fun InstanceButtonRow(
             enabled = interactable
         ) {
             Icon(TablerIcons.Tools, strings.runEditor)
-            Spacer(Modifier.padding(5.dp))
-            Text(strings.launchEditor)
+//            Spacer(Modifier.padding(5.dp))
+//            Text(strings.launchEditor)
         }
-        Spacer(Modifier.padding(5.dp))
+        Spacer(Modifier.width(5.dp))
+        Button(
+            {
+                scope.launch(Dispatchers.IO) {
+                    instance.activate()
+                }
+            },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = MaterialTheme.colors.secondary,
+                contentColor = Color.White
+            ),
+            enabled = !instanceActive
+        ) {
+            Icon(TablerIcons.Pencil, strings.activateInstance)
+            Spacer(Modifier.padding(5.dp))
+            Text(strings.activate)
+        }
+        Spacer(Modifier.width(5.dp))
         Icon(
             instance.patchVersion.icon,
             strings.instancePatchVersion,

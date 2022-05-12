@@ -8,13 +8,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cafe.adriel.lyricist.LocalStrings
 import dev.nycode.omsilauncher.ui.components.ClickablePath
 import dev.nycode.omsilauncher.ui.routing.RouterState
+import dev.nycode.omsilauncher.ui.setup.ExplainSteamRoute
 import dev.nycode.omsilauncher.ui.setup.SetupState
-import dev.nycode.omsilauncher.ui.setup.StartSetupRoute
-import dev.nycode.omsilauncher.ui.setup.SteamRoute
 import dev.nycode.omsilauncher.util.chooseDirectory
-import dev.nycode.omsilauncher.util.isSteamRunning
 import kotlinx.coroutines.launch
 
 @Composable
@@ -22,11 +21,12 @@ fun GameDirectoryScreen(routerState: RouterState, config: MutableState<SetupStat
     val scope = rememberCoroutineScope()
     var configuration by config
     var gameFileDirectory by remember { mutableStateOf(configuration.launcherPath) }
+    val strings = LocalStrings.current
     Box(Modifier.fillMaxSize()) {
-        Text("Setup", fontSize = 35.sp, modifier = Modifier.align(Alignment.TopCenter))
+        Text(strings.setup, fontSize = 35.sp, modifier = Modifier.align(Alignment.TopCenter))
         Column(Modifier.align(Alignment.Center)) {
             Text(
-                "Choose a directory where your instances and the base game files should be stored.",
+                strings.setupChooseDirectory,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Button({
@@ -34,29 +34,24 @@ fun GameDirectoryScreen(routerState: RouterState, config: MutableState<SetupStat
                     gameFileDirectory = chooseDirectory(gameFileDirectory)
                 }
             }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                Text("Select Game File Directory")
+                Text(strings.chooseGameFileDirectory)
             }
                 Spacer(Modifier.padding(5.dp))
                 if (gameFileDirectory != null) {
                     ClickablePath(gameFileDirectory!!)
                 } else {
-                    Text("No Game Directory selected.")
+                    Text(strings.noGameFileDirectory)
                 }
             }
             Button(
                 {
                     configuration = configuration.copy(launcherPath = gameFileDirectory)
-                    if (isSteamRunning()) {
-                        routerState.currentRoute = SteamRoute
-                    } else {
-                        routerState.currentRoute = StartSetupRoute
-                    }
+                    routerState.currentRoute = ExplainSteamRoute
                 },
                 modifier = Modifier.align(Alignment.BottomEnd).padding(10.dp),
                 enabled = gameFileDirectory != null
             ) {
-                Text("Continue")
+                Text(strings.`continue`)
             }
         }
     }
-    

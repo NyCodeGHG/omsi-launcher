@@ -3,6 +3,8 @@ package dev.nycode.omsilauncher
 import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import cafe.adriel.lyricist.ProvideStrings
+import cafe.adriel.lyricist.rememberStrings
 import dev.nycode.omsilauncher.config.Configuration
 import dev.nycode.omsilauncher.ui.Application
 import dev.nycode.omsilauncher.ui.routing.Router
@@ -20,17 +22,20 @@ fun runLauncher(
 ) =
     application {
         val routerState = rememberRouterState(if (runSetup) SetupRoute else MainApplicationRoute)
+        val lyricist = rememberStrings()
         val closeSetup = {
             routerState.currentRoute = MainApplicationRoute
         }
-        MaterialTheme {
-            Window(onCloseRequest = ::exitApplication, title = getApplicationTitle()) {
-                Router(routerState) {
-                    route(SetupRoute) {
-                        Setup(closeSetup, configuration)
-                    }
-                    route(MainApplicationRoute) {
-                        Application()
+        ProvideStrings(lyricist) {
+            MaterialTheme {
+                Window(onCloseRequest = ::exitApplication, title = getApplicationTitle()) {
+                    Router(routerState) {
+                        route(SetupRoute) {
+                            Setup(closeSetup, configuration)
+                        }
+                        route(MainApplicationRoute) {
+                            Application()
+                        }
                     }
                 }
             }

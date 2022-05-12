@@ -8,6 +8,7 @@ import dev.nycode.omsilauncher.config.PersistentValue
 import dev.nycode.omsilauncher.serialization.SerializablePath
 import dev.nycode.omsilauncher.serialization.SerializableUUID
 import dev.nycode.omsilauncher.util.activateAndStartInstallationSafe
+import dev.nycode.omsilauncher.util.activateInstallationSafe
 import kotlinx.serialization.Serializable
 import java.nio.file.Path
 import kotlin.io.path.Path
@@ -30,6 +31,10 @@ data class Instance(
             }
         }
         activateAndStartInstallationSafe(directory, flags)
+    }
+
+    suspend fun activate() {
+        activateInstallationSafe(directory)
     }
 
     enum class PatchVersion(val type: String, val icon: ImageVector) {

@@ -1,7 +1,13 @@
 package dev.nycode.omsilauncher.ui.instance
 
 import androidx.compose.foundation.VerticalScrollbar
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.verticalScroll
@@ -9,15 +15,21 @@ import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.lyricist.LocalStrings
-import cafe.adriel.lyricist.ProvideStrings
-import cafe.adriel.lyricist.rememberStrings
 import dev.nycode.omsilauncher.config.config
 import dev.nycode.omsilauncher.instance.Instance
+import dev.nycode.omsilauncher.instance.getCurrentInstancePath
+import dev.nycode.omsilauncher.instance.receiveCurrentInstancePath
 import dev.nycode.omsilauncher.omsi.OmsiProcessState
 import dev.nycode.omsilauncher.omsi.receiveOmsiProcessUpdates
 import dev.nycode.omsilauncher.ui.components.InstanceListEntry
@@ -27,14 +39,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.nio.file.Path
-import java.util.*
+import java.util.UUID
 import kotlin.io.path.createDirectories
 import kotlin.io.path.listDirectoryEntries
 import kotlin.io.path.notExists
 
 @Composable
 fun InstanceScreen() {
-    val lyricist = rememberStrings()
     val scope = rememberCoroutineScope()
     val instanceState = rememberApplicationInstanceState()
     val instances = instanceState.instances
@@ -42,46 +53,46 @@ fun InstanceScreen() {
         if (isOmsiRunning()) OmsiProcessState.RUNNING else OmsiProcessState.NOT_RUNNING,
         Dispatchers.IO
     )
-    ProvideStrings(lyricist) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            val stateVertical = rememberScrollState(0)
-            Box(
-                Modifier.fillMaxSize()
-                    .verticalScroll(stateVertical)
-                    .padding(end = 12.dp, bottom = 12.dp)
-            ) {
-                Column(Modifier.fillMaxSize()) {
-                    instances.forEach {
-                        InstanceListEntry(
-                            Modifier.padding(5.dp),
-                            instanceState,
-                            it,
-                            scope,
-                            omsiState
-                        )
-                    }
-                    InstanceCreationCard(
+    val currentInstancePath by receiveCurrentInstancePath().collectAsState(getCurrentInstancePath())
+    Box(modifier = Modifier.fillMaxSize()) {
+        val stateVertical = rememberScrollState(0)
+        Box(
+            Modifier.fillMaxSize()
+                .verticalScroll(stateVertical)
+                .padding(end = 12.dp, bottom = 12.dp)
+        ) {
+            Column(Modifier.fillMaxSize()) {
+                instances.forEach {
+                    InstanceListEntry(
                         Modifier.padding(5.dp),
+                        instanceState,
+                        it,
                         scope,
-                        { name, patchVersion, directory ->
-                            directory.parent.createDirectories()
-                            instanceState.createNewInstance(
-                                UUID.randomUUID(),
-                                name,
-                                directory,
-                                patchVersion,
-                                uses4GBPatch = true
-                            )
-                        },
-                        omsiState
+                        omsiState,
+                        it.directory == currentInstancePath
                     )
                 }
+                InstanceCreationCard(
+                    Modifier.padding(5.dp),
+                    scope,
+                    { name, patchVersion, directory ->
+                        directory.parent.createDirectories()
+                        instanceState.createNewInstance(
+                            UUID.randomUUID(),
+                            name,
+                            directory,
+                            patchVersion,
+                            uses4GBPatch = true
+                        )
+                    },
+                    omsiState
+                )
             }
-            VerticalScrollbar(
-                modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
-                adapter = rememberScrollbarAdapter(stateVertical)
-            )
         }
+        VerticalScrollbar(
+            modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+            adapter = rememberScrollbarAdapter(stateVertical)
+        )
     }
 }
 

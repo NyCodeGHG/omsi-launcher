@@ -7,6 +7,7 @@ import dev.nycode.omsilauncher.ui.routing.RouterKey
 import dev.nycode.omsilauncher.ui.routing.rememberRouterState
 import dev.nycode.omsilauncher.ui.setup.screens.GameDirectoryScreen
 import dev.nycode.omsilauncher.ui.setup.screens.StartSetupScreen
+import dev.nycode.omsilauncher.ui.setup.screens.SteamExplainerSetupScreen
 import dev.nycode.omsilauncher.ui.setup.screens.SteamProcessScreen
 import java.nio.file.Path
 
@@ -20,6 +21,7 @@ data class SetupState(val launcherPath: Path?) {
 }
 
 val GameDirectoryRoute = RouterKey(name = "GameDirectory")
+val ExplainSteamRoute = RouterKey(name = "ExplainSteamRoute")
 val SteamRoute = RouterKey(name = "Steam")
 val StartSetupRoute = RouterKey(name = "StartSetup")
 
@@ -30,6 +32,9 @@ fun Setup(closeSetup: () -> Unit, configuration: Configuration?) {
     Router(routerState) {
         route(GameDirectoryRoute) {
             GameDirectoryScreen(routerState, config)
+        }
+        route(ExplainSteamRoute) {
+            SteamExplainerSetupScreen(routerState)
         }
         route(SteamRoute) {
             SteamProcessScreen(routerState)

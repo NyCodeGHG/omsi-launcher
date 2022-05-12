@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import cafe.adriel.lyricist.LocalStrings
 import dev.nycode.omsilauncher.ui.routing.RouterState
 import dev.nycode.omsilauncher.ui.setup.StartSetupRoute
 import dev.nycode.omsilauncher.util.awaitSteamDeath
@@ -21,6 +22,7 @@ fun SteamProcessScreen(routerState: RouterState) = Box(Modifier.fillMaxSize()) {
     val scope = rememberCoroutineScope()
     var closingSteam by remember { mutableStateOf(false) }
     var steamErrorDialog by remember { mutableStateOf(false) }
+    val strings = LocalStrings.current
     DisposableEffect(steamAwaitKey) {
         scope.launch {
             awaitSteamDeath()
@@ -30,7 +32,7 @@ fun SteamProcessScreen(routerState: RouterState) = Box(Modifier.fillMaxSize()) {
     }
     Column(Modifier.align(Alignment.Center)) {
         Text(
-            "Please close Steam™ while setting up the launcher.",
+            strings.closeSteamInfo,
             Modifier.align(Alignment.CenterHorizontally),
             fontSize = 20.sp
         )
@@ -49,15 +51,15 @@ fun SteamProcessScreen(routerState: RouterState) = Box(Modifier.fillMaxSize()) {
             modifier = Modifier.align(Alignment.CenterHorizontally),
             enabled = !closingSteam
         ) {
-            Text("Close Steam")
+            Text(strings.closeSteam)
         }
         if (steamErrorDialog) {
             ErrorDialog(
-                "We were not able to close Steam gracefully. Please close it manually. The setup will continue automatically.",
+                strings.unableToCloseSteam,
                 {
                     steamErrorDialog = false
                 },
-                "Cannot close Steam."
+                strings.unableToCloseSteamTitle
             )
         }
     }
@@ -75,7 +77,7 @@ fun ErrorDialog(text: String, onCloseRequest: () -> Unit, title: String) =
                     onCloseRequest,
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colors.error)
                 ) {
-                    Text("Ok")
+                    Text(LocalStrings.current.ok)
                 }
             }
         }

@@ -4,6 +4,8 @@ import cafe.adriel.lyricist.LyricistStrings
 
 @LyricistStrings(languageTag = "en", default = true)
 val StringsEn = Strings(
+    ok = "Ok",
+    `continue` = "Continue",
     instances = "Instances",
     addNewInstance = "Add new Instance",
     runInstance = "Run instance",
@@ -19,5 +21,19 @@ val StringsEn = Strings(
     confirmDeletion = { instance ->
         "Are you sure you want to delete $instance?"
     },
-    instanceName = "Instance name"
+    instanceName = "Instance name",
+    activateInstance = "Activate instance",
+    activate = "Activate",
+    closeSteamInfo = "Please close Steam™ while setting up the launcher.",
+    closeSteam = "Close Steam",
+    unableToCloseSteam = "We were not able to close Steam gracefully. Please close it manually. The setup will continue automatically.",
+    unableToCloseSteamTitle = "Cannot close Steam.",
+    createBaseGame = "Create base game instance",
+    baseGameExplanation = """In order to share AddOns between your instances, you need to select a list of base addons,
+        |the easiest way is to reinstall OMSI, with just the base AddOns selected
+    """.trimMargin(),
+    setup = "Setup",
+    setupChooseDirectory = "Choose a directory where your instances and the base game files should be stored.",
+    chooseGameFileDirectory = "Select Game File Directory",
+    noGameFileDirectory = "No Game Directory selected."
 )

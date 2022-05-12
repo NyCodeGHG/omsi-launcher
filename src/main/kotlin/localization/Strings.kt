@@ -1,6 +1,8 @@
 package dev.nycode.omsilauncher.localization
 
 data class Strings(
+    val ok: String,
+    val `continue`: String,
     val instances: String,
     val addNewInstance: String,
     val eCitaro: String = "eCitaro",
@@ -15,5 +17,17 @@ data class Strings(
     val yes: String,
     val no: String,
     val confirmDeletion: (instance: String) -> String,
-    val instanceName: String
+    val instanceName: String,
+    val activateInstance: String,
+    val activate: String,
+    val closeSteamInfo: String,
+    val closeSteam: String,
+    val unableToCloseSteam: String,
+    val unableToCloseSteamTitle: String,
+    val createBaseGame: String,
+    val baseGameExplanation: String,
+    val setup: String,
+    val setupChooseDirectory: String,
+    val chooseGameFileDirectory: String,
+    val noGameFileDirectory: String
 )
