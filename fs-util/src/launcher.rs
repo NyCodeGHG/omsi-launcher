@@ -1,16 +1,28 @@
-use crate::privileges::can_create_symlinks;
-use deelevate::{BridgeServer, PrivilegeLevel, Token};
 use std::io::Result;
+use std::process::exit;
+use std::{env, io};
 
-pub fn with_symlink_permission<T>(run: T) -> Result<()>
+use deelevate::{BridgeServer, PrivilegeLevel, Token};
+
+use crate::privileges::can_create_symlinks;
+
+pub fn with_symlink_permission<T>(run: T)
 where
     T: Fn() -> Result<()>,
 {
-    if can_create_symlinks() {
+    let result = if can_create_symlinks() {
         run()
     } else {
-        with_privileges(run)
-    }
+        let result = with_privileges(run);
+        if let Err(e) = &result {
+            if let Some(code) = e.raw_os_error() {
+                exit(code);
+            }
+        }
+        result
+    };
+
+    result.unwrap();
 }
 
 pub fn with_privileges<T>(run: T) -> Result<()>
@@ -19,7 +31,13 @@ where
 {
     let token = Token::with_current_process()?;
     match token.privilege_level()? {
-        PrivilegeLevel::NotPrivileged => spawn_with_elevated_privileges(),
+        PrivilegeLevel::NotPrivileged => match spawn_with_elevated_privileges() {
+            Err(e) => match e.raw_os_error() {
+                None => panic!("{}", e),
+                Some(code) => exit(code),
+            },
+            Ok(_code) => Ok(()),
+        },
         PrivilegeLevel::Elevated | PrivilegeLevel::HighIntegrityAdmin => run(),
     }
 }
@@ -34,8 +52,11 @@ fn spawn_with_elevated_privileges() -> Result<()> {
     };
 
     let mut server = BridgeServer::new();
-    let mut argv = std::env::args_os().collect();
+    let mut argv = env::args_os().collect();
     let mut bridge_cmd = server.start_for_command(&mut argv, &target_token)?;
-    let proc = bridge_cmd.shell_execute("runas")?;
-    std::process::exit(server.serve(proc)? as _);
+    let proc = bridge_cmd.shell_execute("runas");
+    match proc {
+        Ok(process) => server.serve(process).map(|_| ()),
+        Err(_) => Err(io::Error::last_os_error()),
+    }
 }

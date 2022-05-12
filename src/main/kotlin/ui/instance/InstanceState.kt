@@ -2,7 +2,7 @@ package dev.nycode.omsilauncher.ui.instance
 
 import androidx.compose.runtime.*
 import dev.nycode.omsilauncher.instance.*
-import dev.nycode.omsilauncher.util.createInstance
+import dev.nycode.omsilauncher.omsi.createInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.nio.file.Files

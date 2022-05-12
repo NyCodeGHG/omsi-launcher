@@ -1,3 +1,5 @@
+extern crate core;
+
 use std::fmt::Debug;
 use std::fs;
 use std::fs::File;
@@ -27,9 +29,9 @@ struct Opt {
     omsi_instance_folder: PathBuf,
 }
 
-fn main() -> std::io::Result<()> {
+fn main() {
     simple_logger::SimpleLogger::new().env().init().unwrap();
-    with_symlink_permission(run)
+    with_symlink_permission(run);
 }
 
 const OMSI_APP_ID: i32 = 252530;

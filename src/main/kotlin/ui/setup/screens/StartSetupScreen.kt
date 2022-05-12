@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import dev.nycode.omsilauncher.config.saveConfig
 import dev.nycode.omsilauncher.ui.components.ClickablePath
 import dev.nycode.omsilauncher.ui.setup.SetupState
-import dev.nycode.omsilauncher.util.OMSI_STEAM_ID
+import dev.nycode.omsilauncher.omsi.OMSI_STEAM_ID
 import dev.nycode.omsilauncher.util.getOmsiInstallPath
 import dev.nycode.omsilauncher.util.logger
 import dev.nycode.omsilauncher.util.parent

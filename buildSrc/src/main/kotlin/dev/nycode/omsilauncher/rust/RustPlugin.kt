@@ -9,7 +9,7 @@ import org.gradle.kotlin.dsl.create
 class RustPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         target.tasks.create("compileRust", CargoTask::class) {
-            subCommand.set(listOf("build", "--release"))
+            subCommand.set(listOf("build"))
         }
         target.tasks.create("downloadElevateHelper", DownloadElevateHelperTask::class) {
             group = "other"

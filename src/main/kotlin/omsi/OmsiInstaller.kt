@@ -1,9 +1,11 @@
-package dev.nycode.omsilauncher.util
+package dev.nycode.omsilauncher.omsi
 
 import dev.nycode.omsilauncher.config.config
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.LaunchFlag
-import dev.nycode.omsilauncher.omsi.getOmsiBinary
+import dev.nycode.omsilauncher.util.getOmsiInstallPath
+import dev.nycode.omsilauncher.util.logger
+import dev.nycode.omsilauncher.util.parent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.withContext
@@ -19,6 +21,7 @@ import kotlin.io.path.readSymbolicLink
 private val logger = logger()
 
 const val OMSI_STEAM_ID = 252530
+private const val UAC_CANCELLED = 1223
 
 private val releaseMode = System.getProperty("dev.nycode.omsi_launcher.release") != null
 
@@ -56,8 +59,10 @@ private suspend fun doNativeCall(name: String, vararg parameters: String) =
             .start()
 
         process.onExit().await()
-        if (process.exitValue() != 0) {
-            error("Unexpected exit code from $name: ${process.exitValue()}")
+        when (process.exitValue()) {
+            0 -> {}
+            UAC_CANCELLED -> throw UserAccessControlCancelledException()
+            else -> error("Unexpected exit code from $name: ${process.exitValue()}")
         }
         logger.debug { "Successfully finished native call." }
     }
@@ -93,3 +98,5 @@ fun startOmsi(flags: List<LaunchFlag> = emptyList()) {
             )
         )
 }
+
+class UserAccessControlCancelledException : RuntimeException()

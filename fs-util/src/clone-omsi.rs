@@ -1,3 +1,5 @@
+extern crate core;
+
 use std::fs;
 use std::os::windows::fs as windows_fs;
 use std::path::{Path, PathBuf};
@@ -31,9 +33,9 @@ struct Opt {
     only_link_binary: bool,
 }
 
-fn main() -> std::io::Result<()> {
+fn main() {
     simple_logger::SimpleLogger::new().env().init().unwrap();
-    with_symlink_permission(run)
+    with_symlink_permission(run);
 }
 
 fn run() -> std::io::Result<()> {
