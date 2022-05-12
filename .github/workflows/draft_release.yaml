@@ -71,7 +71,7 @@ jobs:
           Set-Content -Path certificate\certificate.txt -Value '${{ secrets.WINDOWS_CERTIFICATE }}'
           certutil -decode certificate\certificate.txt certificate\certificate.pfx
       - name: Sign Binaries
-        working-directory: fs-util/binaries/windows
+        working-directory: fs-util\binaries\windows
         run: |
           signtool sign /f certificate\certificate.pfx /p '${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}' /t http://timestamp.sectigo.com/ /d omsi-launcher omsi-elevate.exe clone-omsi.exe activate-omsi.exe
       - name: Compile and check code
