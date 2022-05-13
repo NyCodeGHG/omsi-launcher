@@ -3,6 +3,7 @@ extern crate core;
 use std::fmt::Debug;
 use std::fs;
 use std::fs::File;
+
 use std::os::windows::fs as windows_fs;
 use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -13,7 +14,6 @@ use structopt::*;
 use crate::launcher::with_symlink_permission;
 
 mod launcher;
-mod privileges;
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "activate-omsi", about = "Activates a specific Omsi instance")]

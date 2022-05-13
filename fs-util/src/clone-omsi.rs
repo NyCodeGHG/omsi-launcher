@@ -2,15 +2,16 @@ extern crate core;
 
 use std::fs;
 use std::os::windows::fs as windows_fs;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
+use crate::directory_copier::mirror_folder;
 use log::info;
 use structopt::*;
 
 use crate::launcher::with_symlink_permission;
 
+mod directory_copier;
 mod launcher;
-mod privileges;
 
 #[derive(Debug, StructOpt)]
 #[structopt(
@@ -69,24 +70,5 @@ fn run() -> std::io::Result<()> {
     );
 
     fs::copy(base_manifest, destination)?;
-    Ok(())
-}
-
-fn mirror_folder(from: &PathBuf, to: &Path) -> std::io::Result<()> {
-    if !to.exists() {
-        fs::create_dir_all(to)?;
-    }
-
-    for item in fs::read_dir(from)? {
-        let path = item?.path();
-        let target_name = path.file_name().unwrap().to_str().unwrap();
-        let target = to.join(target_name);
-        if path.is_dir() {
-            mirror_folder(&path, &target).unwrap()
-        } else if target.file_name().unwrap() != "manifest.acf" {
-            windows_fs::symlink_file(path, target)?
-        }
-    }
-
     Ok(())
 }

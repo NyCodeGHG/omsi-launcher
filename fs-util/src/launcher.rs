@@ -2,9 +2,10 @@ use std::io::Result;
 use std::process::exit;
 use std::{env, io};
 
+use crate::launcher::privileges::can_create_symlinks;
 use deelevate::{BridgeServer, PrivilegeLevel, Token};
 
-use crate::privileges::can_create_symlinks;
+mod privileges;
 
 pub fn with_symlink_permission<T>(run: T)
 where

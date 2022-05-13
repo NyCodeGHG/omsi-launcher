@@ -13,6 +13,10 @@ path = "src/clone-omsi.rs"
 name = "activate-omsi"
 path = "src/activate-omsi.rs"
 
+[[bin]]
+name = "relink-omsi"
+path = "src/relink-omsi.rs"
+
 [dependencies]
 structopt = "0.3"
 deelevate = { git = "https://github.com/NyCodeGHG/omsi-elevate" }
