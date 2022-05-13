@@ -62,6 +62,7 @@ tasks {
         kotlinOptions {
             freeCompilerArgs =
                 freeCompilerArgs + "-opt-in=kotlinx.serialization.ExperimentalSerializationApi"
+            jvmTarget = "18"
         }
     }
     afterEvaluate {
@@ -74,6 +75,16 @@ tasks {
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(18))
+    }
+}
+
+kotlin {
+    sourceSets {
+        all {
+            languageSettings {
+                optIn("kotlin.RequiresOptIn")
+            }
+        }
     }
 }
 
