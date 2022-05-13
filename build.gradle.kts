@@ -36,7 +36,7 @@ dependencies {
     implementation("org.lwjgl", "lwjgl-nfd", "3.3.1", classifier = "natives-windows")
     implementation("br.com.devsrsouza.compose.icons.jetbrains", "tabler-icons", "1.0.0")
 
-    implementation("cafe.adriel.lyricist", "lyricist", "1.2.0")
+    implementation("cafe.adriel.lyricist", "lyricist", "1.2.1")
 
     ksp("cafe.adriel.lyricist", "lyricist-processor", "1.2.0")
     implementation(platform("dev.schlaubi:stdx-bom:1.1.0"))
