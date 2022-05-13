@@ -61,7 +61,8 @@ tasks {
     withType<KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs =
-                freeCompilerArgs + "-opt-in=kotlinx.serialization.ExperimentalSerializationApi"
+                freeCompilerArgs + "-opt-in=kotlinx.serialization.ExperimentalSerializationApi" +
+            "-opt-in=kotlinx.serialization.InternalSerializationApi"
             jvmTarget = "18"
         }
     }
