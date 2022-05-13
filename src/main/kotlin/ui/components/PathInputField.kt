@@ -1,15 +1,11 @@
 package dev.nycode.omsilauncher.ui.components
 
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onKeyEvent
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Folder
 import dev.nycode.omsilauncher.util.chooseDirectory
@@ -19,7 +15,6 @@ import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PathInputField(
     value: Path?,
@@ -28,6 +23,7 @@ fun PathInputField(
     modifier: Modifier = Modifier,
     isError: Boolean = false,
     label: (@Composable () -> Unit)? = null,
+    placeholder: (@Composable () -> Unit)? = null,
 ) {
     val scope = rememberCoroutineScope()
     val chooseDirectory = {
@@ -41,22 +37,17 @@ fun PathInputField(
             onValueChange(Path(it))
         },
         readOnly = true,
+        singleLine = true,
         trailingIcon = {
-            Icon(TablerIcons.Folder, "Folder")
-        },
-        modifier = modifier.onFocusChanged { state ->
-            if (state.isFocused) {
+            IconButton({
                 chooseDirectory()
-            }
-        }.onKeyEvent {
-            if (it.key == Key.Enter) {
-                chooseDirectory()
-                return@onKeyEvent true
-            } else {
-                return@onKeyEvent false
+            }) {
+                Icon(TablerIcons.Folder, "Folder")
             }
         },
+        modifier = modifier,
         isError = isError,
-        label = label
+        label = label,
+        placeholder = placeholder
     )
 }

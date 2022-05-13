@@ -5,6 +5,7 @@ import compose.icons.TablerIcons
 import compose.icons.tablericons.Bus
 import compose.icons.tablericons.Train
 import dev.nycode.omsilauncher.config.PersistentValue
+import dev.nycode.omsilauncher.localization.Strings
 import dev.nycode.omsilauncher.omsi.activateAndStartInstallationSafe
 import dev.nycode.omsilauncher.omsi.activateInstallationSafe
 import dev.nycode.omsilauncher.serialization.SerializablePath
@@ -37,15 +38,23 @@ data class Instance(
         activateInstallationSafe(directory)
     }
 
-    enum class PatchVersion(val type: String, val icon: ImageVector) {
-        BI_ARTICULATED_BUS_VERSION("current", TablerIcons.Bus),
-        TRAM_VERSION("older", TablerIcons.Train);
+    enum class PatchVersion(
+        val type: String,
+        val icon: ImageVector,
+        val translation: Strings.() -> String,
+    ) {
+        BI_ARTICULATED_BUS_VERSION("current", TablerIcons.Bus, { biArticulatedBusPatch }),
+        TRAM_VERSION("older", TablerIcons.Train, { tramPatch });
 
         val executable: String
             get() = "Omsi_$type.exe"
 
         val relativePath: Path
             get() = Path("_Straßenbahn") / executable
+
+        companion object {
+            val VALUES = values().toList()
+        }
     }
 
     override fun toSavedData(): SavedInstance {

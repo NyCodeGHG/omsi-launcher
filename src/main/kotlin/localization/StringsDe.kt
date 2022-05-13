@@ -1,6 +1,7 @@
 package dev.nycode.omsilauncher.localization
 
 import cafe.adriel.lyricist.LyricistStrings
+import dev.nycode.omsilauncher.util.removeLineBreaks
 
 @LyricistStrings(languageTag = "de")
 val StringsDe = Strings(
@@ -32,9 +33,17 @@ val StringsDe = Strings(
     baseGameExplanation = """Um verschiedene AddOns in mehreren AddOns installiert zu haben, musst du eine Basis-Instanz
         |erstellen, am einfachsten geht das, indem du OMSI neu installierst und dabei nur die gewünschten Basis-AddOns
         |auswählst
-    """.trimMargin(),
+    """.trimMargin().removeLineBreaks(),
     setup = "Setup",
     setupChooseDirectory = "Wähle einen Ordner in dem deine Instanzen und Spieldateien gespeichert werden sollen.",
     chooseGameFileDirectory = "Wähle dein neues Spielverzeichnis aus",
-    noGameFileDirectory = "Kein Spielverzeichnis ausgewählt."
+    noGameFileDirectory = "Kein Spielverzeichnis ausgewählt.",
+    newInstance = "Neue Instanz",
+    biArticulatedBusPatch = "Doppelgelenkbus-Patch",
+    tramPatch = "Straßenbahn-Patch",
+    createANewInstance = "Eine neue Instanz erstellen",
+    instanceDirectory = "Instanz-Ordner",
+    patchVersion = "Patch-Version",
+    use4gbPatch = "4 GB Arbeitsspeicher-Patch verwenden",
+    createInstance = "Instanz erstellen"
 )

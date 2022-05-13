@@ -1,6 +1,7 @@
 package dev.nycode.omsilauncher.localization
 
 import cafe.adriel.lyricist.LyricistStrings
+import dev.nycode.omsilauncher.util.removeLineBreaks
 
 @LyricistStrings(languageTag = "en", default = true)
 val StringsEn = Strings(
@@ -31,9 +32,17 @@ val StringsEn = Strings(
     createBaseGame = "Create base game instance",
     baseGameExplanation = """In order to share AddOns between your instances, you need to select a list of base addons,
         |the easiest way is to reinstall OMSI, with just the base AddOns selected
-    """.trimMargin(),
+    """.trimMargin().removeLineBreaks(),
     setup = "Setup",
     setupChooseDirectory = "Choose a directory where your instances and the base game files should be stored.",
     chooseGameFileDirectory = "Select Game File Directory",
-    noGameFileDirectory = "No Game Directory selected."
+    noGameFileDirectory = "No Game Directory selected.",
+    newInstance = "New Instance",
+    biArticulatedBusPatch = "Bi articulated bus Patch",
+    tramPatch = "Tram Patch",
+    createANewInstance = "Create a new Instance",
+    instanceDirectory = "Instance Directory",
+    patchVersion = "Patch Version",
+    use4gbPatch = "Use 4 GB Memory Patch",
+    createInstance = "Create Instance"
 )

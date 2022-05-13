@@ -29,5 +29,13 @@ data class Strings(
     val setup: String,
     val setupChooseDirectory: String,
     val chooseGameFileDirectory: String,
-    val noGameFileDirectory: String
+    val noGameFileDirectory: String,
+    val newInstance: String,
+    val biArticulatedBusPatch: String,
+    val tramPatch: String,
+    val createANewInstance: String,
+    val instanceDirectory: String,
+    val patchVersion: String,
+    val use4gbPatch: String,
+    val createInstance: String,
 )
