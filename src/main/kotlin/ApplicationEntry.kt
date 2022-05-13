@@ -28,7 +28,7 @@ fun runLauncher(
 ) =
     application {
         val routerState = rememberRouterState(if (runSetup) SetupRoute else MainApplicationRoute)
-        val lyricist = rememberStrings("de")
+        val lyricist = rememberStrings()
         val closeSetup = {
             routerState.currentRoute = MainApplicationRoute
         }
