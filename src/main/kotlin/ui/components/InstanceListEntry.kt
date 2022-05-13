@@ -156,7 +156,7 @@ private fun InstanceButtonRow(
                 backgroundColor = MaterialTheme.colors.secondary,
                 contentColor = Color.White
             ),
-            enabled = !instanceActive
+            enabled = !instanceActive && interactable
         ) {
             Icon(TablerIcons.Click, strings.activateInstance)
         }
