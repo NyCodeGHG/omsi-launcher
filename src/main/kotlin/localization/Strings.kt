@@ -38,4 +38,8 @@ data class Strings(
     val patchVersion: String,
     val use4gbPatch: String,
     val createInstance: String,
+    val omsiNotInstalledTitle: String,
+    val omsiNotInstalledDescription: String,
+    val steamNotInstalledTitle: String,
+    val steamNotInstalledDescription: String
 )

@@ -17,4 +17,7 @@ inline fun Router(routerState: RouterState, builder: RouterBuilder.() -> Unit) {
 }
 
 @Composable
-fun rememberRouterState(defaultRoute: RouterKey) = remember { RouterState(defaultRoute) }
+fun rememberRouterState(defaultRoute: () -> RouterKey) = remember { RouterState(defaultRoute()) }
+
+@Composable
+fun rememberRouterState(defaultRoute: RouterKey) = rememberRouterState { defaultRoute }

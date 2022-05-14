@@ -44,5 +44,9 @@ val StringsEn = Strings(
     instanceDirectory = "Instance Directory",
     patchVersion = "Patch Version",
     use4gbPatch = "Use 4 GB Memory Patch",
-    createInstance = "Create Instance"
+    createInstance = "Create Instance",
+    omsiNotInstalledTitle = "OMSI not installed",
+    omsiNotInstalledDescription = "Cannot find OMSI installation path, please try starting it through Steam",
+    steamNotInstalledTitle = "Steam not installed",
+    steamNotInstalledDescription = "This launcher is only available for the Steam version of OMSI 2"
 )
