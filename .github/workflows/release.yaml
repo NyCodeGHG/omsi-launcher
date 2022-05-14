@@ -11,8 +11,7 @@ jobs:
   # Credit: https://github.com/cli/cli/blob/351cd622e7499ab94b57ec5dbbcd2143c3761192/.github/workflows/releases.yml#L200-L214
   winget:
     name: Update winget manifest
-    runs-on: windows-2019
-    if: 1 == 2 # disable until UX is stable
+    runs-on: windows-2022
     steps:
       - name: Setup winget-create
         shell: pwsh
