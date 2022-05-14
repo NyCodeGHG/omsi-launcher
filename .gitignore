@@ -49,3 +49,6 @@ test-link
 test-link2
 
 local.properties
+
+# log files
+*.log
