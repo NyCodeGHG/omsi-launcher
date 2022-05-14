@@ -11,8 +11,7 @@ jobs:
   # Credit: https://github.com/cli/cli/blob/351cd622e7499ab94b57ec5dbbcd2143c3761192/.github/workflows/releases.yml#L200-L214
   winget:
     name: Update winget manifest
-    runs-on: windows-2019
-    if: 1 == 2 # disable until UX is stable
+    runs-on: windows-2022
     steps:
       - name: Setup winget-create
         shell: pwsh
@@ -26,7 +25,7 @@ jobs:
         run: |
           $tagname = $env:GITHUB_REF.Replace("refs/tags/", "")
           $version = $tagname.Replace("v", "")
-          $url = "https://github.com/Nycode/omsi-launcher/releases/download/${tagname}/omsi-launcher-${version}.msi"
+          $url = "https://github.com/NyCodeGHG/omsi-launcher/releases/download/${tagname}/omsi-launcher-${version}.msi"
           .\wingetcreate.exe update OmsiLauncher.OmsiLauncher -u $url --version $version
           if ($version -notmatch "-") {
             .\wingetcreate.exe submit .\manifests\m\OmsiLauncher\OmsiLauncher\${version}\ --token $env:WINGET_GITHUB_TOKEN
@@ -50,7 +49,7 @@ jobs:
       - name: Commit files
         run: |
           git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.name "GitHub Actions"
           git commit -m "Update changelog" -a
       - name: Push changes
         uses: ad-m/github-push-action@master
