@@ -8,6 +8,7 @@ import dev.nycode.omsilauncher.util.logger
 import dev.nycode.omsilauncher.util.parent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.await
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.nio.file.Path
 import kotlin.io.path.Path
@@ -66,9 +67,14 @@ private suspend fun doNativeCall(name: String, vararg parameters: String) =
             if (releaseMode) Path("app") / "resources" else Path("fs-util") / "build" / "binaries" / "windows"
         val absoluteExecutable = (basePath / name).absolutePathString()
         val process = ProcessBuilder().command(absoluteExecutable, *parameters)
-            .redirectError(ProcessBuilder.Redirect.INHERIT)
-            .redirectOutput(ProcessBuilder.Redirect.INHERIT)
+            .redirectErrorStream(true)
             .start()
+
+        launch {
+            process.inputStream.bufferedReader().lineSequence().forEach {
+                logger.info(it)
+            }
+        }
 
         process.onExit().await()
         when (process.exitValue()) {
