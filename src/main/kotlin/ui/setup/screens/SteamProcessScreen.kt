@@ -15,15 +15,13 @@ import dev.nycode.omsilauncher.util.awaitSteamDeath
 import dev.nycode.omsilauncher.util.tryCloseSteam
 import kotlinx.coroutines.launch
 
-private val steamAwaitKey = Any()
-
 @Composable
 fun SteamProcessScreen(routerState: RouterState) = Box(Modifier.fillMaxSize()) {
     val scope = rememberCoroutineScope()
     var closingSteam by remember { mutableStateOf(false) }
     var steamErrorDialog by remember { mutableStateOf(false) }
     val strings = LocalStrings.current
-    DisposableEffect(steamAwaitKey) {
+    DisposableEffect(Unit) {
         scope.launch {
             awaitSteamDeath()
             routerState.currentRoute = StartSetupRoute

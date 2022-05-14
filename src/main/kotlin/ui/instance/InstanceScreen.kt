@@ -12,7 +12,9 @@ import androidx.compose.material.Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import cafe.adriel.lyricist.LocalStrings
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Plus
 import dev.nycode.omsilauncher.instance.getCurrentInstancePath
@@ -21,6 +23,8 @@ import dev.nycode.omsilauncher.omsi.OmsiProcessState
 import dev.nycode.omsilauncher.omsi.receiveOmsiProcessUpdates
 import dev.nycode.omsilauncher.ui.components.ErrorDialog
 import dev.nycode.omsilauncher.ui.components.InstanceListEntry
+import dev.nycode.omsilauncher.ui.components.TooltipText
+import dev.nycode.omsilauncher.ui.components.TooltipWrapper
 import dev.nycode.omsilauncher.ui.instance.creation.InstanceCreationDialog
 import dev.nycode.omsilauncher.util.isOmsiRunning
 import kotlinx.coroutines.Dispatchers
@@ -68,14 +72,12 @@ fun InstanceScreen() {
                 }
             }
         )
-        FloatingActionButton(
-            {
+        FloatingCreateInstanceButton(
+            modifier = Modifier.align(Alignment.BottomEnd).padding(bottom = 16.dp, end = 16.dp),
+            onClick = {
                 showCreationDialog = true
-            },
-            modifier = Modifier.align(Alignment.BottomEnd).padding(bottom = 16.dp, end = 16.dp)
-        ) {
-            Icon(TablerIcons.Plus, null)
-        }
+            }
+        )
     }
     if (showCreationDialog) {
         InstanceCreationDialog(
@@ -94,5 +96,26 @@ fun InstanceScreen() {
                 }
             }
         )
+    }
+}
+
+@Composable
+private fun FloatingCreateInstanceButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    val strings = LocalStrings.current
+    TooltipWrapper(
+        modifier = modifier,
+        tooltip = {
+            TooltipText(strings.createANewInstance)
+        }
+    ) {
+        FloatingActionButton(
+            onClick = onClick,
+            contentColor = Color.White
+        ) {
+            Icon(TablerIcons.Plus, null)
+        }
     }
 }
