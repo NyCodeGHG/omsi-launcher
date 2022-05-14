@@ -4,6 +4,8 @@ sealed class VDFElement
 
 data class VDFObject(private val content: Map<String, VDFElement>) : VDFElement(), Map<String, VDFElement> by content
 
+val EmptyVDFObject = VDFObject(emptyMap())
+
 sealed class VDFPrimitive : VDFElement() {
     abstract val isString: Boolean
     abstract val content: String
