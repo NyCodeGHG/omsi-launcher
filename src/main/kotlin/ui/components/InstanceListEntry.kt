@@ -1,7 +1,6 @@
 package dev.nycode.omsilauncher.ui.components
 
 import androidx.compose.foundation.ContextMenuArea
-import androidx.compose.foundation.ContextMenuItem
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -17,11 +16,18 @@ import compose.icons.TablerIcons
 import compose.icons.tablericons.*
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.InstanceState
-import dev.nycode.omsilauncher.localization.Strings
 import dev.nycode.omsilauncher.omsi.OmsiProcessState
 import dev.nycode.omsilauncher.omsi.UserAccessControlCancelledException
 import dev.nycode.omsilauncher.ui.CustomColors
 import dev.nycode.omsilauncher.ui.instance.ApplicationInstanceState
+import dev.nycode.omsilauncher.ui.instance.context.InstanceActionContext
+import dev.nycode.omsilauncher.ui.instance.context.InstanceContextMenuAction
+import dev.nycode.omsilauncher.ui.instance.context.impl.ActivateInstanceContextMenuAction
+import dev.nycode.omsilauncher.ui.instance.context.impl.DeleteInstanceContextMenuAction
+import dev.nycode.omsilauncher.ui.instance.context.impl.EditInstanceContextMenuAction
+import dev.nycode.omsilauncher.ui.instance.context.impl.start.EditorStartInstanceContextMenuAction
+import dev.nycode.omsilauncher.ui.instance.context.impl.start.RegularStartInstanceContextMenuAction
+import dev.nycode.omsilauncher.ui.instance.context.instanceContextMenus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,38 +46,44 @@ fun InstanceListEntry(
     val image = remember { imageFromResource("ecitaro.jpg") }
     var deleteDialog by remember { mutableStateOf(false) }
     val strings = LocalStrings.current
-    val interactable =
-        instance.state == InstanceState.READY && omsiState == OmsiProcessState.NOT_RUNNING
 
-    val startInstance: (Boolean) -> Unit = { editor: Boolean ->
-        scope.launch(Dispatchers.IO) {
-            instance.start(editor)
-        }
-    }
-
-    val editInstance = {} // not yet implemented
-
-    val deleteInstance = {
-        deleteDialog = true
-    }
-
-    val activateInstance: () -> Unit = {
-        scope.launch(Dispatchers.IO) {
-            try {
-                instance.activate()
-            } catch (exception: UserAccessControlCancelledException) {
-                showUACDialog()
+    val context = remember(strings, omsiState, instance, instanceActive, scope) {
+        val startInstance: (Boolean) -> Unit = { editor: Boolean ->
+            scope.launch(Dispatchers.IO) {
+                instance.start(editor)
             }
         }
-    }
 
-    Card(modifier, elevation = 3.dp) {
-        InstanceContextMenuArea(
+        val editInstance = {} // not yet implemented
+
+        val deleteInstance = {
+            deleteDialog = true
+        }
+
+        val activateInstance: () -> Unit = {
+            scope.launch(Dispatchers.IO) {
+                try {
+                    instance.activate()
+                } catch (exception: UserAccessControlCancelledException) {
+                    showUACDialog()
+                }
+            }
+        }
+
+        InstanceActionContext(
+            strings = strings,
+            omsiState = omsiState,
+            instance = instance,
+            instanceActive = instanceActive,
             onStartInstance = startInstance,
             onEditInstance = editInstance,
             onDeleteInstance = deleteInstance,
             onActivateInstance = activateInstance
-        ) {
+        )
+    }
+
+    Card(modifier, elevation = 3.dp) {
+        InstanceContextMenuArea(context = context) {
             Row(Modifier.fillMaxWidth().height(125.dp)) {
                 Image(image, strings.eCitaro)
                 Spacer(Modifier.padding(5.dp))
@@ -81,25 +93,31 @@ fun InstanceListEntry(
                     }
                     InstanceButtonRow(
                         modifier = Modifier.align(Alignment.BottomStart).padding(10.dp),
-                        instance = instance,
-                        interactable = interactable,
-                        instanceActive = instanceActive,
-                        onStartInstance = startInstance,
-                        onActivateInstance = activateInstance
+                        context = context
                     )
                     Box(
                         modifier = Modifier.align(Alignment.TopEnd).padding(10.dp).fillMaxHeight()
                     ) {
-                        InstanceEditButton(
+                        InstanceActionIconButton(
                             modifier = Modifier.align(Alignment.TopEnd),
-                            interactable = interactable,
-                            onEditInstance = editInstance
-                        )
-                        InstanceDeleteButton(
+                            context = context,
+                            EditInstanceContextMenuAction,
+                            strings.editInstance
+                        ) {
+                            Icon(TablerIcons.Pencil, strings.edit)
+                        }
+                        InstanceActionIconButton(
                             modifier = Modifier.align(Alignment.BottomEnd),
-                            interactable = interactable,
-                            onDeleteInstance = deleteInstance
-                        )
+                            context = context,
+                            DeleteInstanceContextMenuAction,
+                            strings.deleteInstance
+                        ) {
+                            Icon(
+                                TablerIcons.Trash,
+                                strings.delete,
+                                tint = MaterialTheme.colors.error
+                            )
+                        }
                     }
                 }
             }
@@ -124,68 +142,79 @@ fun InstanceListEntry(
 }
 
 @Composable
-private fun InstanceDeleteButton(
+private fun InstanceActionIconButton(
     modifier: Modifier = Modifier,
-    onDeleteInstance: () -> Unit,
-    interactable: Boolean,
+    context: InstanceActionContext,
+    action: InstanceContextMenuAction,
+    tooltip: String,
+    icon: @Composable () -> Unit,
 ) {
-    val strings = LocalStrings.current
-    TooltipWrapper(modifier = modifier, tooltip = {
-        TooltipText(strings.deleteInstance)
-    }) {
+    InstanceAction(
+        modifier = modifier,
+        tooltip = tooltip
+    ) {
         IconButton(
-            onClick = onDeleteInstance,
-            enabled = interactable
+            onClick = { action.action(context) },
+            enabled = action.isAvailable(context)
         ) {
-            Icon(TablerIcons.Trash, strings.delete, tint = MaterialTheme.colors.error)
+            icon()
         }
     }
 }
 
 @Composable
-private fun InstanceEditButton(
+private fun InstanceActionButton(
     modifier: Modifier = Modifier,
-    @Suppress("UNUSED_PARAMETER") interactable: Boolean,
-    onEditInstance: () -> Unit,
+    context: InstanceActionContext,
+    action: InstanceContextMenuAction,
+    tooltip: String,
+    colors: ButtonColors,
+    content: @Composable () -> Unit,
 ) {
-    val strings = LocalStrings.current
-    TooltipWrapper(
-        tooltip = {
-            TooltipText(strings.editInstance)
-        },
+    InstanceAction(
+        tooltip = tooltip,
         modifier = modifier
     ) {
-        IconButton(
-            onClick = onEditInstance,
-            enabled = false // interactable NOT YET IMPLEMENTED
+        Button(
+            onClick = { action.action(context) },
+            colors = colors,
+            enabled = action.isAvailable(context)
         ) {
-            Icon(TablerIcons.Pencil, strings.edit)
+            content()
         }
+    }
+}
+
+@Composable
+private fun InstanceAction(
+    modifier: Modifier = Modifier,
+    tooltip: String,
+    content: @Composable () -> Unit,
+) {
+    TooltipWrapper(
+        modifier = modifier,
+        tooltip = {
+            TooltipText(tooltip)
+        }
+    ) {
+        content()
     }
 }
 
 @Composable
 private fun InstanceButtonRow(
     modifier: Modifier = Modifier,
-    instance: Instance,
-    interactable: Boolean,
-    instanceActive: Boolean,
-    onStartInstance: (editor: Boolean) -> Unit,
-    onActivateInstance: () -> Unit,
+    context: InstanceActionContext,
 ) = Row(modifier) {
-    val strings = LocalStrings.current
+    val instance = context.instance
     if (instance.state == InstanceState.CREATING || instance.state == InstanceState.DELETING) {
         LinearProgressIndicator(modifier = Modifier.padding(bottom = 5.dp))
     } else {
-        InstanceStartButton(interactable, strings, onStartInstance)
+        InstanceStartButton(context)
         Spacer(Modifier.width(5.dp))
-        InstanceStartEditorButton(interactable, strings, onStartInstance)
+        InstanceStartEditorButton(context)
         Spacer(Modifier.width(5.dp))
-        InstanceActivateButton(
-            instanceActive = instanceActive,
-            interactable = interactable,
-            onActivateInstance = onActivateInstance
-        )
+        InstanceActivateButton(context)
         Spacer(Modifier.width(5.dp))
         InstancePatchVersionIcon(
             modifier = Modifier.align(Alignment.Bottom),
@@ -222,98 +251,69 @@ private fun InstancePatchVersionIcon(
 
 @Composable
 private fun InstanceActivateButton(
-    instanceActive: Boolean,
-    interactable: Boolean,
-    onActivateInstance: () -> Unit,
+    context: InstanceActionContext,
 ) {
     val strings = LocalStrings.current
-    TooltipWrapper(tooltip = {
-        TooltipText(strings.activateInstance)
-    }) {
-        Button(
-            onClick = onActivateInstance,
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = MaterialTheme.colors.secondary,
-                contentColor = Color.White
-            ),
-            enabled = !instanceActive && interactable
-        ) {
-            Icon(TablerIcons.Click, strings.activateInstance)
-        }
+    InstanceActionButton(
+        context = context,
+        action = ActivateInstanceContextMenuAction,
+        tooltip = strings.activateInstance,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.secondary,
+            contentColor = Color.White
+        )
+    ) {
+        Icon(TablerIcons.Click, strings.activateInstance)
     }
 }
 
 @Composable
 private fun InstanceStartEditorButton(
-    interactable: Boolean,
-    strings: Strings,
-    onStartInstance: (editor: Boolean) -> Unit,
+    context: InstanceActionContext,
 ) {
-    TooltipWrapper(tooltip = {
-        TooltipText(text = strings.startEditorInstance)
-    }) {
-        Button(
-            onClick = {
-                onStartInstance(true)
-            },
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = MaterialTheme.colors.primary,
-                contentColor = Color.White
-            ),
-            enabled = interactable
-        ) {
-            Icon(TablerIcons.Tools, strings.runEditor)
-        }
+    val strings = LocalStrings.current
+    InstanceActionButton(
+        context = context,
+        action = EditorStartInstanceContextMenuAction,
+        tooltip = strings.startEditorInstance,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = Color.White
+        )
+    ) {
+        Icon(TablerIcons.Tools, strings.runEditor)
     }
 }
 
 @Composable
 private fun InstanceStartButton(
-    interactable: Boolean,
-    strings: Strings,
-    onStartInstance: (editor: Boolean) -> Unit,
+    context: InstanceActionContext,
 ) {
-    TooltipWrapper(tooltip = {
-        TooltipText(text = strings.startInstance)
-    }) {
-        Button(
-            onClick = {
-                onStartInstance(false)
-            },
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = CustomColors.success,
-                contentColor = Color.White
-            ),
-            enabled = interactable
-        ) {
-            Icon(TablerIcons.PlayerPlay, strings.runInstance)
-        }
+    val strings = LocalStrings.current
+    InstanceActionButton(
+        context = context,
+        action = RegularStartInstanceContextMenuAction,
+        tooltip = strings.startInstance,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = CustomColors.success,
+            contentColor = Color.White
+        )
+    ) {
+        Icon(TablerIcons.PlayerPlay, strings.runInstance)
     }
 }
 
 @Composable
 private fun InstanceContextMenuArea(
-    onStartInstance: (editor: Boolean) -> Unit,
-    onEditInstance: () -> Unit,
-    onDeleteInstance: () -> Unit,
-    onActivateInstance: () -> Unit,
+    context: InstanceActionContext,
     content: @Composable () -> Unit,
 ) {
-    val strings = LocalStrings.current
     ContextMenuArea(items = {
-        listOf(
-            ContextMenuItem(strings.startInstance) {
-                onStartInstance(false)
-            },
-            ContextMenuItem(strings.startEditorInstance) {
-                onStartInstance(true)
-            },
-            ContextMenuItem(strings.activateInstance) {
-                onActivateInstance()
-            },
-            ContextMenuItem(strings.editInstance, onEditInstance),
-            ContextMenuItem(strings.deleteInstance, onDeleteInstance),
-        )
+        instanceContextMenus
+            .asSequence()
+            .filter { it.isAvailable(context) }
+            .map { it.buildMenuItem(context) }
+            .toList()
     }, content = content)
 }
 
