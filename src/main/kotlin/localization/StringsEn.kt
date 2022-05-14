@@ -59,5 +59,9 @@ val StringsEn = Strings(
         "Selected Patch: $patchVersion"
     },
     editInstance = "Edit instance (Not yet implemented)",
-    deleteInstance = "Delete instance"
+    deleteInstance = "Delete instance",
+    omsiNotInstalledTitle = "OMSI not installed",
+    omsiNotInstalledDescription = "Cannot find OMSI installation path, please try starting it through Steam",
+    steamNotInstalledTitle = "Steam not installed",
+    steamNotInstalledDescription = "This launcher is only available for the Steam version of OMSI 2"
 )

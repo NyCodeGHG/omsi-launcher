@@ -51,4 +51,8 @@ data class Strings(
     val selectedPatchVersion: (patchVersion: String) -> String,
     val editInstance: String,
     val deleteInstance: String,
+    val omsiNotInstalledTitle: String,
+    val omsiNotInstalledDescription: String,
+    val steamNotInstalledTitle: String,
+    val steamNotInstalledDescription: String
 )
