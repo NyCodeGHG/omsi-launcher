@@ -36,6 +36,7 @@ val StringsDe = Strings(
     """.trimMargin().removeLineBreaks(),
     setup = "Setup",
     setupChooseDirectory = "Wähle einen Ordner in dem deine Instanzen und Spieldateien gespeichert werden sollen.",
+    setupChooseDirectoryWarning = "Dies ist NICHT das Steam/OMSI Installationsverzeichnis. Erstelle einen neuen Ordner für den Launcher.",
     chooseGameFileDirectory = "Wähle dein neues Spielverzeichnis aus",
     noGameFileDirectory = "Kein Spielverzeichnis ausgewählt.",
     newInstance = "Neue Instanz",
@@ -45,5 +46,19 @@ val StringsDe = Strings(
     instanceDirectory = "Instanz-Ordner",
     patchVersion = "Patch-Version",
     use4gbPatch = "4 GB Arbeitsspeicher-Patch verwenden",
-    createInstance = "Instanz erstellen"
+    createInstance = "Instanz erstellen",
+    continueSetup = "Mit dem Setup fortfahren",
+    setupLauncherDirectoryHeadline = "Launcherverzeichnis:",
+    setupOmsiDirectoryHeadline = "OMSI Installation:",
+    setupStepCopyGameFiles = "Kopiere Spieldateien",
+    setupStepCopyManifest = "Kopiere Spielmanifest",
+    setupStepCreatingInstancesJson = "Erstelle instances.json",
+    setupStepSavingConfiguration = "Speichere Configuration",
+    startInstance = "Starte Instanz",
+    startEditorInstance = "Starte Instanz im Editor Modus",
+    selectedPatchVersion = { patchVersion ->
+        "Ausgewählter Patch: $patchVersion"
+    },
+    editInstance = "Instanz bearbeiten (Noch nicht implementiert)",
+    deleteInstance = "Instanz löschen"
 )

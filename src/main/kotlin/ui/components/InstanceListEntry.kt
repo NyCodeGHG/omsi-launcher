@@ -3,7 +3,9 @@ package dev.nycode.omsilauncher.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,6 +17,7 @@ import compose.icons.TablerIcons
 import compose.icons.tablericons.*
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.InstanceState
+import dev.nycode.omsilauncher.localization.Strings
 import dev.nycode.omsilauncher.omsi.OmsiProcessState
 import dev.nycode.omsilauncher.omsi.UserAccessControlCancelledException
 import dev.nycode.omsilauncher.ui.CustomColors
@@ -35,7 +38,7 @@ fun InstanceListEntry(
     showUACDialog: () -> Unit,
 ) {
     val image = remember { imageFromResource("ecitaro.jpg") }
-    var deleteDialog by remember { mutableStateOf(false) }
+    val (deleteDialog, setDeleteDialog) = remember { mutableStateOf(false) }
     val strings = LocalStrings.current
     val interactable =
         instance.state == InstanceState.READY && omsiState == OmsiProcessState.NOT_RUNNING
@@ -56,22 +59,12 @@ fun InstanceListEntry(
                     showUACDialog
                 )
                 Box(modifier = Modifier.align(Alignment.TopEnd).padding(10.dp).fillMaxHeight()) {
-                    IconButton(
-                        {},
-                        modifier = Modifier.align(Alignment.TopEnd),
-                        enabled = interactable
-                    ) {
-                        Icon(TablerIcons.Pencil, strings.edit)
-                    }
-                    IconButton(
-                        {
-                            deleteDialog = true
-                        },
-                        modifier = Modifier.align(Alignment.BottomEnd),
-                        enabled = interactable
-                    ) {
-                        Icon(TablerIcons.Trash, strings.delete, tint = MaterialTheme.colors.error)
-                    }
+                    InstanceEditButton(Modifier.align(Alignment.TopEnd), interactable)
+                    InstanceDeleteButton(
+                        Modifier.align(Alignment.BottomEnd),
+                        setDeleteDialog,
+                        interactable
+                    )
                 }
             }
         }
@@ -80,7 +73,7 @@ fun InstanceListEntry(
         ConfirmationDialog(
             strings.confirmDeletion(instance.name),
             { delete ->
-                deleteDialog = false
+                setDeleteDialog(false)
                 if (delete) {
                     scope.launch(Dispatchers.IO) {
                         instanceState.deleteInstance(instance)
@@ -91,6 +84,48 @@ fun InstanceListEntry(
             noText = strings.no,
             title = strings.confirmDeletion(instance.name)
         )
+    }
+}
+
+@Composable
+private fun InstanceDeleteButton(
+    modifier: Modifier = Modifier,
+    setDeleteDialog: (Boolean) -> Unit,
+    interactable: Boolean,
+) {
+    val strings = LocalStrings.current
+    TooltipWrapper(modifier = modifier, tooltip = {
+        TooltipText(strings.deleteInstance)
+    }) {
+        IconButton(
+            onClick = {
+                setDeleteDialog(true)
+            },
+            enabled = interactable
+        ) {
+            Icon(TablerIcons.Trash, strings.delete, tint = MaterialTheme.colors.error)
+        }
+    }
+}
+
+@Composable
+private fun InstanceEditButton(
+    modifier: Modifier = Modifier,
+    @Suppress("UNUSED_PARAMETER") interactable: Boolean,
+) {
+    val strings = LocalStrings.current
+    TooltipWrapper(
+        tooltip = {
+            TooltipText(strings.editInstance)
+        },
+        modifier = modifier
+    ) {
+        IconButton(
+            {},
+            enabled = false // interactable NOT YET IMPLEMENTED
+        ) {
+            Icon(TablerIcons.Pencil, strings.edit)
+        }
     }
 }
 
@@ -107,28 +142,103 @@ private fun InstanceButtonRow(
     if (instance.state == InstanceState.CREATING || instance.state == InstanceState.DELETING) {
         LinearProgressIndicator(modifier = Modifier.padding(bottom = 5.dp))
     } else {
-        suspend fun Instance.withUACAction(action: suspend Instance.() -> Unit) = try {
-            action()
-        } catch (exception: UserAccessControlCancelledException) {
-            showUACDialog()
+        val withUACAction: suspend Instance.(suspend Instance.() -> Unit) -> Unit = { action ->
+            try {
+                action()
+            } catch (exception: UserAccessControlCancelledException) {
+                showUACDialog()
+            }
         }
+        InstanceStartButton(scope, instance, interactable, strings, withUACAction)
+        Spacer(Modifier.width(5.dp))
+        InstanceStartEditorButton(scope, instance, withUACAction, interactable, strings)
+        Spacer(Modifier.width(5.dp))
+        InstanceActivateButton(
+            scope,
+            instance,
+            withUACAction,
+            instanceActive,
+            interactable,
+            strings
+        )
+        Spacer(Modifier.width(5.dp))
+        InstancePatchVersionIcon(
+            modifier = Modifier.align(Alignment.Bottom),
+            instance = instance
+        )
+    }
+}
+
+@Composable
+private fun InstancePatchVersionIcon(
+    modifier: Modifier = Modifier,
+    instance: Instance,
+) {
+    val strings = LocalStrings.current
+    TooltipWrapper(
+        modifier = modifier,
+        tooltip = {
+            TooltipText(
+                text = strings.selectedPatchVersion(
+                    instance.patchVersion.translation(
+                        strings
+                    )
+                )
+            )
+        }
+    ) {
+        Icon(
+            instance.patchVersion.icon,
+            strings.instancePatchVersion,
+            modifier = modifier.size(50.dp)
+        )
+    }
+}
+
+private typealias UACActionWrapper = suspend Instance.(suspend Instance.() -> Unit) -> Unit
+
+@Composable
+private fun InstanceActivateButton(
+    scope: CoroutineScope,
+    instance: Instance,
+    withUACAction: UACActionWrapper,
+    instanceActive: Boolean,
+    interactable: Boolean,
+    strings: Strings,
+) {
+    TooltipWrapper(tooltip = {
+        TooltipText(strings.activateInstance)
+    }) {
         Button(
-            {
+            onClick = {
                 scope.launch(Dispatchers.IO) {
-                    instance.withUACAction(Instance::start)
+                    instance.withUACAction(Instance::activate)
                 }
             },
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = CustomColors.success,
+                backgroundColor = MaterialTheme.colors.secondary,
                 contentColor = Color.White
             ),
-            enabled = interactable
+            enabled = !instanceActive && interactable
         ) {
-            Icon(TablerIcons.PlayerPlay, strings.runInstance)
+            Icon(TablerIcons.Click, strings.activateInstance)
         }
-        Spacer(Modifier.width(5.dp))
+    }
+}
+
+@Composable
+private fun InstanceStartEditorButton(
+    scope: CoroutineScope,
+    instance: Instance,
+    withUACAction: UACActionWrapper,
+    interactable: Boolean,
+    strings: Strings,
+) {
+    TooltipWrapper(tooltip = {
+        TooltipText(text = strings.startEditorInstance)
+    }) {
         Button(
-            {
+            onClick = {
                 scope.launch(Dispatchers.IO) {
                     instance.withUACAction {
                         start(true)
@@ -143,29 +253,34 @@ private fun InstanceButtonRow(
         ) {
             Icon(TablerIcons.Tools, strings.runEditor)
         }
-        Spacer(Modifier.width(5.dp))
+    }
+}
+
+@Composable
+private fun InstanceStartButton(
+    scope: CoroutineScope,
+    instance: Instance,
+    interactable: Boolean,
+    strings: Strings,
+    withUACAction: UACActionWrapper,
+) {
+    TooltipWrapper(tooltip = {
+        TooltipText(text = strings.startInstance)
+    }) {
         Button(
-            {
+            onClick = {
                 scope.launch(Dispatchers.IO) {
-                    instance.withUACAction {
-                        activate()
-                    }
+                    instance.withUACAction(Instance::start)
                 }
             },
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = MaterialTheme.colors.secondary,
+                backgroundColor = CustomColors.success,
                 contentColor = Color.White
             ),
-            enabled = !instanceActive && interactable
+            enabled = interactable
         ) {
-            Icon(TablerIcons.Click, strings.activateInstance)
+            Icon(TablerIcons.PlayerPlay, strings.runInstance)
         }
-        Spacer(Modifier.width(5.dp))
-        Icon(
-            instance.patchVersion.icon,
-            strings.instancePatchVersion,
-            modifier = Modifier.align(Alignment.Bottom).size(50.dp)
-        )
     }
 }
 
