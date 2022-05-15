@@ -68,5 +68,6 @@ data class Strings(
     val windowedWindowMode: String,
     val fullScreenWindowMode: String,
     val logLevel: String,
-    val screenMode: String
+    val screenMode: String,
+    val showInstanceFiles: String
 )

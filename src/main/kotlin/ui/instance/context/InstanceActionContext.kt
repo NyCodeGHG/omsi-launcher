@@ -13,4 +13,5 @@ data class InstanceActionContext(
     val onEditInstance: () -> Unit,
     val onDeleteInstance: () -> Unit,
     val onActivateInstance: () -> Unit,
+    val onShowInstanceFiles: () -> Unit
 )

@@ -31,6 +31,7 @@ import dev.nycode.omsilauncher.ui.instance.context.instanceContextMenus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.io.path.absolutePathString
 import org.jetbrains.skia.Image.Companion as SkiaImage
 
 @Composable
@@ -70,6 +71,10 @@ fun InstanceListEntry(
             }
         }
 
+        val showInstanceFiles: () -> Unit = {
+            Runtime.getRuntime().exec(arrayOf("explorer", instance.directory.absolutePathString()))
+        }
+
         InstanceActionContext(
             strings = strings,
             omsiState = omsiState,
@@ -78,7 +83,8 @@ fun InstanceListEntry(
             onStartInstance = startInstance,
             onEditInstance = editInstance,
             onDeleteInstance = deleteInstance,
-            onActivateInstance = activateInstance
+            onActivateInstance = activateInstance,
+            onShowInstanceFiles = showInstanceFiles
         )
     }
 
