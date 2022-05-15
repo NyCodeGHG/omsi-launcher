@@ -13,7 +13,10 @@ data class InstanceOptions(
 ) {
 
     @Serializable
-    enum class LogLevel(val launchFlag: LaunchFlag? = null, override val translation: Strings.() -> String) :
+    enum class LogLevel(
+        val launchFlag: LaunchFlag? = null,
+        override val translation: Strings.() -> String,
+    ) :
         Translatable {
         DEFAULT(translation = { defaultLogLevel }),
         NO_LOG(LaunchFlag.NO_LOG, { noLogLogLevel }),
@@ -25,7 +28,10 @@ data class InstanceOptions(
     }
 
     @Serializable
-    enum class ScreenMode(val launchFlag: LaunchFlag? = null, override val translation: Strings.() -> String) :
+    enum class ScreenMode(
+        val launchFlag: LaunchFlag? = null,
+        override val translation: Strings.() -> String,
+    ) :
         Translatable {
         DEFAULT(translation = { defaultWindowMode }),
         WINDOWED(LaunchFlag.WINDOWED, { windowedWindowMode }),

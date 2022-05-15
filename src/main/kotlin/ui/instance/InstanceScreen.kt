@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.lyricist.LocalStrings
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Plus
+import dev.nycode.omsilauncher.instance.InstanceOptions
 import dev.nycode.omsilauncher.instance.getCurrentInstancePath
 import dev.nycode.omsilauncher.instance.receiveCurrentInstancePath
 import dev.nycode.omsilauncher.omsi.OmsiProcessState
@@ -84,16 +85,23 @@ fun InstanceScreen() {
             {
                 showCreationDialog = false
             },
-            { name, path, patchVersion, use4gbPatch, options ->
+            { creationState ->
                 scope.launch(Dispatchers.IO) {
-                    instanceState.createNewInstance(
-                        UUID.randomUUID(),
-                        name,
-                        path,
-                        patchVersion,
-                        uses4GBPatch = use4gbPatch,
-                        options = options
-                    )
+                    with(creationState) {
+                        instanceState.createNewInstance(
+                            UUID.randomUUID(),
+                            name,
+                            path!!,
+                            patchVersion,
+                            uses4GBPatch = use4gbPatch,
+                            options = InstanceOptions(
+                                saveLogs,
+                                useDebugMode,
+                                logLevel,
+                                screenMode
+                            )
+                        )
+                    }
                 }
             }
         )
