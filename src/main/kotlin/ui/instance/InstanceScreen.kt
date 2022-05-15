@@ -84,14 +84,15 @@ fun InstanceScreen() {
             {
                 showCreationDialog = false
             },
-            { name, path, patchVersion, use4gbPatch ->
+            { name, path, patchVersion, use4gbPatch, options ->
                 scope.launch(Dispatchers.IO) {
                     instanceState.createNewInstance(
                         UUID.randomUUID(),
                         name,
                         path,
                         patchVersion,
-                        uses4GBPatch = use4gbPatch
+                        uses4GBPatch = use4gbPatch,
+                        options = options
                     )
                 }
             }
