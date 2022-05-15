@@ -104,7 +104,7 @@ fn symlink_global_omsi_entry_point(opt: &Opt) -> std::io::Result<()> {
 
     info!(
         "Symlinking {} to {}",
-        &opt.omsi_installation_folder.to_str().unwrap(),
+        &opt.omsi_instance_folder.to_str().unwrap(),
         &target.to_str().unwrap()
     );
     windows_fs::symlink_dir(&opt.omsi_instance_folder, &target)

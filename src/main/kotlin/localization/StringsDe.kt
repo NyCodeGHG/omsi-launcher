@@ -80,6 +80,8 @@ val StringsDe = Strings(
     logLevel = "Log Level",
     screenMode = "Fenstermodus",
     showInstanceFiles = "Lokale Dateien anzeigen",
+    cannotDeleteMainInstance = "Du kannst die Basis-Instanz nicht löschen",
+    baseInstance = "Basis-Instanz",
     directoryNeedsToBeEmpty = "Das Verzeichnis muss leer sein",
     closeSteamLaunchInfo = "Bitte schließe Steam um die Instanz zu wechseln"
 )

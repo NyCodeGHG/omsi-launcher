@@ -71,5 +71,7 @@ data class Strings(
     val logLevel: String,
     val screenMode: String,
     val showInstanceFiles: String,
+    val cannotDeleteMainInstance: String,
+    val baseInstance: String,
     val directoryNeedsToBeEmpty: String
 )

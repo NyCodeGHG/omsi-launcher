@@ -36,7 +36,7 @@ import java.util.*
 fun InstanceScreen() {
     val scope = rememberCoroutineScope()
     val instanceState = rememberApplicationInstanceState()
-    val instances = instanceState.instances
+    val instances = instanceState.instances.sortedByDescending { it.isBaseInstance }
     val omsiState by receiveOmsiProcessUpdates().collectAsState(
         if (isOmsiRunning()) OmsiProcessState.RUNNING else OmsiProcessState.NOT_RUNNING,
         Dispatchers.IO

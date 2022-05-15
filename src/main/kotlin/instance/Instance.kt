@@ -24,6 +24,7 @@ data class Instance(
     val options: InstanceOptions = InstanceOptions(),
     val state: InstanceState,
     val uses4GBPatch: Boolean,
+    val isBaseInstance: Boolean = false
 ) : PersistentValue<SavedInstance> {
     suspend fun start(editor: Boolean = false, awaitSteamDeath: suspend () -> Boolean = { true }) {
         val flags = buildList {
@@ -32,11 +33,11 @@ data class Instance(
                 add(LaunchFlag.EDITOR)
             }
         }
-        activateAndStartInstallationSafe(directory, flags, awaitSteamDeath)
+        activateAndStartInstallationSafe(this, flags, awaitSteamDeath)
     }
 
-    suspend fun activate(awaitSteamDeath: suspend () -> Boolean = { true }) {
-        activateInstallationSafe(directory, true, awaitSteamDeath)
+    suspend fun activate() {
+        activateInstallationSafe(this, true, awaitSteamDeath)
     }
 
     enum class PatchVersion(
@@ -59,9 +60,12 @@ data class Instance(
     }
 
     override fun toSavedData(): SavedInstance {
-        return SavedInstance(id, name, directory, patchVersion, options, uses4GBPatch)
+        return SavedInstance(id, name, directory, patchVersion, options, uses4GBPatch, isBaseInstance)
     }
 }
+
+val List<Instance>.baseInstance: Instance
+    get() = firstOrNull { it.isBaseInstance } ?: error("Base instance not found")
 
 @Serializable
 enum class LaunchFlag(val cliName: String) {

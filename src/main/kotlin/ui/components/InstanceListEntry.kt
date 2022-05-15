@@ -2,9 +2,31 @@ package dev.nycode.omsilauncher.ui.components
 
 import androidx.compose.foundation.ContextMenuArea
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonColors
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -14,7 +36,11 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import cafe.adriel.lyricist.LocalStrings
 import compose.icons.TablerIcons
-import compose.icons.tablericons.*
+import compose.icons.tablericons.Click
+import compose.icons.tablericons.Pencil
+import compose.icons.tablericons.PlayerPlay
+import compose.icons.tablericons.Tools
+import compose.icons.tablericons.Trash
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.InstanceState
 import dev.nycode.omsilauncher.omsi.OmsiProcessState
@@ -112,7 +138,12 @@ fun InstanceListEntry(
                 Spacer(Modifier.padding(5.dp))
                 Box(Modifier.fillMaxSize()) {
                     Row(modifier = Modifier.align(Alignment.TopStart).padding(10.dp)) {
-                        Text(instance.name, fontSize = 30.sp)
+                        val name = if (instance.isBaseInstance) {
+                            strings.baseInstance
+                        } else {
+                            instance.name
+                        }
+                        Text(name, fontSize = 30.sp)
                     }
                     InstanceButtonRow(
                         modifier = Modifier.align(Alignment.BottomStart).padding(10.dp),
@@ -133,12 +164,12 @@ fun InstanceListEntry(
                             modifier = Modifier.align(Alignment.BottomEnd),
                             context = context,
                             DeleteInstanceContextMenuAction,
-                            strings.deleteInstance
+                            DeleteInstanceContextMenuAction.buildItemLabel(context)
                         ) {
                             Icon(
                                 TablerIcons.Trash,
-                                strings.delete,
-                                tint = MaterialTheme.colors.error
+                                DeleteInstanceContextMenuAction.buildItemLabel(context),
+                                tint = MaterialTheme.colors.error.copy(alpha = LocalContentAlpha.current)
                             )
                         }
                     }

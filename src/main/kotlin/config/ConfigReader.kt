@@ -15,6 +15,7 @@ import kotlin.io.path.writeText
 
 val configJson = Json {
     prettyPrint = true
+    encodeDefaults = true
 }
 
 private val logger = logger()

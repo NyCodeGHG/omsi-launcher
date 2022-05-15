@@ -11,6 +11,7 @@
 - Add app manifest merging logic ([ee8b73d](https://github.com/NyCodeGHG/omsi-launcher/commit/ee8b73deac980611b2e1976eb70d47a7ae45b631))
 - Add vdf parser ([d8b9ac4](https://github.com/NyCodeGHG/omsi-launcher/commit/d8b9ac4fa371fe89940e182a4c6e68421534a524))
 - Add all instance options to creation UI ([#26](https://github.com/NyCodeGHG/omsi-launcher/pull/26))
+- Show base game instance in instances view
 - Add Context Menu entry to show instance files ([#29](https://github.com/NyCodeGHG/omsi-launcher/pull/29))
 - Show "Close Steam" dialog as well when switching instances ([#27](https://github.com/NyCodeGHG/omsi-launcher/pull/27))
 
