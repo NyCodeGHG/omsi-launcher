@@ -56,7 +56,7 @@ private fun InstanceCreationForm(
     instanceCreationState: InstanceCreationState,
 ) = with(instanceCreationState) {
     val strings = LocalStrings.current
-    Column(Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = strings.createANewInstance,
@@ -64,9 +64,12 @@ private fun InstanceCreationForm(
             fontSize = 30.sp,
             textAlign = TextAlign.Center,
         )
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             Column(
-                Modifier.padding(top = 8.dp),
+                modifier = Modifier.padding(top = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 OutlinedTextField(
@@ -80,7 +83,7 @@ private fun InstanceCreationForm(
                     },
                     singleLine = true
                 )
-                Spacer(Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 PathInputField(
                     value = path,
                     onValueChange = { path = it },
@@ -88,48 +91,47 @@ private fun InstanceCreationForm(
                         Text(strings.instanceDirectory)
                     }
                 )
-                Spacer(Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 DropDownColumn(
-                    strings.patchVersion,
-                    strings,
-                    patchVersion,
-                    { patchVersion = it },
-                    Instance.PatchVersion.VALUES
+                    title = strings.patchVersion,
+                    strings = strings,
+                    value = patchVersion,
+                    onValueChange = { patchVersion = it },
+                    values = Instance.PatchVersion.VALUES
                 )
-                Spacer(Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 DropDownColumn(
-                    strings.logLevel,
-                    strings,
-                    logLevel,
-                    { logLevel = it },
-                    InstanceOptions.LogLevel.VALUES
+                    title = strings.logLevel,
+                    strings = strings,
+                    value = logLevel,
+                    onValueChange = { logLevel = it },
+                    values = InstanceOptions.LogLevel.VALUES
                 )
-                Spacer(Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 DropDownColumn(
-                    strings.screenMode,
-                    strings,
-                    screenMode,
-                    { screenMode = it },
-                    InstanceOptions.ScreenMode.VALUES
+                    title = strings.screenMode,
+                    strings = strings,
+                    value = screenMode,
+                    onValueChange = { screenMode = it },
+                    values = InstanceOptions.ScreenMode.VALUES
                 )
-                Spacer(Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
             }
-
             Column(Modifier.padding(top = 8.dp)) {
                 CheckboxRow(
-                    strings.use4gbPatch,
-                    strings.use4gbPatchTooltip,
-                    use4gbPatch
+                    title = strings.use4gbPatch,
+                    tooltip = strings.use4gbPatchTooltip,
+                    value = use4gbPatch
                 ) { use4gbPatch = it }
                 CheckboxRow(
-                    strings.saveLogs,
-                    strings.saveLogsTooltip(path?.absolutePathString()),
-                    saveLogs
+                    title = strings.saveLogs,
+                    tooltip = strings.saveLogsTooltip(path?.absolutePathString()),
+                    value = saveLogs
                 ) { saveLogs = it }
                 CheckboxRow(
-                    strings.debugMode,
-                    strings.debugModeTooltip,
-                    useDebugMode
+                    title = strings.debugMode,
+                    tooltip = strings.debugModeTooltip,
+                    value = useDebugMode
                 ) { useDebugMode = it }
             }
         }
@@ -140,8 +142,8 @@ private fun InstanceCreationForm(
 private fun <E : Translatable> DropDownColumn(
     title: String,
     strings: Strings,
-    get: E,
-    set: (E) -> Unit,
+    value: E,
+    onValueChange: (E) -> Unit,
     values: Collection<E>,
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -154,8 +156,8 @@ private fun <E : Translatable> DropDownColumn(
         )
         Spacer(Modifier.height(8.dp))
         DropdownInputField(
-            value = get,
-            onValueChange = set,
+            value = value,
+            onValueChange = onValueChange,
             modifier = Modifier.width(280.dp),
             values = values
         ) {
@@ -168,12 +170,12 @@ private fun <E : Translatable> DropDownColumn(
 private fun CheckboxRow(
     title: String,
     tooltip: String,
-    get: Boolean,
-    set: (Boolean) -> Unit,
+    value: Boolean,
+    onValueChange: (Boolean) -> Unit,
 ) {
     TooltipWrapper(tooltip = { TooltipText(tooltip) }) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(get, set)
+            Checkbox(value, onValueChange)
             Text(title)
         }
     }
