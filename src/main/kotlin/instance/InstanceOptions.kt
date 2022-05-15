@@ -1,5 +1,7 @@
 package dev.nycode.omsilauncher.instance
 
+import dev.nycode.omsilauncher.localization.Strings
+import dev.nycode.omsilauncher.localization.Translatable
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -11,17 +13,33 @@ data class InstanceOptions(
 ) {
 
     @Serializable
-    enum class LogLevel(val launchFlag: LaunchFlag? = null) {
-        DEFAULT,
-        NO_LOG(LaunchFlag.NO_LOG),
-        FULL_LOG(LaunchFlag.LOG_ALL)
+    enum class LogLevel(
+        val launchFlag: LaunchFlag? = null,
+        override val translation: Strings.() -> String,
+    ) :
+        Translatable {
+        DEFAULT(translation = { defaultLogLevel }),
+        NO_LOG(LaunchFlag.NO_LOG, { noLogLogLevel }),
+        FULL_LOG(LaunchFlag.LOG_ALL, { logAllLogLevel });
+
+        companion object {
+            val VALUES = values().asList()
+        }
     }
 
     @Serializable
-    enum class ScreenMode(val launchFlag: LaunchFlag? = null) {
-        DEFAULT,
-        WINDOWED(LaunchFlag.WINDOWED),
-        FULL_SCREEN(LaunchFlag.FULLSCREEN)
+    enum class ScreenMode(
+        val launchFlag: LaunchFlag? = null,
+        override val translation: Strings.() -> String,
+    ) :
+        Translatable {
+        DEFAULT(translation = { defaultWindowMode }),
+        WINDOWED(LaunchFlag.WINDOWED, { windowedWindowMode }),
+        FULL_SCREEN(LaunchFlag.FULLSCREEN, { fullScreenWindowMode });
+
+        companion object {
+            val VALUES = values().asList()
+        }
     }
 
     fun toLaunchFlags(): List<LaunchFlag> = buildList {

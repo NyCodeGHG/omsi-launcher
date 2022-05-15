@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.sp
+import cafe.adriel.lyricist.LocalStrings
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Settings
 import compose.icons.tablericons.Stack
@@ -33,10 +34,11 @@ private class ApplicationRoute(
 @Composable
 fun Application() {
     val routerState = rememberRouterState(InstanceRoute)
+    val strings = LocalStrings.current
     val routes = remember {
         listOf(
-            ApplicationRoute(InstanceRoute, "Instances", TablerIcons.Stack),
-            ApplicationRoute(SettingsRoute, "Settings", TablerIcons.Settings)
+            ApplicationRoute(InstanceRoute, strings.instances, TablerIcons.Stack),
+            ApplicationRoute(SettingsRoute, strings.settings, TablerIcons.Settings)
         )
     }
     Row(modifier = Modifier.fillMaxSize()) {
@@ -47,7 +49,7 @@ fun Application() {
                     InstanceScreen()
                 }
                 route(SettingsRoute) {
-                    Text("Settings", fontSize = 40.sp)
+                    Text(strings.settings, fontSize = 40.sp)
                 }
             }
         }

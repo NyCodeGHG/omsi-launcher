@@ -6,6 +6,7 @@ import compose.icons.tablericons.Bus
 import compose.icons.tablericons.Train
 import dev.nycode.omsilauncher.config.PersistentValue
 import dev.nycode.omsilauncher.localization.Strings
+import dev.nycode.omsilauncher.localization.Translatable
 import dev.nycode.omsilauncher.omsi.activateAndStartInstallationSafe
 import dev.nycode.omsilauncher.omsi.activateInstallationSafe
 import dev.nycode.omsilauncher.serialization.SerializablePath
@@ -41,8 +42,8 @@ data class Instance(
     enum class PatchVersion(
         val type: String,
         val icon: ImageVector,
-        val translation: Strings.() -> String,
-    ) {
+        override val translation: Strings.() -> String,
+    ) : Translatable {
         BI_ARTICULATED_BUS_VERSION("current", TablerIcons.Bus, { biArticulatedBusPatch }),
         TRAM_VERSION("older", TablerIcons.Train, { tramPatch });
 

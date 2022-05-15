@@ -1,6 +1,7 @@
 package dev.nycode.omsilauncher
 
 import androidx.compose.material.MaterialTheme
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
@@ -41,7 +42,7 @@ fun runLauncher(
                 else -> MainApplicationRoute
             }
         }
-        val lyricist = rememberStrings()
+        val lyricist = rememberStrings(Locale.current.toLanguageTag())
         val closeSetup = {
             routerState.currentRoute = MainApplicationRoute
         }
