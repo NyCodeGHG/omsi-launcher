@@ -85,34 +85,50 @@ private suspend fun doNativeCall(name: String, vararg parameters: String) =
         logger.debug { "Successfully finished native call." }
     }
 
-suspend fun activateInstallationSafe(path: Path) {
+suspend fun activateInstallationSafe(path: Path, startSteam: Boolean = false, awaitSteamDeath: suspend () -> Boolean): Boolean {
     val omsi = getOmsiInstallPath()
     if (omsi.isSymbolicLink() && omsi.readSymbolicLink() == path) {
         val currentManifest = omsi.parent(2) / "appmanifest_$OMSI_STEAM_ID.acf"
         if (currentManifest.exists()) {
             logger.debug { "Backing up $currentManifest to current installation $path" }
             currentManifest.copyTo(path / "manifest.acf", true)
-            return
+            return true
         }
     }
-    doNativeCall("activate-omsi.exe", omsi.absolutePathString(), path.absolutePathString())
+    if (awaitSteamDeath()) {
+        doNativeCall("activate-omsi.exe", omsi.absolutePathString(), path.absolutePathString())
+
+        if (startSteam) {
+            withContext(Dispatchers.IO) {
+                runSteam()
+            }
+        }
+        return true
+    }
+
+    return false
 }
 
-suspend fun activateAndStartInstallationSafe(path: Path, flags: List<LaunchFlag>) {
-    activateInstallationSafe(path)
-    startOmsi(flags)
+suspend fun activateAndStartInstallationSafe(path: Path, flags: List<LaunchFlag>, awaitSteamDeath: suspend () -> Boolean) {
+    if (activateInstallationSafe(path, awaitSteamDeath = awaitSteamDeath)) {
+        startOmsi(flags)
+    }
 }
 
 fun startOmsi(flags: List<LaunchFlag> = emptyList()) {
     val flagsString =
         if (flags.isEmpty()) "" else "// " + flags.joinToString(separator = " ") { it.option }
 
+    runSteam("rungameid/$OMSI_STEAM_ID$flagsString")
+}
+
+private fun runSteam(arguments: String = "") {
     Runtime.getRuntime()
         .exec(
             arrayOf(
                 "rundll32",
                 "url.dll,FileProtocolHandler",
-                "steam://rungameid/$OMSI_STEAM_ID$flagsString"
+                "steam://$arguments"
             )
         )
 }
