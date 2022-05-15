@@ -2,9 +2,30 @@ package dev.nycode.omsilauncher.ui.components
 
 import androidx.compose.foundation.ContextMenuArea
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonColors
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -13,7 +34,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.lyricist.LocalStrings
 import compose.icons.TablerIcons
-import compose.icons.tablericons.*
+import compose.icons.tablericons.Click
+import compose.icons.tablericons.Pencil
+import compose.icons.tablericons.PlayerPlay
+import compose.icons.tablericons.Tools
+import compose.icons.tablericons.Trash
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.InstanceState
 import dev.nycode.omsilauncher.omsi.OmsiProcessState
@@ -31,7 +56,7 @@ import dev.nycode.omsilauncher.ui.instance.context.instanceContextMenus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.io.path.absolutePathString
+import java.awt.Desktop
 import org.jetbrains.skia.Image.Companion as SkiaImage
 
 @Composable
@@ -72,7 +97,7 @@ fun InstanceListEntry(
         }
 
         val showInstanceFiles: () -> Unit = {
-            Runtime.getRuntime().exec(arrayOf("explorer", instance.directory.absolutePathString()))
+            Desktop.getDesktop().browse(instance.directory.toUri())
         }
 
         InstanceActionContext(
