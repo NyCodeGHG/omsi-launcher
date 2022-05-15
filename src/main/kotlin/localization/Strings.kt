@@ -70,7 +70,3 @@ data class Strings(
     val logLevel: String,
     val screenMode: String
 )
-
-interface Translatable {
-    val translation: Strings.() -> String
-}
