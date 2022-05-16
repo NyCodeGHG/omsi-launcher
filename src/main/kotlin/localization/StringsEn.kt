@@ -77,5 +77,6 @@ val StringsEn = Strings(
     windowedWindowMode = "Windowed",
     fullScreenWindowMode = "Full Screen",
     logLevel = "Log Level",
-    screenMode = "Screen Mode"
+    screenMode = "Screen Mode",
+    showInstanceFiles = "Show instance files"
 )

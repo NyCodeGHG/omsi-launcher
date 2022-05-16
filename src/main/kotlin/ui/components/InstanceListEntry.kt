@@ -78,7 +78,7 @@ fun InstanceListEntry(
             onStartInstance = startInstance,
             onEditInstance = editInstance,
             onDeleteInstance = deleteInstance,
-            onActivateInstance = activateInstance
+            onActivateInstance = activateInstance,
         )
     }
 

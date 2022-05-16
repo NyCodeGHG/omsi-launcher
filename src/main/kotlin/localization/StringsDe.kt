@@ -78,5 +78,6 @@ val StringsDe = Strings(
     windowedWindowMode = "Fenstermodus",
     fullScreenWindowMode = "Vollbild",
     logLevel = "Log Level",
-    screenMode = "Fenstermodus"
+    screenMode = "Fenstermodus",
+    showInstanceFiles = "Lokale Dateien anzeigen"
 )
