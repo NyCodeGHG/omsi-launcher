@@ -72,26 +72,30 @@ fun InstanceCreationDialog(
                         modifier = Modifier.padding(top = 8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        OutlinedTextField(
-                            value = name,
-                            onValueChange = { name = it },
-                            placeholder = {
-                                Text(strings.newInstance)
-                            },
-                            label = {
-                                Text(strings.instanceName)
-                            },
-                            singleLine = true
-                        )
+                        Row(Modifier.fillMaxWidth(.43f)) {
+                            OutlinedTextField(
+                                value = name,
+                                onValueChange = { name = it },
+                                placeholder = {
+                                    Text(strings.newInstance)
+                                },
+                                label = {
+                                    Text(strings.instanceName)
+                                },
+                                singleLine = true
+                            )
+                        }
                         Spacer(modifier = Modifier.height(8.dp))
-                        PathInputField(
-                            value = path,
-                            requiresEmptyDirectory = true,
-                            onValueChange = { path = it },
-                            label = {
-                                Text(strings.instanceDirectory)
-                            }
-                        )
+                        Row(Modifier.fillMaxWidth(.43f)) {
+                            PathInputField(
+                                value = path,
+                                requiresEmptyDirectory = true,
+                                onValueChange = { path = it },
+                                label = {
+                                    Text(strings.instanceDirectory)
+                                }
+                            )
+                        }
                         Spacer(modifier = Modifier.height(8.dp))
                         DropDownColumn(
                             title = strings.patchVersion,
@@ -181,3 +185,4 @@ fun InstanceCreationDialog(
                 }
             }
         }
+        
