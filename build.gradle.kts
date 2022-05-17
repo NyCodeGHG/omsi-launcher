@@ -55,6 +55,7 @@ sourceSets {
 
 ktlint {
     disabledRules.add("no-wildcard-imports")
+    version.set("0.45.2")
 }
 
 tasks {
