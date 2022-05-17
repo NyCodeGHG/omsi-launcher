@@ -36,10 +36,12 @@ fun PathInputField(
 ) {
     val scope = rememberCoroutineScope()
     var showIsEmptyError by remember { mutableStateOf(false) }
+
     fun changeDirectory(directory: Path?) {
-        if (directory == null) return
         if (requiresEmptyDirectory) {
-            showIsEmptyError = directory.isDirectory() && directory.listDirectoryEntries().isNotEmpty()
+            showIsEmptyError =
+                directory != null && directory.isDirectory() && directory.listDirectoryEntries()
+                    .isNotEmpty()
         }
         onValueChange(directory)
     }
