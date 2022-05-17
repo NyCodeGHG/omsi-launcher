@@ -13,7 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.lyricist.LocalStrings
-import dev.nycode.omsilauncher.ui.components.PathInputField
+import dev.nycode.omsilauncher.ui.components.EmptyDirectoryPathField
 import dev.nycode.omsilauncher.ui.routing.RouterState
 import dev.nycode.omsilauncher.ui.setup.ExplainSteamRoute
 import dev.nycode.omsilauncher.ui.setup.SetupState
@@ -45,9 +45,8 @@ fun GameDirectoryScreen(routerState: RouterState, config: MutableState<SetupStat
                 fontWeight = FontWeight.Bold
             )
             Spacer(Modifier.height(20.dp))
-            PathInputField(
+            EmptyDirectoryPathField(
                 value = gameFileDirectory,
-                requiresEmptyDirectory = true,
                 onValueChange = { directory ->
                     gameFileDirectory = directory
                     buttonFocusRequester.requestFocus()
