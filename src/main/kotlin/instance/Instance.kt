@@ -36,7 +36,7 @@ data class Instance(
         activateAndStartInstallationSafe(this, flags, awaitSteamDeath)
     }
 
-    suspend fun activate() {
+    suspend fun activate(awaitSteamDeath: suspend () -> Boolean = { true }) {
         activateInstallationSafe(this, true, awaitSteamDeath)
     }
 

@@ -1,7 +1,20 @@
 package dev.nycode.omsilauncher.ui.instance.creation
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.Button
+import androidx.compose.material.Checkbox
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -26,12 +39,13 @@ import kotlin.io.path.*
 
 @Composable
 fun InstanceCreationDialog(
+    mainInstance: Instance,
     onCloseRequest: () -> Unit,
     createInstance: (InstanceCreationState) -> Unit,
 ) {
     val strings = LocalStrings.current
     val dialogState = rememberDialogState(height = 620.dp, width = 700.dp)
-    val instanceCreationState = remember { InstanceCreationState() }
+    val instanceCreationState = remember { InstanceCreationState(mainInstance) }
     fun isValid(): Boolean = with(instanceCreationState) {
         name.isNotBlank() && (
             path?.isDirectory() == true && path?.listDirectoryEntries()

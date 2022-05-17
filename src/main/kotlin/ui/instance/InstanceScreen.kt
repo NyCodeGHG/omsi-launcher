@@ -18,6 +18,7 @@ import cafe.adriel.lyricist.LocalStrings
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Plus
 import dev.nycode.omsilauncher.instance.InstanceOptions
+import dev.nycode.omsilauncher.instance.baseInstance
 import dev.nycode.omsilauncher.instance.getCurrentInstancePath
 import dev.nycode.omsilauncher.instance.receiveCurrentInstancePath
 import dev.nycode.omsilauncher.omsi.OmsiProcessState
@@ -82,6 +83,7 @@ fun InstanceScreen() {
     }
     if (showCreationDialog) {
         InstanceCreationDialog(
+            instances.baseInstance,
             {
                 showCreationDialog = false
             },

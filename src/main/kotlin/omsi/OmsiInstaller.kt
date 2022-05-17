@@ -86,20 +86,24 @@ private suspend fun doNativeCall(name: String, vararg parameters: String) =
         logger.debug { "Successfully finished native call." }
     }
 
-suspend fun activateInstallationSafe(instance: Instance, startSteam: Boolean = false, awaitSteamDeath: suspend () -> Boolean) {
+suspend fun activateInstallationSafe(
+    instance: Instance,
+    startSteam: Boolean = false,
+    awaitSteamDeath: suspend () -> Boolean
+): Boolean {
     val omsi = getOmsiInstallPath()
     if (omsi.isSymbolicLink() && omsi.readSymbolicLink() == instance.directory) {
         val currentManifest = omsi.parent(2) / "appmanifest_$OMSI_STEAM_ID.acf"
         if (currentManifest.exists()) {
             logger.debug { "Backing up $currentManifest to current installation ${instance.directory}" }
             currentManifest.copyTo(instance.directory / "manifest.acf", true)
-            return
+            return true
         }
     }
     val isSteamRunning = isSteamRunning()
 
     if (!isSteamRunning || awaitSteamDeath()) {
-        doNativeCall("activate-omsi.exe", omsi.absolutePathString(), path.absolutePathString())
+        doNativeCall("activate-omsi.exe", omsi.absolutePathString(), instance.directory.absolutePathString())
         if (!(instance.directory / "Omsi.exe").exists()) {
             reLinkOmsiExecutable(instance)
         }
@@ -111,7 +115,14 @@ suspend fun activateInstallationSafe(instance: Instance, startSteam: Boolean = f
         return true
     }
 
-suspend fun activateAndStartInstallationSafe(instance: Instance, flags: List<LaunchFlag>) {
+    return false
+}
+
+suspend fun activateAndStartInstallationSafe(
+    instance: Instance,
+    flags: List<LaunchFlag>,
+    awaitSteamDeath: suspend () -> Boolean = { true }
+) {
     if (activateInstallationSafe(instance, awaitSteamDeath = awaitSteamDeath)) {
         startOmsi(flags)
     }
