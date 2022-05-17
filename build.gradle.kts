@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.serialization") version "1.6.21"
-    id("org.jetbrains.compose") version "1.2.0-alpha01-dev683"
+    id("org.jetbrains.compose") version "1.2.0-alpha01-dev686"
     id("com.github.gmazzo.buildconfig") version "3.0.3"
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
     id("com.google.devtools.ksp") version "1.6.21-1.0.5"
@@ -55,6 +55,14 @@ sourceSets {
 
 ktlint {
     disabledRules.add("no-wildcard-imports")
+    version.set("0.45.2")
+
+    filter {
+        exclude { element ->
+            val path = element.file.absolutePath
+            path.contains("build") || path.contains("generated") || element.isDirectory
+        }
+    }
 }
 
 tasks {
