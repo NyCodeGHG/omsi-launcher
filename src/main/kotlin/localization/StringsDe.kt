@@ -79,5 +79,6 @@ val StringsDe = Strings(
     fullScreenWindowMode = "Vollbild",
     logLevel = "Log Level",
     screenMode = "Fenstermodus",
-    showInstanceFiles = "Lokale Dateien anzeigen"
+    showInstanceFiles = "Lokale Dateien anzeigen",
+    directoryNeedsToBeEmpty = "Das Verzeichnis muss leer sein"
 )

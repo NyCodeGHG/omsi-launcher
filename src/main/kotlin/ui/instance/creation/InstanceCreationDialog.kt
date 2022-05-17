@@ -86,6 +86,7 @@ fun InstanceCreationDialog(
                         Spacer(modifier = Modifier.height(8.dp))
                         PathInputField(
                             value = path,
+                            requiresEmptyDirectory = true,
                             onValueChange = { path = it },
                             label = {
                                 Text(strings.instanceDirectory)
@@ -180,4 +181,3 @@ fun InstanceCreationDialog(
                 }
             }
         }
-        

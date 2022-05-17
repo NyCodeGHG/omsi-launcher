@@ -47,6 +47,7 @@ fun GameDirectoryScreen(routerState: RouterState, config: MutableState<SetupStat
             Spacer(Modifier.height(20.dp))
             PathInputField(
                 value = gameFileDirectory,
+                requiresEmptyDirectory = true,
                 onValueChange = { directory ->
                     gameFileDirectory = directory
                     buttonFocusRequester.requestFocus()

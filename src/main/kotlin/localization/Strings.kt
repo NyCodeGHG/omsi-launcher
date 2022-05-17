@@ -69,5 +69,6 @@ data class Strings(
     val fullScreenWindowMode: String,
     val logLevel: String,
     val screenMode: String,
-    val showInstanceFiles: String
+    val showInstanceFiles: String,
+    val directoryNeedsToBeEmpty: String
 )
