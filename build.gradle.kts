@@ -56,6 +56,13 @@ sourceSets {
 ktlint {
     disabledRules.add("no-wildcard-imports")
     version.set("0.45.2")
+
+    filter {
+        exclude { element ->
+            val path = element.file.absolutePath
+            path.contains("build") || path.contains("generated") || element.isDirectory
+        }
+    }
 }
 
 tasks {
