@@ -32,7 +32,7 @@ fun PathInputField(
     val scope = rememberCoroutineScope()
     val chooseDirectory = {
         scope.launch(Dispatchers.IO) {
-            chooseDirectory(defaultDirectory)
+            onValueChange(chooseDirectory(defaultDirectory))
         }
     }
     OutlinedTextField(
