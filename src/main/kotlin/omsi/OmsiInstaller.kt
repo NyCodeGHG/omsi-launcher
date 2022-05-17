@@ -4,6 +4,7 @@ import dev.nycode.omsilauncher.config.config
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.LaunchFlag
 import dev.nycode.omsilauncher.util.getOmsiInstallPath
+import dev.nycode.omsilauncher.util.isSteamRunning
 import dev.nycode.omsilauncher.util.logger
 import dev.nycode.omsilauncher.util.parent
 import kotlinx.coroutines.Dispatchers
@@ -95,10 +96,12 @@ suspend fun activateInstallationSafe(path: Path, startSteam: Boolean = false, aw
             return true
         }
     }
-    if (awaitSteamDeath()) {
+    val isSteamRunning = isSteamRunning()
+
+    if (!isSteamRunning || awaitSteamDeath()) {
         doNativeCall("activate-omsi.exe", omsi.absolutePathString(), path.absolutePathString())
 
-        if (startSteam) {
+        if (isSteamRunning && startSteam) {
             withContext(Dispatchers.IO) {
                 runSteam()
             }

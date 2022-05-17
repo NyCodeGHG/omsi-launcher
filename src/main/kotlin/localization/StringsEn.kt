@@ -79,7 +79,6 @@ val StringsEn = Strings(
     logLevel = "Log Level",
     screenMode = "Screen Mode",
     showInstanceFiles = "Show instance files",
-    screenMode = "Screen Mode",
     closeSteamLaunchInfo = "Please close Steam before switching instances",
     directoryNeedsToBeEmpty = "The directory must be empty"
 )
