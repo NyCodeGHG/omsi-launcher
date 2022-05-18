@@ -10,6 +10,7 @@ import java.nio.file.Path
 class InstanceCreationState {
     var name: String by mutableStateOf("")
     var path: Path? by mutableStateOf(null)
+    var customPath: Path? by mutableStateOf(null)
     var patchVersion: Instance.PatchVersion by mutableStateOf(Instance.PatchVersion.BI_ARTICULATED_BUS_VERSION)
     var use4gbPatch: Boolean by mutableStateOf(true)
     var saveLogs: Boolean by mutableStateOf(false)

@@ -1,20 +1,7 @@
 package dev.nycode.omsilauncher.ui.instance.creation
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.Button
-import androidx.compose.material.Checkbox
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,13 +17,12 @@ import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.InstanceOptions
 import dev.nycode.omsilauncher.localization.Strings
 import dev.nycode.omsilauncher.localization.Translatable
-import dev.nycode.omsilauncher.ui.components.*
-import dev.nycode.omsilauncher.util.contains
+import dev.nycode.omsilauncher.ui.components.DropdownInputField
+import dev.nycode.omsilauncher.ui.components.EmptyDirectoryPathField
+import dev.nycode.omsilauncher.ui.components.TooltipText
+import dev.nycode.omsilauncher.ui.components.TooltipWrapper
 import dev.nycode.omsilauncher.util.sanitize
-import kotlin.io.path.absolutePathString
-import kotlin.io.path.div
-import kotlin.io.path.isDirectory
-import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.*
 
 @Composable
 fun InstanceCreationDialog(
@@ -47,8 +33,10 @@ fun InstanceCreationDialog(
     val dialogState = rememberDialogState(height = 620.dp, width = 700.dp)
     val instanceCreationState = remember { InstanceCreationState() }
     fun isValid(): Boolean = with(instanceCreationState) {
-        name.isNotBlank() && path?.isDirectory() == true && path?.listDirectoryEntries()
-            ?.isEmpty() == true
+        name.isNotBlank() && (
+            path?.isDirectory() == true && path?.listDirectoryEntries()
+                ?.isEmpty() == true
+            ) || path?.notExists() == true
     }
     Dialog(
         onCloseRequest = onCloseRequest,
@@ -89,31 +77,29 @@ private fun InstanceCreationForm(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(Modifier.fillMaxWidth(.43f)) {
-                            OutlinedTextField(
-                                value = name,
-                                onValueChange = {
-                                    name = it
-                                    if (path in config.instancesDirectory || path == null) {
-                                        path = config.instancesDirectory / name.sanitize()
-                                    }
-                                },
-                                placeholder = {
-                                    Text(strings.newInstance)
-                                },
-                                label = {
-                                    Text(strings.instanceName)
-                                },
-                                singleLine = true
-                            )
+                    OutlinedTextField(
+                        value = name,
+                        onValueChange = {
+                            name = it
+                            path = config.instancesDirectory / name.sanitize()
+                        },
+                        placeholder = {
+                            Text(strings.newInstance)
+                        },
+                        label = {
+                            Text(strings.instanceName)
+                        },
+                        singleLine = true
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(Modifier.fillMaxWidth(.43f)) {
+                    EmptyDirectoryPathField(
+                        value = customPath ?: path,
+                        onValueChange = { customPath = it },
+                        label = {
+                            Text(strings.instanceDirectory)
                         }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Row(Modifier.fillMaxWidth(.43f)) {
-                            EmptyDirectoryPathField(
-                                value = path,
-                                onValueChange = { path = it },
-                                label = {
-                                    Text(strings.instanceDirectory)
-                                }
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
