@@ -12,6 +12,7 @@ data class SavedInstance(
     val patchVersion: Instance.PatchVersion,
     val options: InstanceOptions,
     val uses4GBPatch: Boolean,
+    val isBaseInstance: Boolean = false
 ) {
     fun toInstance(): Instance {
         return Instance(
@@ -21,7 +22,8 @@ data class SavedInstance(
             patchVersion,
             options,
             InstanceState.READY,
-            uses4GBPatch
+            uses4GBPatch,
+            isBaseInstance
         )
     }
 }

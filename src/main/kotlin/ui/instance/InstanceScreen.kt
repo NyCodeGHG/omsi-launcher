@@ -18,6 +18,7 @@ import cafe.adriel.lyricist.LocalStrings
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Plus
 import dev.nycode.omsilauncher.instance.InstanceOptions
+import dev.nycode.omsilauncher.instance.baseInstance
 import dev.nycode.omsilauncher.instance.getCurrentInstancePath
 import dev.nycode.omsilauncher.instance.receiveCurrentInstancePath
 import dev.nycode.omsilauncher.omsi.OmsiProcessState
@@ -36,7 +37,7 @@ import java.util.*
 fun InstanceScreen() {
     val scope = rememberCoroutineScope()
     val instanceState = rememberApplicationInstanceState()
-    val instances = instanceState.instances
+    val instances = instanceState.instances.sortedByDescending { it.isBaseInstance }
     val omsiState by receiveOmsiProcessUpdates().collectAsState(
         if (isOmsiRunning()) OmsiProcessState.RUNNING else OmsiProcessState.NOT_RUNNING,
         Dispatchers.IO
@@ -82,6 +83,7 @@ fun InstanceScreen() {
     }
     if (showCreationDialog) {
         InstanceCreationDialog(
+            instances.baseInstance,
             {
                 showCreationDialog = false
             },

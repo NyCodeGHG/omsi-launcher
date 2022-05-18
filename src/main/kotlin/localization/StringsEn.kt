@@ -80,5 +80,7 @@ val StringsEn = Strings(
     screenMode = "Screen Mode",
     showInstanceFiles = "Show instance files",
     closeSteamLaunchInfo = "Please close Steam before switching instances",
-    directoryNeedsToBeEmpty = "The directory must be empty"
+    directoryNeedsToBeEmpty = "The directory must be empty",
+    cannotDeleteMainInstance = "You can't delete the base instance",
+    baseInstance = "Base Instance"
 )
