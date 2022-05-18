@@ -91,7 +91,7 @@ fun InstanceScreen() {
                         instanceState.createNewInstance(
                             UUID.randomUUID(),
                             name,
-                            path!!,
+                            customPath ?: path ?: error("No path given. This shouldn't happen."),
                             patchVersion,
                             uses4GBPatch = use4gbPatch,
                             options = InstanceOptions(

@@ -12,16 +12,17 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.rememberDialogState
 import cafe.adriel.lyricist.LocalStrings
+import dev.nycode.omsilauncher.config.config
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.InstanceOptions
 import dev.nycode.omsilauncher.localization.Strings
 import dev.nycode.omsilauncher.localization.Translatable
 import dev.nycode.omsilauncher.ui.components.DropdownInputField
-import dev.nycode.omsilauncher.ui.components.PathInputField
+import dev.nycode.omsilauncher.ui.components.EmptyDirectoryPathField
 import dev.nycode.omsilauncher.ui.components.TooltipText
 import dev.nycode.omsilauncher.ui.components.TooltipWrapper
-import kotlin.io.path.absolutePathString
-import kotlin.io.path.listDirectoryEntries
+import dev.nycode.omsilauncher.util.sanitize
+import kotlin.io.path.*
 
 @Composable
 fun InstanceCreationDialog(
@@ -32,7 +33,10 @@ fun InstanceCreationDialog(
     val dialogState = rememberDialogState(height = 620.dp, width = 700.dp)
     val instanceCreationState = remember { InstanceCreationState() }
     fun isValid(): Boolean = with(instanceCreationState) {
-        name.isNotBlank() && path?.listDirectoryEntries()?.isEmpty() == true
+        name.isNotBlank() && (
+            path?.isDirectory() == true && path?.listDirectoryEntries()
+                ?.isEmpty() == true
+            ) || path?.notExists() == true
     }
     Dialog(
         onCloseRequest = onCloseRequest,
@@ -72,25 +76,32 @@ private fun InstanceCreationForm(
                 modifier = Modifier.padding(top = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    placeholder = {
-                        Text(strings.newInstance)
-                    },
-                    label = {
-                        Text(strings.instanceName)
-                    },
-                    singleLine = true
-                )
+                Row(Modifier.fillMaxWidth(.43f)) {
+                    OutlinedTextField(
+                        value = name,
+                        onValueChange = {
+                            name = it
+                            path = config.instancesDirectory / name.sanitize()
+                        },
+                        placeholder = {
+                            Text(strings.newInstance)
+                        },
+                        label = {
+                            Text(strings.instanceName)
+                        },
+                        singleLine = true
+                    )
+                }
                 Spacer(modifier = Modifier.height(8.dp))
-                PathInputField(
-                    value = path,
-                    onValueChange = { path = it },
-                    label = {
-                        Text(strings.instanceDirectory)
-                    }
-                )
+                Row(Modifier.fillMaxWidth(.43f)) {
+                    EmptyDirectoryPathField(
+                        value = customPath ?: path,
+                        onValueChange = { customPath = it },
+                        label = {
+                            Text(strings.instanceDirectory)
+                        }
+                    )
+                }
                 Spacer(modifier = Modifier.height(8.dp))
                 DropDownColumn(
                     title = strings.patchVersion,

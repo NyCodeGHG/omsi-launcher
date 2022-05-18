@@ -78,5 +78,6 @@ val StringsEn = Strings(
     fullScreenWindowMode = "Full Screen",
     logLevel = "Log Level",
     screenMode = "Screen Mode",
-    showInstanceFiles = "Show instance files"
+    showInstanceFiles = "Show instance files",
+    directoryNeedsToBeEmpty = "The directory must be empty"
 )

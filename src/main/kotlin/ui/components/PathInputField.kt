@@ -3,9 +3,11 @@ package dev.nycode.omsilauncher.ui.components
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import cafe.adriel.lyricist.LocalStrings
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Folder
 import dev.nycode.omsilauncher.util.chooseDirectory
@@ -14,6 +16,8 @@ import kotlinx.coroutines.launch
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
+import kotlin.io.path.isDirectory
+import kotlin.io.path.listDirectoryEntries
 
 @Composable
 fun PathInputField(
@@ -48,6 +52,33 @@ fun PathInputField(
         modifier = modifier,
         isError = isError,
         label = label,
+        placeholder = placeholder
+    )
+}
+
+@Composable
+fun EmptyDirectoryPathField(
+    value: Path?,
+    onValueChange: (Path?) -> Unit,
+    defaultDirectory: Path? = null,
+    modifier: Modifier = Modifier,
+    label: (@Composable () -> Unit)? = null,
+    placeholder: (@Composable () -> Unit)? = null,
+) {
+    val isError = value != null && value.isDirectory() && value.listDirectoryEntries().isNotEmpty()
+    PathInputField(
+        value = value,
+        onValueChange = onValueChange,
+        defaultDirectory = defaultDirectory,
+        modifier = modifier,
+        isError = isError,
+        label = {
+            if (isError) {
+                Text(LocalStrings.current.directoryNeedsToBeEmpty)
+            } else {
+                label?.invoke()
+            }
+        },
         placeholder = placeholder
     )
 }
