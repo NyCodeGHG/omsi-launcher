@@ -80,5 +80,6 @@ val StringsDe = Strings(
     logLevel = "Log Level",
     screenMode = "Fenstermodus",
     showInstanceFiles = "Lokale Dateien anzeigen",
-    directoryNeedsToBeEmpty = "Das Verzeichnis muss leer sein"
+    directoryNeedsToBeEmpty = "Das Verzeichnis muss leer sein",
+    closeSteamLaunchInfo = "Bitte schließe Steam um die Instanz zu wechseln"
 )

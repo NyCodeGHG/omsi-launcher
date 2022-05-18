@@ -25,18 +25,18 @@ data class Instance(
     val state: InstanceState,
     val uses4GBPatch: Boolean,
 ) : PersistentValue<SavedInstance> {
-    suspend fun start(editor: Boolean = false) {
+    suspend fun start(editor: Boolean = false, awaitSteamDeath: suspend () -> Boolean = { true }) {
         val flags = buildList {
             addAll(options.toLaunchFlags())
             if (editor) {
                 add(LaunchFlag.EDITOR)
             }
         }
-        activateAndStartInstallationSafe(directory, flags)
+        activateAndStartInstallationSafe(directory, flags, awaitSteamDeath)
     }
 
-    suspend fun activate() {
-        activateInstallationSafe(directory)
+    suspend fun activate(awaitSteamDeath: suspend () -> Boolean = { true }) {
+        activateInstallationSafe(directory, true, awaitSteamDeath)
     }
 
     enum class PatchVersion(

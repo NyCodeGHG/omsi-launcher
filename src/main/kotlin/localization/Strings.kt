@@ -23,6 +23,7 @@ data class Strings(
     val activate: String,
     val closeSteamInfo: String,
     val closeSteam: String,
+    val closeSteamLaunchInfo: String,
     val unableToCloseSteam: String,
     val unableToCloseSteamTitle: String,
     val createBaseGame: String,

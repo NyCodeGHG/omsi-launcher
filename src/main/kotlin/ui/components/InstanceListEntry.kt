@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import cafe.adriel.lyricist.LocalStrings
 import compose.icons.TablerIcons
 import compose.icons.tablericons.*
@@ -28,6 +29,7 @@ import dev.nycode.omsilauncher.ui.instance.context.impl.EditInstanceContextMenuA
 import dev.nycode.omsilauncher.ui.instance.context.impl.start.EditorStartInstanceContextMenuAction
 import dev.nycode.omsilauncher.ui.instance.context.impl.start.RegularStartInstanceContextMenuAction
 import dev.nycode.omsilauncher.ui.instance.context.instanceContextMenus
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,12 +47,33 @@ fun InstanceListEntry(
 ) {
     val image = remember { imageFromResource("ecitaro.jpg") }
     var deleteDialog by remember { mutableStateOf(false) }
+    var steamDeathSuspensionPoint: CompletableDeferred<Boolean>? by remember { mutableStateOf(null) }
     val strings = LocalStrings.current
 
+    val point = steamDeathSuspensionPoint
+    if (point != null) {
+        Dialog({
+            point.complete(false)
+            steamDeathSuspensionPoint = null
+        }, title = strings.closeSteam) {
+        SteamProcessScreen(strings.closeSteamLaunchInfo) {
+            point.complete(true)
+            steamDeathSuspensionPoint = null
+        }
+    }
+    }
+
     val context = remember(strings, omsiState, instance, instanceActive, scope) {
+
+        val awaitSteamDeath = suspend {
+            val newPoint = CompletableDeferred<Boolean>()
+            steamDeathSuspensionPoint = newPoint
+            newPoint.await()
+        }
+
         val startInstance: (Boolean) -> Unit = { editor: Boolean ->
             scope.launch(Dispatchers.IO) {
-                instance.start(editor)
+                instance.start(editor, awaitSteamDeath)
             }
         }
 
@@ -63,7 +86,7 @@ fun InstanceListEntry(
         val activateInstance: () -> Unit = {
             scope.launch(Dispatchers.IO) {
                 try {
-                    instance.activate()
+                    instance.activate(awaitSteamDeath)
                 } catch (exception: UserAccessControlCancelledException) {
                     showUACDialog()
                 }
