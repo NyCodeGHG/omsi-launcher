@@ -20,9 +20,9 @@
 - Upgrade lyricst to 1.2.1 ([#19](https://github.com/NyCodeGHG/omsi-launcher/pull/19)
   , [#18](https://github.com/NyCodeGHG/omsi-launcher/pull/18))
 - Check whether directories are empty in setup 
-  and creation dialogs [#33](https://github.com/NyCodeGHG/omsi-launcher/pull/33)
+  and creation dialogs ([#33](https://github.com/NyCodeGHG/omsi-launcher/pull/33))
 - Make launcher suggest directories based on instance names
-  [#33](https://github.com/NyCodeGHG/omsi-launcher/pull/33)
+  ([#33](https://github.com/NyCodeGHG/omsi-launcher/pull/33))
 
 ### Deprecated
 
@@ -33,8 +33,8 @@
 - Handle when Steam/OMSI is not
   installed ([#20](https://github.com/NyCodeGHG/omsi-launcher/pull/20))
 - Log native executables correctly ([#22](https://github.com/NyCodeGHG/omsi-launcher/pull/22))
-- Fix input boxes in instance creation dialog exceeding UI space 
-  [#33](https://github.com/NyCodeGHG/omsi-launcher/pull/33)
+- Fix input boxes in instance creation dialog exceeding UI space
+  ([#33](https://github.com/NyCodeGHG/omsi-launcher/pull/33))
 
 ### Security
 
