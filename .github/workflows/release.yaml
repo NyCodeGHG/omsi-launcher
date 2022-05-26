@@ -27,7 +27,7 @@ jobs:
           $url = "https://github.com/NyCodeGHG/omsi-launcher/releases/download/${tagname}/omsi-launcher-${version}.msi"
           .\wingetcreate.exe update OmsiLauncher.OmsiLauncher -u $url --version $version
           if ($version -notmatch "-") {
-            .\wingetcreate.exe submit .\manifests\m\OmsiLauncher\OmsiLauncher\${version}\ --token $env:WINGET_GITHUB_TOKEN
+            .\wingetcreate.exe submit .\manifests\o\OmsiLauncher\OmsiLauncher\${version}\ --token $env:WINGET_GITHUB_TOKEN
           }
       # Patch changelog, commit and push to the current repository
   changelog:
