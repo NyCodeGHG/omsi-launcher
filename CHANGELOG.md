@@ -1,9 +1,20 @@
 # Changelog
 
 ## [Unreleased]
-
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [0.4.0] - 2022-05-26
+### Added
 - Tooltips ([#23](https://github.com/NyCodeGHG/omsi-launcher/pull/23))
 - Context Menus ([#24](https://github.com/NyCodeGHG/omsi-launcher/pull/24))
 - Add relink native
@@ -15,8 +26,8 @@
 - Add Context Menu entry to show instance files ([#29](https://github.com/NyCodeGHG/omsi-launcher/pull/29))
 - Show "Close Steam" dialog as well when switching instances ([#27](https://github.com/NyCodeGHG/omsi-launcher/pull/27))
 
-### Changed
 
+### Changed
 - Upgrade kotlinx-serialization-json to
   1.3.3 ([#17](https://github.com/NyCodeGHG/omsi-launcher/pull/17))
 - Upgrade lyricst to 1.2.1 ([#19](https://github.com/NyCodeGHG/omsi-launcher/pull/19)
@@ -26,24 +37,23 @@
 - Make launcher suggest directories based on instance names
   ([#33](https://github.com/NyCodeGHG/omsi-launcher/pull/33))
 
+
 ### Deprecated
 
 ### Removed
 
 ### Fixed
-
 - Handle when Steam/OMSI is not
   installed ([#20](https://github.com/NyCodeGHG/omsi-launcher/pull/20))
 - Log native executables correctly ([#22](https://github.com/NyCodeGHG/omsi-launcher/pull/22))
 - Fix input boxes in instance creation dialog exceeding UI space
   ([#33](https://github.com/NyCodeGHG/omsi-launcher/pull/33))
 
+
 ### Security
 
 ## [0.3.0] - 2022-05-14
-
 ### Added
-
 - Add internal support for 4 GB patch
 - Synchronise Steam manifest between instances
 - Add internal routing system
@@ -51,28 +61,20 @@
 - Add instance activate button
 - Add UAC error dialog
 
-### Changed
 
+### Changed
 - Update LICENSE software author
 - Update program vendor
 - Translate missing strings in setup
 
-### Deprecated
 
 ### Removed
-
 - Old routing system based on enums
 
-### Fixed
-
-### Security
-
 ## [0.2.0] - 2022-05-09
-
 ### Added
-
 - Add proper `CHANGELOG.md`
 
-### Fixed
 
+### Fixed
 - Fix installer not including Rust binaries
