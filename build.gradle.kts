@@ -38,7 +38,7 @@ dependencies {
 
     implementation("cafe.adriel.lyricist", "lyricist", "1.2.2")
 
-    ksp("cafe.adriel.lyricist", "lyricist-processor", "1.2.1")
+    ksp("cafe.adriel.lyricist", "lyricist-processor", "1.2.2")
     implementation(platform("dev.schlaubi:stdx-bom:1.1.0"))
     implementation("dev.schlaubi", "stdx-serialization")
 
