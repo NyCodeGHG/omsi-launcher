@@ -10,8 +10,22 @@
 ### Removed
 
 ### Fixed
+
+### Security
+
+## [0.4.1] - 2022-05-26
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
 - Fix instance creation failing, if base instance is started once
   - This was caused by `clone-omsi.exe` symlinking the `Omsi.exe` symlink in base game and therefore panicking on new instances
+
 ### Security
 
 ## [0.4.0] - 2022-05-26
@@ -27,7 +41,6 @@
 - Add Context Menu entry to show instance files ([#29](https://github.com/NyCodeGHG/omsi-launcher/pull/29))
 - Show "Close Steam" dialog as well when switching instances ([#27](https://github.com/NyCodeGHG/omsi-launcher/pull/27))
 
-
 ### Changed
 - Upgrade kotlinx-serialization-json to
   1.3.3 ([#17](https://github.com/NyCodeGHG/omsi-launcher/pull/17))
@@ -38,20 +51,12 @@
 - Make launcher suggest directories based on instance names
   ([#33](https://github.com/NyCodeGHG/omsi-launcher/pull/33))
 
-
-### Deprecated
-
-### Removed
-
 ### Fixed
 - Handle when Steam/OMSI is not
   installed ([#20](https://github.com/NyCodeGHG/omsi-launcher/pull/20))
 - Log native executables correctly ([#22](https://github.com/NyCodeGHG/omsi-launcher/pull/22))
 - Fix input boxes in instance creation dialog exceeding UI space
   ([#33](https://github.com/NyCodeGHG/omsi-launcher/pull/33))
-
-
-### Security
 
 ## [0.3.0] - 2022-05-14
 ### Added
@@ -62,12 +67,10 @@
 - Add instance activate button
 - Add UAC error dialog
 
-
 ### Changed
 - Update LICENSE software author
 - Update program vendor
 - Translate missing strings in setup
-
 
 ### Removed
 - Old routing system based on enums
@@ -75,7 +78,6 @@
 ## [0.2.0] - 2022-05-09
 ### Added
 - Add proper `CHANGELOG.md`
-
 
 ### Fixed
 - Fix installer not including Rust binaries
