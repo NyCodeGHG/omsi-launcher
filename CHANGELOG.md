@@ -10,7 +10,8 @@
 ### Removed
 
 ### Fixed
-
+- Fix instance creation failing, if base instance is started once
+  - This was caused by `clone-omsi.exe` symlinking the `Omsi.exe` symlink in base game and therefore panicking on new instances
 ### Security
 
 ## [0.4.0] - 2022-05-26

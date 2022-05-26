@@ -15,7 +15,7 @@ pub fn mirror_folder(from: &PathBuf, to: &Path) -> std::io::Result<()> {
             mirror_folder(&path, &target).unwrap()
         } else if target.file_name().unwrap() != "manifest.acf"
             && !target.exists()
-            && !target.is_symlink()
+            && !path.is_symlink()
         {
             windows_fs::symlink_file(path, target)?
         }
