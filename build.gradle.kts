@@ -27,7 +27,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx", "kotlinx-serialization-json", "1.3.3")
     implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.6.1")
     implementation("org.jetbrains.kotlinx", "kotlinx-cli", "0.3.4")
-    implementation("io.github.microutils", "kotlin-logging", "2.1.21")
+    implementation("io.github.microutils", "kotlin-logging", "2.1.23")
     runtimeOnly("ch.qos.logback", "logback-classic", "1.2.11")
     implementation("net.java.dev.jna", "jna-platform", "5.11.0")
     implementation("org.lwjgl", "lwjgl", "3.3.1")
@@ -36,9 +36,9 @@ dependencies {
     implementation("org.lwjgl", "lwjgl-nfd", "3.3.1", classifier = "natives-windows")
     implementation("br.com.devsrsouza.compose.icons.jetbrains", "tabler-icons", "1.0.0")
 
-    implementation("cafe.adriel.lyricist", "lyricist", "1.2.1")
+    implementation("cafe.adriel.lyricist", "lyricist", "1.2.2")
 
-    ksp("cafe.adriel.lyricist", "lyricist-processor", "1.2.1")
+    ksp("cafe.adriel.lyricist", "lyricist-processor", "1.2.2")
     implementation(platform("dev.schlaubi:stdx-bom:1.1.0"))
     implementation("dev.schlaubi", "stdx-serialization")
 
