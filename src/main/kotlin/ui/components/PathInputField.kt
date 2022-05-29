@@ -25,6 +25,7 @@ fun PathInputField(
     onValueChange: (Path?) -> Unit,
     defaultDirectory: Path? = null,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     isError: Boolean = false,
     label: (@Composable () -> Unit)? = null,
     placeholder: (@Composable () -> Unit)? = null,
@@ -42,10 +43,11 @@ fun PathInputField(
         },
         readOnly = true,
         singleLine = true,
+        enabled = enabled,
         trailingIcon = {
             IconButton({
                 chooseDirectory()
-            }) {
+            }, enabled = enabled) {
                 Icon(TablerIcons.Folder, "Folder")
             }
         },
@@ -62,6 +64,7 @@ fun EmptyDirectoryPathField(
     onValueChange: (Path?) -> Unit,
     defaultDirectory: Path? = null,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     label: (@Composable () -> Unit)? = null,
     placeholder: (@Composable () -> Unit)? = null,
 ) {
@@ -72,8 +75,9 @@ fun EmptyDirectoryPathField(
         defaultDirectory = defaultDirectory,
         modifier = modifier,
         isError = isError,
+        enabled = enabled,
         label = {
-            if (isError) {
+            if (isError && enabled) {
                 Text(LocalStrings.current.directoryNeedsToBeEmpty)
             } else {
                 label?.invoke()

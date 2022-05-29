@@ -1,4 +1,4 @@
-package dev.nycode.omsilauncher.ui.instance.creation
+package dev.nycode.omsilauncher.ui.instance.context.modification
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -39,51 +39,48 @@ import dev.nycode.omsilauncher.ui.components.TooltipWrapper
 import dev.nycode.omsilauncher.util.sanitize
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.div
-import kotlin.io.path.isDirectory
-import kotlin.io.path.listDirectoryEntries
-import kotlin.io.path.notExists
 
 @Composable
-fun InstanceCreationDialog(
-    mainInstance: Instance,
+fun InstanceDialog(
+    dialogTitle: String,
+    formTitle: String,
+    parentInstance: Instance,
+    disableFolderInput: Boolean = false,
+    isValid: InstanceModificationState.() -> Boolean = { true },
+    saveButtonLabel: @Composable () -> Unit,
     onCloseRequest: () -> Unit,
-    createInstance: (InstanceCreationState) -> Unit,
+    onUpdate: (InstanceModificationState) -> Unit,
 ) {
-    val strings = LocalStrings.current
     val dialogState = rememberDialogState(height = 620.dp, width = 700.dp)
-    val instanceCreationState = remember { InstanceCreationState(mainInstance) }
-    fun isValid(): Boolean = with(instanceCreationState) {
-        name.isNotBlank() && (
-            path?.isDirectory() == true && path?.listDirectoryEntries()
-                ?.isEmpty() == true
-            ) || path?.notExists() == true
-    }
+    val instanceModificationState = remember { InstanceModificationState(parentInstance) }
     Dialog(
         onCloseRequest = onCloseRequest,
-        title = strings.createANewInstance,
+        title = dialogTitle,
         state = dialogState
     ) {
         Box(modifier = Modifier.padding(16.dp).fillMaxSize()) {
-            InstanceCreationForm(instanceCreationState)
+            InstanceForm(formTitle, instanceModificationState, disableFolderInput)
             Button({
                 onCloseRequest()
-                createInstance(instanceCreationState)
-            }, modifier = Modifier.align(Alignment.BottomCenter), enabled = isValid()) {
-                Text(strings.createInstance)
+                onUpdate(instanceModificationState)
+            }, modifier = Modifier.align(Alignment.BottomCenter), enabled = isValid(instanceModificationState)) {
+                saveButtonLabel()
             }
         }
     }
 }
 
 @Composable
-private fun InstanceCreationForm(
-    instanceCreationState: InstanceCreationState,
-) = with(instanceCreationState) {
+private fun InstanceForm(
+    title: String,
+    instanceModificationState: InstanceModificationState,
+    disableFolderInput: Boolean = false
+) = with(instanceModificationState) {
     val strings = LocalStrings.current
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = strings.createANewInstance,
+            text = title,
             style = MaterialTheme.typography.h3,
             fontSize = 30.sp,
             textAlign = TextAlign.Center,
@@ -101,7 +98,9 @@ private fun InstanceCreationForm(
                         value = name,
                         onValueChange = {
                             name = it
-                            path = config.instancesDirectory / name.sanitize()
+                            if (!disableFolderInput) {
+                                path = config.instancesDirectory / name.sanitize()
+                            }
                         },
                         placeholder = {
                             Text(strings.newInstance)
@@ -117,6 +116,7 @@ private fun InstanceCreationForm(
                     EmptyDirectoryPathField(
                         value = customPath ?: path,
                         onValueChange = { customPath = it },
+                        enabled = !disableFolderInput,
                         label = {
                             Text(strings.instanceDirectory)
                         }

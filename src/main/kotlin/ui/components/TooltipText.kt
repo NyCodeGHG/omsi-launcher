@@ -6,6 +6,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -19,7 +20,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun TooltipText(
-    text: String,
+    text: CharSequence,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
@@ -35,21 +36,44 @@ fun TooltipText(
     maxLines: Int = Int.MAX_VALUE,
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle = LocalTextStyle.current,
-) = Text(
-    text,
-    modifier.padding(8.dp),
-    color,
-    fontSize,
-    fontStyle,
-    fontWeight,
-    fontFamily,
-    letterSpacing,
-    textDecoration,
-    textAlign,
-    lineHeight,
-    overflow,
-    softWrap,
-    maxLines,
-    onTextLayout,
-    style
-)
+) {
+    when (text) {
+        is AnnotatedString -> Text(
+            text = text,
+            modifier = modifier.padding(8.dp),
+            color = color,
+            fontSize = fontSize,
+            fontStyle = fontStyle,
+            fontWeight = fontWeight,
+            fontFamily = fontFamily,
+            letterSpacing = letterSpacing,
+            textDecoration = textDecoration,
+            textAlign = textAlign,
+            lineHeight = lineHeight,
+            overflow = overflow,
+            softWrap = softWrap,
+            maxLines = maxLines,
+            onTextLayout = onTextLayout,
+            style = style
+        )
+        is String -> Text(
+            text = text,
+            modifier = modifier.padding(8.dp),
+            color = color,
+            fontSize = fontSize,
+            fontStyle = fontStyle,
+            fontWeight = fontWeight,
+            fontFamily = fontFamily,
+            letterSpacing = letterSpacing,
+            textDecoration = textDecoration,
+            textAlign = textAlign,
+            lineHeight = lineHeight,
+            overflow = overflow,
+            softWrap = softWrap,
+            maxLines = maxLines,
+            onTextLayout = onTextLayout,
+            style = style
+        )
+        else -> error("Only String and AnnotatedString is supported.")
+    }
+}

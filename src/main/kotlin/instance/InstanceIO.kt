@@ -42,7 +42,7 @@ fun loadInstances(): List<Instance> {
 
 fun saveInstances(instances: List<Instance>): List<Instance> {
     instancesJson.outputStream().use {
-        configJson.encodeToStream(instances.map(Instance::toSavedData), it)
+        configJson.encodeToStream(instances.toSet().map(Instance::toSavedData), it)
     }
     return instances
 }

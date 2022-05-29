@@ -1,5 +1,9 @@
 package dev.nycode.omsilauncher.localization
 
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import cafe.adriel.lyricist.LyricistStrings
 import dev.nycode.omsilauncher.util.removeLineBreaks
 
@@ -61,7 +65,7 @@ val StringsDe = Strings(
     selectedPatchVersion = { patchVersion ->
         "Ausgewählter Patch: $patchVersion"
     },
-    editInstance = "Instanz bearbeiten (Noch nicht implementiert)",
+    editInstance = "Instanz bearbeiten",
     deleteInstance = "Instanz löschen",
     omsiNotInstalledTitle = "OMSI ist nicht installiert",
     omsiNotInstalledDescription = "Das Installationsverzeichnis konnte nicht gefunden werden, bitte starte OMSI über Steam",
@@ -83,5 +87,18 @@ val StringsDe = Strings(
     cannotDeleteMainInstance = "Du kannst die Basis-Instanz nicht löschen",
     baseInstance = "Basis-Instanz",
     directoryNeedsToBeEmpty = "Das Verzeichnis muss leer sein",
-    closeSteamLaunchInfo = "Bitte schließe Steam um die Instanz zu wechseln"
+    closeSteamLaunchInfo = "Bitte schließe Steam um die Instanz zu wechseln",
+    reSyncInstance = "Instanz neu synchronisieren",
+    reSyncInstanceExplainer = buildAnnotatedString {
+        append("Benutze dies, ")
+        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+            append("bevor ")
+        }
+        append("du Änderungen an der Basis-Instanz vornimmst")
+    },
+    iAmDone = "Ich bin fertig",
+    mergingSteamManifest = { name -> "Steam Manifest von $name wird neu-zusammengefasst" },
+    preparingReSynchronisation = "Neu-Synchronisation wird vorbereitet",
+    reLinkingInstances = "Instanzen werden neu gelinkt",
+    waitingForChanges = "Es wird auf Änderungen gewartet"
 )
