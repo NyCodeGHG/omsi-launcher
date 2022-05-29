@@ -9,7 +9,13 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,11 +33,11 @@ import dev.nycode.omsilauncher.ui.components.ErrorDialog
 import dev.nycode.omsilauncher.ui.components.InstanceListEntry
 import dev.nycode.omsilauncher.ui.components.TooltipText
 import dev.nycode.omsilauncher.ui.components.TooltipWrapper
-import dev.nycode.omsilauncher.ui.instance.creation.InstanceCreationDialog
+import dev.nycode.omsilauncher.ui.instance.context.modification.InstanceCreationDialog
 import dev.nycode.omsilauncher.util.isOmsiRunning
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.UUID
 
 @Composable
 fun InstanceScreen() {

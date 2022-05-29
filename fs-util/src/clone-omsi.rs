@@ -4,10 +4,10 @@ use std::fs;
 use std::os::windows::fs as windows_fs;
 use std::path::PathBuf;
 
-use crate::directory_copier::mirror_folder;
 use log::info;
 use structopt::*;
 
+use crate::directory_copier::mirror_folder;
 use crate::launcher::with_symlink_permission;
 
 mod directory_copier;
@@ -59,16 +59,22 @@ fn run() -> std::io::Result<()> {
         &opt.binary_path.to_str().unwrap(),
         &omsi_executable.to_str().unwrap()
     );
+    if opt.only_link_binary {
+        // Delete old OMSI.exe for relink
+        fs::remove_file(&omsi_executable)?;
+    }
     windows_fs::symlink_file(&opt.binary_path, omsi_executable)?;
 
-    let base_manifest = opt.base_game_folder.join("manifest.acf");
-    let destination = opt.omsi_instance_folder.join("manifest.acf");
-    info!(
-        "Copying base manifest {} to {}",
-        &base_manifest.to_str().unwrap(),
-        &destination.to_str().unwrap()
-    );
+    if !opt.only_link_binary {
+        let base_manifest = opt.base_game_folder.join("manifest.acf");
+        let destination = opt.omsi_instance_folder.join("manifest.acf");
+        info!(
+            "Copying base manifest {} to {}",
+            &base_manifest.to_str().unwrap(),
+            &destination.to_str().unwrap()
+        );
+        fs::copy(base_manifest, destination)?;
+    }
 
-    fs::copy(base_manifest, destination)?;
     Ok(())
 }

@@ -3,6 +3,8 @@ package dev.nycode.omsilauncher.ui.instance
 import androidx.compose.runtime.*
 import dev.nycode.omsilauncher.instance.*
 import dev.nycode.omsilauncher.omsi.createInstance
+import dev.nycode.omsilauncher.omsi.reLinkOmsiExecutable
+import dev.nycode.omsilauncher.ui.instance.context.modification.InstanceModificationState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.nio.file.Files
@@ -16,18 +18,18 @@ import kotlin.streams.asSequence
 
 class ApplicationInstanceState {
 
-    var instances: List<Instance> by mutableStateOf(loadInstances())
-        private set
+    private var internalInstances: List<Instance> by mutableStateOf(loadInstances())
+    val instances: List<Instance> get() = internalInstances.sortedByDescending { it.id }
 
     suspend fun deleteInstance(instance: Instance) = withContext(Dispatchers.IO) {
-        instances = instances - instance + instance.copy(state = InstanceState.DELETING)
+        internalInstances = instances - instance + instance.copy(state = InstanceState.DELETING)
         Files.walk(instance.directory).use {
             it.asSequence()
                 .sortedDescending()
                 .forEach(Path::deleteExisting)
         }
-        instances = instances.filter { it.id != instance.id }
-        persistInstances(instances)
+        internalInstances = internalInstances.filter { it.id != instance.id }
+        persistInstances(internalInstances)
     }
 
     suspend fun createNewInstance(
@@ -47,21 +49,39 @@ class ApplicationInstanceState {
             InstanceState.CREATING,
             uses4GBPatch
         )
-        instances = instances + instance
+        internalInstances = internalInstances + instance
         if (directory.notExists()) {
             directory.createDirectories()
         }
         directory.resolve("launcher.lock").createFile()
         createInstance(instance)
-        instances = instances - instance + instance.copy(state = InstanceState.READY)
-        persistInstances(instances)
+        internalInstances = internalInstances - instance + instance.copy(state = InstanceState.READY)
+        persistInstances(internalInstances)
+    }
+
+    suspend fun updateInstance(id: UUID, state: InstanceModificationState) = withContext(Dispatchers.IO) {
+        val oldInstance = internalInstances.first { it.id == id }
+        val oldInstances = internalInstances - oldInstance
+        val newInstance = oldInstance.copy(
+            options = InstanceOptions(state.saveLogs, state.useDebugMode, state.logLevel, state.screenMode),
+            uses4GBPatch = state.use4gbPatch,
+            patchVersion = state.patchVersion,
+            state = InstanceState.UPDATING
+        )
+        internalInstances = oldInstances + newInstance
+
+        if (oldInstance.patchVersion != newInstance.patchVersion || oldInstance.uses4GBPatch != newInstance.uses4GBPatch) {
+            reLinkOmsiExecutable(newInstance)
+        }
+
+        internalInstances = persistInstances(oldInstances + newInstance.copy(state = InstanceState.READY))
     }
 
     fun persistInstances(instances: List<Instance>): List<Instance> {
         return saveInstances(instances)
     }
 
-    operator fun component1() = instances
+    operator fun component1() = internalInstances
 }
 
 @Composable

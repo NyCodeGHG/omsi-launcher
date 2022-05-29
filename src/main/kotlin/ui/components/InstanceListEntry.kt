@@ -42,7 +42,6 @@ import compose.icons.tablericons.PlayerPlay
 import compose.icons.tablericons.Tools
 import compose.icons.tablericons.Trash
 import dev.nycode.omsilauncher.instance.Instance
-import dev.nycode.omsilauncher.instance.InstanceState
 import dev.nycode.omsilauncher.omsi.OmsiProcessState
 import dev.nycode.omsilauncher.omsi.UserAccessControlCancelledException
 import dev.nycode.omsilauncher.ui.CustomColors
@@ -55,6 +54,7 @@ import dev.nycode.omsilauncher.ui.instance.context.impl.EditInstanceContextMenuA
 import dev.nycode.omsilauncher.ui.instance.context.impl.start.EditorStartInstanceContextMenuAction
 import dev.nycode.omsilauncher.ui.instance.context.impl.start.RegularStartInstanceContextMenuAction
 import dev.nycode.omsilauncher.ui.instance.context.instanceContextMenus
+import dev.nycode.omsilauncher.ui.instance.context.modification.InstanceEditDialog
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -73,6 +73,7 @@ fun InstanceListEntry(
 ) {
     val image = remember { imageFromResource("ecitaro.jpg") }
     var deleteDialog by remember { mutableStateOf(false) }
+    var editDialog by remember { mutableStateOf(false) }
     var steamDeathSuspensionPoint: CompletableDeferred<Boolean>? by remember { mutableStateOf(null) }
     val strings = LocalStrings.current
 
@@ -82,11 +83,11 @@ fun InstanceListEntry(
             point.complete(false)
             steamDeathSuspensionPoint = null
         }, title = strings.closeSteam) {
-        SteamProcessScreen(strings.closeSteamLaunchInfo) {
-            point.complete(true)
-            steamDeathSuspensionPoint = null
+            SteamProcessScreen(strings.closeSteamLaunchInfo) {
+                point.complete(true)
+                steamDeathSuspensionPoint = null
+            }
         }
-    }
     }
 
     val context = remember(strings, omsiState, instance, instanceActive, scope) {
@@ -103,7 +104,9 @@ fun InstanceListEntry(
             }
         }
 
-        val editInstance = {} // not yet implemented
+        val editInstance = {
+            editDialog = true
+        }
 
         val deleteInstance = {
             deleteDialog = true
@@ -193,6 +196,18 @@ fun InstanceListEntry(
             title = strings.confirmDeletion(instance.name)
         )
     }
+
+    if (editDialog) {
+        val onClose = {
+            editDialog = false
+        }
+        InstanceEditDialog(instance, onClose) {
+            scope.launch {
+                onClose()
+                instanceState.updateInstance(instance.id, it)
+            }
+        }
+    }
 }
 
 @Composable
@@ -261,7 +276,7 @@ private fun InstanceButtonRow(
     context: InstanceActionContext,
 ) = Row(modifier) {
     val instance = context.instance
-    if (instance.state == InstanceState.CREATING || instance.state == InstanceState.DELETING) {
+    if (instance.state.showLoadingIndicator) {
         LinearProgressIndicator(modifier = Modifier.padding(bottom = 5.dp))
     } else {
         InstanceStartButton(context)
