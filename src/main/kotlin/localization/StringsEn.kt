@@ -87,7 +87,7 @@ val StringsEn = Strings(
     directoryNeedsToBeEmpty = "The directory must be empty",
     cannotDeleteMainInstance = "You can't delete the base instance",
     baseInstance = "Base Instance",
-    reSyncInstance = "Re-Synchronise Instanz",
+    reSyncInstance = "Re-Synchronise Instance",
     reSyncInstanceExplainer = buildAnnotatedString {
         append("Use this, ")
         withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
