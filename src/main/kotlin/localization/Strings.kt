@@ -1,5 +1,7 @@
 package dev.nycode.omsilauncher.localization
 
+import androidx.compose.ui.text.AnnotatedString
+
 data class Strings(
     val ok: String,
     val `continue`: String,
@@ -73,5 +75,12 @@ data class Strings(
     val showInstanceFiles: String,
     val cannotDeleteMainInstance: String,
     val baseInstance: String,
-    val directoryNeedsToBeEmpty: String
+    val directoryNeedsToBeEmpty: String,
+    val reSyncInstance: String,
+    val reSyncInstanceExplainer: AnnotatedString,
+    val preparingReSynchronisation: String,
+    val waitingForChanges: String,
+    val iAmDone: String,
+    val mergingSteamManifest: (name: String) -> String,
+    val reLinkingInstances: String
 )

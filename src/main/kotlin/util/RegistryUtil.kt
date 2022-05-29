@@ -3,6 +3,7 @@ package dev.nycode.omsilauncher.util
 import com.sun.jna.platform.win32.Advapi32Util
 import com.sun.jna.platform.win32.Win32Exception
 import com.sun.jna.platform.win32.WinReg
+import dev.nycode.omsilauncher.omsi.OMSI_STEAM_MANIFEST_NAME
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.absolute
@@ -15,6 +16,8 @@ fun getSteamInstallPathOrNull(): Path? =
 fun getSteamExecutable(): Path = getSteamInstallPath() / "steam.exe"
 
 fun getOmsiInstallPath(): Path = getOmsiInstallPathOrNull() ?: error("Omsi is not installed")
+fun getOmsiSteamManifest(): Path = getOmsiInstallPath().parent(2) / OMSI_STEAM_MANIFEST_NAME
+
 fun getOmsiInstallPathOrNull(): Path? =
     getRegistryPathOrNull("""SOFTWARE\WOW6432Node\aerosoft\OMSI 2""", "Product_Path")
 

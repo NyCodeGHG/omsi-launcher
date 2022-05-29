@@ -70,6 +70,7 @@ fun InstanceScreen() {
                     InstanceListEntry(
                         modifier = Modifier.padding(6.dp),
                         instanceState = instanceState,
+                        instances,
                         instance = instance,
                         scope = scope,
                         omsiState = omsiState,

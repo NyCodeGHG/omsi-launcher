@@ -9,7 +9,8 @@ import kotlinx.serialization.modules.SerializersModule
 private const val tab = "\t"
 private const val delimiter = "\t\t"
 
-open class VDF internal constructor(override val serializersModule: SerializersModule) : StringFormat {
+open class VDF internal constructor(override val serializersModule: SerializersModule = EmptySerializersModule) :
+    StringFormat {
 
     fun decodeToVDFObject(string: String) = decodeToVDFObject(VDFLineParser(string.lines()), false)
 

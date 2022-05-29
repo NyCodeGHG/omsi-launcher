@@ -1,5 +1,9 @@
 package dev.nycode.omsilauncher.localization
 
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import cafe.adriel.lyricist.LyricistStrings
 import dev.nycode.omsilauncher.util.removeLineBreaks
 
@@ -60,7 +64,7 @@ val StringsEn = Strings(
     selectedPatchVersion = { patchVersion ->
         "Selected Patch: $patchVersion"
     },
-    editInstance = "Edit instance (Not yet implemented)",
+    editInstance = "Edit instance",
     deleteInstance = "Delete instance",
     omsiNotInstalledTitle = "OMSI not installed",
     omsiNotInstalledDescription = "Cannot find OMSI installation path, please try starting it through Steam",
@@ -82,5 +86,18 @@ val StringsEn = Strings(
     closeSteamLaunchInfo = "Please close Steam before switching instances",
     directoryNeedsToBeEmpty = "The directory must be empty",
     cannotDeleteMainInstance = "You can't delete the base instance",
-    baseInstance = "Base Instance"
+    baseInstance = "Base Instance",
+    reSyncInstance = "Re-Synchronise Instanz",
+    reSyncInstanceExplainer = buildAnnotatedString {
+        append("Use this, ")
+        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+            append("before ")
+        }
+        append("you make changes to the base instance")
+    },
+    iAmDone = "I am done",
+    mergingSteamManifest = { name -> "Merging Steam manifest of $name" },
+    preparingReSynchronisation = "Preparing re-synchronisation",
+    reLinkingInstances = "Relinking instances",
+    waitingForChanges = "Waiting for changes"
 )

@@ -1,9 +1,20 @@
 package dev.nycode.omsilauncher.ui.setup.screens
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -11,16 +22,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.lyricist.LocalStrings
 import dev.nycode.omsilauncher.config.saveConfig
-import dev.nycode.omsilauncher.omsi.OMSI_STEAM_ID
 import dev.nycode.omsilauncher.ui.components.ClickablePath
 import dev.nycode.omsilauncher.ui.setup.SetupState
 import dev.nycode.omsilauncher.ui.setup.components.SetupContinueButton
 import dev.nycode.omsilauncher.util.getOmsiInstallPath
+import dev.nycode.omsilauncher.util.getOmsiSteamManifest
 import dev.nycode.omsilauncher.util.logger
-import dev.nycode.omsilauncher.util.parent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.io.path.*
+import kotlin.io.path.copyTo
+import kotlin.io.path.createFile
+import kotlin.io.path.deleteIfExists
+import kotlin.io.path.div
+import kotlin.io.path.exists
+import kotlin.io.path.moveTo
+import kotlin.io.path.notExists
+import kotlin.io.path.writeText
 
 private val logger = logger()
 
@@ -63,7 +80,7 @@ fun StartSetupScreen(config: MutableState<SetupState>, closeSetup: () -> Unit) {
             // Delete Omsi.exe as we want to symlink to "_Straßenbahn" patches
             gameDirectory.resolve("Omsi.exe").deleteIfExists()
             setupStep = strings.setupStepCopyManifest
-            val manifest = omsiInstallPath.parent(2) / "appmanifest_$OMSI_STEAM_ID.acf"
+            val manifest = getOmsiSteamManifest()
             manifest.copyTo(gameDirectory / "manifest.acf")
             omsiInstallPath.subpath(0, omsiInstallPath.nameCount - 2)
             setupStep = strings.setupStepSavingConfiguration

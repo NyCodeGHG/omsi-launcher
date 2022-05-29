@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 ### Added
+- Modify base instance button
+- Implement edit button
 
 ### Changed
 - Increase Checkbox hitbox to also register clicks on text

@@ -12,7 +12,8 @@ data class SavedInstance(
     val patchVersion: Instance.PatchVersion,
     val options: InstanceOptions,
     val uses4GBPatch: Boolean,
-    val isBaseInstance: Boolean = false
+    val isBaseInstance: Boolean = false,
+    val manifestHash: String? = null
 ) {
     fun toInstance(): Instance {
         return Instance(

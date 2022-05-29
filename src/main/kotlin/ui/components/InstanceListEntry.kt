@@ -39,6 +39,7 @@ import compose.icons.TablerIcons
 import compose.icons.tablericons.Click
 import compose.icons.tablericons.Pencil
 import compose.icons.tablericons.PlayerPlay
+import compose.icons.tablericons.Refresh
 import compose.icons.tablericons.Tools
 import compose.icons.tablericons.Trash
 import dev.nycode.omsilauncher.instance.Instance
@@ -46,11 +47,13 @@ import dev.nycode.omsilauncher.omsi.OmsiProcessState
 import dev.nycode.omsilauncher.omsi.UserAccessControlCancelledException
 import dev.nycode.omsilauncher.ui.CustomColors
 import dev.nycode.omsilauncher.ui.instance.ApplicationInstanceState
+import dev.nycode.omsilauncher.ui.instance.ReSyncInstanceDialog
 import dev.nycode.omsilauncher.ui.instance.context.InstanceActionContext
 import dev.nycode.omsilauncher.ui.instance.context.InstanceContextMenuAction
 import dev.nycode.omsilauncher.ui.instance.context.impl.ActivateInstanceContextMenuAction
 import dev.nycode.omsilauncher.ui.instance.context.impl.DeleteInstanceContextMenuAction
 import dev.nycode.omsilauncher.ui.instance.context.impl.EditInstanceContextMenuAction
+import dev.nycode.omsilauncher.ui.instance.context.impl.ReSyncInstanceContextMenuAction
 import dev.nycode.omsilauncher.ui.instance.context.impl.start.EditorStartInstanceContextMenuAction
 import dev.nycode.omsilauncher.ui.instance.context.impl.start.RegularStartInstanceContextMenuAction
 import dev.nycode.omsilauncher.ui.instance.context.instanceContextMenus
@@ -65,6 +68,7 @@ import org.jetbrains.skia.Image.Companion as SkiaImage
 fun InstanceListEntry(
     modifier: Modifier,
     instanceState: ApplicationInstanceState,
+    instances: List<Instance>,
     instance: Instance,
     scope: CoroutineScope,
     omsiState: OmsiProcessState,
@@ -74,6 +78,7 @@ fun InstanceListEntry(
     val image = remember { imageFromResource("ecitaro.jpg") }
     var deleteDialog by remember { mutableStateOf(false) }
     var editDialog by remember { mutableStateOf(false) }
+    var syncInstanceDialog by remember { mutableStateOf(false) }
     var steamDeathSuspensionPoint: CompletableDeferred<Boolean>? by remember { mutableStateOf(null) }
     val strings = LocalStrings.current
 
@@ -112,6 +117,10 @@ fun InstanceListEntry(
             deleteDialog = true
         }
 
+        val syncInstance = {
+            syncInstanceDialog = true
+        }
+
         val activateInstance: () -> Unit = {
             scope.launch(Dispatchers.IO) {
                 try {
@@ -131,6 +140,7 @@ fun InstanceListEntry(
             onEditInstance = editInstance,
             onDeleteInstance = deleteInstance,
             onActivateInstance = activateInstance,
+            onReSyncInstance = syncInstance
         )
     }
 
@@ -197,6 +207,10 @@ fun InstanceListEntry(
         )
     }
 
+    if (syncInstanceDialog) {
+        ReSyncInstanceDialog(instances, instance) { syncInstanceDialog = false }
+    }
+
     if (editDialog) {
         val onClose = {
             editDialog = false
@@ -236,7 +250,7 @@ private fun InstanceActionButton(
     modifier: Modifier = Modifier,
     context: InstanceActionContext,
     action: InstanceContextMenuAction,
-    tooltip: String,
+    tooltip: CharSequence,
     colors: ButtonColors,
     content: @Composable () -> Unit,
 ) {
@@ -257,7 +271,7 @@ private fun InstanceActionButton(
 @Composable
 private fun InstanceAction(
     modifier: Modifier = Modifier,
-    tooltip: String,
+    tooltip: CharSequence,
     content: @Composable () -> Unit,
 ) {
     TooltipWrapper(
@@ -284,6 +298,10 @@ private fun InstanceButtonRow(
         InstanceStartEditorButton(context)
         Spacer(Modifier.width(5.dp))
         InstanceActivateButton(context)
+        if (instance.isBaseInstance) {
+            Spacer(Modifier.width(5.dp))
+            InstanceReSyncButton(context)
+        }
         Spacer(Modifier.width(5.dp))
         InstancePatchVersionIcon(
             modifier = Modifier.align(Alignment.Bottom),
@@ -319,9 +337,23 @@ private fun InstancePatchVersionIcon(
 }
 
 @Composable
-private fun InstanceActivateButton(
-    context: InstanceActionContext,
-) {
+private fun InstanceReSyncButton(context: InstanceActionContext) {
+    val strings = LocalStrings.current
+    InstanceActionButton(
+        context = context,
+        action = ReSyncInstanceContextMenuAction,
+        tooltip = strings.reSyncInstanceExplainer,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.error,
+            contentColor = Color.White
+        )
+    ) {
+        Icon(TablerIcons.Refresh, strings.reSyncInstance)
+    }
+}
+
+@Composable
+private fun InstanceActivateButton(context: InstanceActionContext) {
     val strings = LocalStrings.current
     InstanceActionButton(
         context = context,

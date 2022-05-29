@@ -4,9 +4,9 @@ import dev.nycode.omsilauncher.config.config
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.LaunchFlag
 import dev.nycode.omsilauncher.util.getOmsiInstallPath
+import dev.nycode.omsilauncher.util.getOmsiSteamManifest
 import dev.nycode.omsilauncher.util.isSteamRunning
 import dev.nycode.omsilauncher.util.logger
-import dev.nycode.omsilauncher.util.parent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.launch
@@ -23,6 +23,7 @@ import kotlin.io.path.readSymbolicLink
 private val logger = logger()
 
 const val OMSI_STEAM_ID = 252530
+const val OMSI_STEAM_MANIFEST_NAME = "appmanifest_$OMSI_STEAM_ID.acf"
 private const val UAC_CANCELLED = 1223
 
 private val releaseMode = System.getProperty("dev.nycode.omsi_launcher.release") != null
@@ -93,7 +94,7 @@ suspend fun activateInstallationSafe(
 ): Boolean {
     val omsi = getOmsiInstallPath()
     if (omsi.isSymbolicLink() && omsi.readSymbolicLink() == instance.directory) {
-        val currentManifest = omsi.parent(2) / "appmanifest_$OMSI_STEAM_ID.acf"
+        val currentManifest = getOmsiSteamManifest()
         if (currentManifest.exists()) {
             logger.debug { "Backing up $currentManifest to current installation ${instance.directory}" }
             currentManifest.copyTo(instance.directory / "manifest.acf", true)
