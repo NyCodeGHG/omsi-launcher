@@ -80,8 +80,6 @@ class ApplicationInstanceState {
     fun persistInstances(instances: List<Instance>): List<Instance> {
         return saveInstances(instances)
     }
-
-    operator fun component1() = internalInstances
 }
 
 @Composable

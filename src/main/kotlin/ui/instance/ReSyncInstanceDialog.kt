@@ -43,7 +43,7 @@ import kotlin.io.path.copyTo
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
 
-private val LOG = logger()
+private val logger = logger()
 private val PreparingRoute = RouterKey(name = "Preparing")
 private val WaitingForChangesRoute = RouterKey(name = "WaitingForChangesScreen")
 private val ActionRoute = RouterKey(name = "Action")
@@ -138,13 +138,13 @@ private fun ActionScreen(instances: List<Instance>, instance: Instance, onCloseR
                 step = strings.mergingSteamManifest(it.name)
                 val instanceManifest = vdf.decodeToVDFObject(it.manifest.readText())
                 val merge = instanceManifest.mergeManifestWith(newMainManifest, backupMainManifest)
-                LOG.debug { "Merging manifest of ${it.name}, diff: ${merge == instanceManifest}" }
+                logger.debug { "Merging manifest of ${it.name}, diff: ${merge == instanceManifest}" }
                 val encodedManifest = vdf.encodeFromVDFElement(merge)
                 it.manifest.writeText(encodedManifest)
             }
 
             step = strings.reLinkingInstances
-            LOG.info { "Re-linking all OMSI child instances" }
+            logger.info { "Re-linking all OMSI child instances" }
             relinkBaseGame(instances.filterNot(Instance::isBaseInstance))
             onCloseRequest()
         }
