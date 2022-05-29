@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- Increase Checkbox hitbox to also register clicks on text
 
 ### Deprecated
 

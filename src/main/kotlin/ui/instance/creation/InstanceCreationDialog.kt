@@ -1,5 +1,6 @@
 package dev.nycode.omsilauncher.ui.instance.creation
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,9 +17,13 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,7 +40,11 @@ import dev.nycode.omsilauncher.ui.components.EmptyDirectoryPathField
 import dev.nycode.omsilauncher.ui.components.TooltipText
 import dev.nycode.omsilauncher.ui.components.TooltipWrapper
 import dev.nycode.omsilauncher.util.sanitize
-import kotlin.io.path.*
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.div
+import kotlin.io.path.isDirectory
+import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.notExists
 
 @Composable
 fun InstanceCreationDialog(
@@ -198,9 +207,20 @@ private fun CheckboxRow(
     value: Boolean,
     onValueChange: (Boolean) -> Unit,
 ) {
-    TooltipWrapper(tooltip = { TooltipText(tooltip) }) {
+    var state by remember { mutableStateOf(value) }
+    fun onClick() {
+        state = !state
+        onValueChange(state)
+    }
+    val pressIndicator = Modifier.pointerInput(::onClick) {
+        detectTapGestures(onPress = { onClick() })
+    }
+    TooltipWrapper(modifier = pressIndicator, tooltip = { TooltipText(tooltip) }) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(value, onValueChange)
+            Checkbox(state, onCheckedChange = {
+                state = it
+                onValueChange(it)
+            })
             Text(title)
         }
     }
