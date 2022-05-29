@@ -7,6 +7,7 @@
 
 ### Changed
 - Increase Checkbox hitbox to also register clicks on text
+- Bump `kotlinx.coroutines` to `1.6.2`
 
 ### Deprecated
 
