@@ -17,10 +17,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -207,20 +204,14 @@ private fun CheckboxRow(
     value: Boolean,
     onValueChange: (Boolean) -> Unit,
 ) {
-    var state by remember { mutableStateOf(value) }
-    fun onClick() {
-        state = !state
-        onValueChange(state)
-    }
-    val pressIndicator = Modifier.pointerInput(::onClick) {
-        detectTapGestures(onPress = { onClick() })
+    val pressIndicator = Modifier.pointerInput(Unit) {
+        detectTapGestures(onPress = {
+            onValueChange(!value)
+        })
     }
     TooltipWrapper(modifier = pressIndicator, tooltip = { TooltipText(tooltip) }) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(state, onCheckedChange = {
-                state = it
-                onValueChange(it)
-            })
+            Checkbox(value, onCheckedChange = onValueChange)
             Text(title)
         }
     }
