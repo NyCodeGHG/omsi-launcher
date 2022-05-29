@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [0.5.0] - 2022-05-29
+### Added
 - Modify base instance button
 - Implement edit button
 
@@ -18,19 +31,9 @@
 ### Security
 
 ## [0.4.1] - 2022-05-26
-### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
-
 ### Fixed
 - Fix instance creation failing, if base instance is started once
   - This was caused by `clone-omsi.exe` symlinking the `Omsi.exe` symlink in base game and therefore panicking on new instances
-
-### Security
 
 ## [0.4.0] - 2022-05-26
 ### Added
