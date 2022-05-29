@@ -37,8 +37,8 @@ fun TooltipText(
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle = LocalTextStyle.current,
 ) {
-    if (text is AnnotatedString) {
-        Text(
+    when (text) {
+        is AnnotatedString -> Text(
             text = text,
             modifier = modifier.padding(8.dp),
             color = color,
@@ -56,8 +56,7 @@ fun TooltipText(
             onTextLayout = onTextLayout,
             style = style
         )
-    } else if (text is String) {
-        Text(
+        is String -> Text(
             text = text,
             modifier = modifier.padding(8.dp),
             color = color,
@@ -75,7 +74,6 @@ fun TooltipText(
             onTextLayout = onTextLayout,
             style = style
         )
-    } else {
-        error("Only String and AnnotatedString ist supported")
+        else -> error("Only String and AnnotatedString is supported.")
     }
 }
