@@ -10,6 +10,7 @@
 ### Removed
 
 ### Fixed
+- Fix error when re-linking base instance
 
 ### Security
 

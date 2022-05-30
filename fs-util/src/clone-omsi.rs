@@ -4,7 +4,7 @@ use std::fs;
 use std::os::windows::fs as windows_fs;
 use std::path::PathBuf;
 
-use log::info;
+use log::{info, warn};
 use structopt::*;
 
 use crate::directory_copier::mirror_folder;
@@ -54,15 +54,16 @@ fn run() -> std::io::Result<()> {
     }
 
     let omsi_executable = &opt.omsi_instance_folder.join("Omsi.exe");
+    if opt.only_link_binary && omsi_executable.exists() {
+        // Delete old OMSI.exe for relink
+        warn!("Deleting old executable {}", &omsi_executable.to_str().unwrap());
+        fs::remove_file(&omsi_executable)?;
+    }
     info!(
         "Linking {} to {}",
         &opt.binary_path.to_str().unwrap(),
         &omsi_executable.to_str().unwrap()
     );
-    if opt.only_link_binary {
-        // Delete old OMSI.exe for relink
-        fs::remove_file(&omsi_executable)?;
-    }
     windows_fs::symlink_file(&opt.binary_path, omsi_executable)?;
 
     if !opt.only_link_binary {
