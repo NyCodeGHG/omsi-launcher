@@ -10,6 +10,10 @@
 ### Removed
 
 ### Fixed
+- Fix edit dialog for base instance
+  - Disable name field
+  - Fix title showing `<base instance>`
+- Translate edit dialog
 
 ### Security
 

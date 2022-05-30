@@ -99,5 +99,8 @@ val StringsEn = Strings(
     mergingSteamManifest = { name -> "Merging Steam manifest of $name" },
     preparingReSynchronisation = "Preparing re-synchronisation",
     reLinkingInstances = "Relinking instances",
-    waitingForChanges = "Waiting for changes"
+    waitingForChanges = "Waiting for changes",
+    save = "Save",
+    editInstanceTitle = { name -> "Edit instance $name" },
+    editBaseInstance = "Edit base-instance"
 )

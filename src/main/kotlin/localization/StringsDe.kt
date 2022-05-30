@@ -100,5 +100,8 @@ val StringsDe = Strings(
     mergingSteamManifest = { name -> "Steam Manifest von $name wird neu-zusammengefasst" },
     preparingReSynchronisation = "Neu-Synchronisation wird vorbereitet",
     reLinkingInstances = "Instanzen werden neu gelinkt",
-    waitingForChanges = "Es wird auf Änderungen gewartet"
+    waitingForChanges = "Es wird auf Änderungen gewartet",
+    save = "Speichern",
+    editInstanceTitle = { name -> "Instanz $name bearbeiten" },
+    editBaseInstance = "Basis-Instanz bearbeiten"
 )

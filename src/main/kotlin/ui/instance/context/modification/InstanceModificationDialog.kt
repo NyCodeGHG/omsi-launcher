@@ -46,6 +46,7 @@ fun InstanceDialog(
     formTitle: String,
     parentInstance: Instance,
     disableFolderInput: Boolean = false,
+    disableNameInput: Boolean = false,
     isValid: InstanceModificationState.() -> Boolean = { true },
     saveButtonLabel: @Composable () -> Unit,
     onCloseRequest: () -> Unit,
@@ -59,7 +60,7 @@ fun InstanceDialog(
         state = dialogState
     ) {
         Box(modifier = Modifier.padding(16.dp).fillMaxSize()) {
-            InstanceForm(formTitle, instanceModificationState, disableFolderInput)
+            InstanceForm(formTitle, instanceModificationState, disableFolderInput, disableNameInput)
             Button({
                 onCloseRequest()
                 onUpdate(instanceModificationState)
@@ -74,7 +75,8 @@ fun InstanceDialog(
 private fun InstanceForm(
     title: String,
     instanceModificationState: InstanceModificationState,
-    disableFolderInput: Boolean = false
+    disableFolderInput: Boolean = false,
+    disableNameInput: Boolean = false
 ) = with(instanceModificationState) {
     val strings = LocalStrings.current
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -108,7 +110,8 @@ private fun InstanceForm(
                         label = {
                             Text(strings.instanceName)
                         },
-                        singleLine = true
+                        singleLine = true,
+                        enabled = !disableNameInput
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
