@@ -207,7 +207,7 @@ private fun CheckboxRow(
     value: Boolean,
     onValueChange: (Boolean) -> Unit,
 ) {
-    val pressIndicator = Modifier.pointerInput(Unit) {
+    val pressIndicator = Modifier.pointerInput(value) {
         detectTapGestures(onPress = {
             onValueChange(!value)
         })
