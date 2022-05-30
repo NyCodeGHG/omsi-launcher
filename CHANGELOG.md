@@ -10,6 +10,19 @@
 ### Removed
 
 ### Fixed
+
+### Security
+
+## [0.5.1] - 2022-05-30
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
 - Fix edit dialog for base instance
   - Disable name field
   - Fix title showing `<base instance>`
@@ -26,14 +39,6 @@
 ### Changed
 - Increase Checkbox hitbox to also register clicks on text
 - Bump `kotlinx.coroutines` to `1.6.2`
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
 
 ## [0.4.1] - 2022-05-26
 ### Fixed
