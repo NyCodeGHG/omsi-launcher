@@ -26,10 +26,11 @@ fun InstanceCreationDialog(
         strings.createInstance,
         strings.createANewInstance,
         mainInstance,
-        false,
-        { isValid() },
-        { Text(strings.createInstance) },
-        onCloseRequest,
-        createInstance
+        disableFolderInput = false,
+        disableNameInput = false,
+        isValid = { isValid() },
+        saveButtonLabel = { Text(strings.createInstance) },
+        onCloseRequest = onCloseRequest,
+        onUpdate = createInstance
     )
 }
