@@ -10,11 +10,10 @@
 ### Removed
 
 ### Fixed
-- Fix error when re-linking base instance
 
 ### Security
 
-## [0.5.1] - 2022-05-30
+## [0.5.2] - 2022-05-30
 ### Added
 
 ### Changed
@@ -24,13 +23,17 @@
 ### Removed
 
 ### Fixed
+- Fix error when re-linking base instance
+
+### Security
+
+## [0.5.1] - 2022-05-30
+### Fixed
 - Fix edit dialog for base instance
   - Disable name field
   - Fix title showing `<base instance>`
 - Translate edit dialog
 - Fix checkbox area not toggling properly
-
-### Security
 
 ## [0.5.0] - 2022-05-29
 ### Added
