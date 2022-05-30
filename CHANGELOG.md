@@ -10,6 +10,7 @@
 ### Removed
 
 ### Fixed
+- Also save name when editing
 
 ### Security
 
