@@ -93,21 +93,27 @@ suspend fun activateInstallationSafe(
     awaitSteamDeath: suspend () -> Boolean
 ): Boolean {
     val omsi = getOmsiInstallPath()
+    val binary = getOmsiBinary(instance)
     if (omsi.isSymbolicLink() && omsi.readSymbolicLink() == instance.directory) {
         val currentManifest = getOmsiSteamManifest()
         if (currentManifest.exists()) {
             logger.debug { "Backing up $currentManifest to current installation ${instance.directory}" }
             currentManifest.copyTo(instance.directory / "manifest.acf", true)
-            return true
+            val currentBinary = instance.directory / "Omsi.exe"
+            if (currentBinary.exists() && currentBinary.isSymbolicLink() && currentBinary.readSymbolicLink() == binary) {
+                return true
+            }
         }
     }
     val isSteamRunning = isSteamRunning()
 
     if (!isSteamRunning || awaitSteamDeath()) {
-        doNativeCall("activate-omsi.exe", omsi.absolutePathString(), instance.directory.absolutePathString())
-        if (!(instance.directory / "Omsi.exe").exists()) {
-            reLinkOmsiExecutable(instance)
-        }
+        doNativeCall(
+            "activate-omsi.exe",
+            omsi.absolutePathString(),
+            instance.directory.absolutePathString(),
+            binary.absolutePathString()
+        )
         if (isSteamRunning && startSteam) {
             withContext(Dispatchers.IO) {
                 runSteam()

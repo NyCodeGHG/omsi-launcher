@@ -4,6 +4,8 @@
 ### Added
 
 ### Changed
+- Only prompt UAC once when relinking base instance
+- Also check if Omsi.exe links to correct patch and not only if it exists
 
 ### Deprecated
 

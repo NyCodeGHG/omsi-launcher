@@ -3,7 +3,6 @@ extern crate core;
 use std::fmt::Debug;
 use std::fs;
 use std::fs::File;
-
 use std::os::windows::fs as windows_fs;
 use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -12,8 +11,10 @@ use log::{info, warn};
 use structopt::*;
 
 use crate::launcher::with_symlink_permission;
+use crate::omsi_linker::link_omsi;
 
 mod launcher;
+mod omsi_linker;
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "activate-omsi", about = "Activates a specific Omsi instance")]
@@ -21,12 +22,17 @@ struct Opt {
     #[structopt(help = "The Steam installation folder of OMSI", parse(from_os_str))]
     omsi_installation_folder: PathBuf,
 
-    // test13
     #[structopt(
         help = "The folder of the instance you want to activate",
         parse(from_os_str)
     )]
     omsi_instance_folder: PathBuf,
+
+    #[structopt(
+        help = "The path to the Omsi.exe patch to validate",
+        parse(from_os_str)
+    )]
+    omsi_executable_path: Option<PathBuf>,
 }
 
 fn main() {
@@ -60,6 +66,19 @@ fn run() -> std::io::Result<()> {
         )?;
     } else {
         warn!("OMSI folder is not symlink, manifest restoration failed")
+    }
+
+    match &opt.omsi_executable_path {
+        None => {}
+        Some(path) => {
+            let current_executable = opt.omsi_installation_folder.join("Omsi.exe");
+            if !current_executable.exists()
+                || !current_executable.is_symlink()
+                || &current_executable.read_link()? != path
+            {
+                link_omsi(&opt.omsi_instance_folder, path)?;
+            }
+        }
     }
 
     symlink_global_omsi_entry_point(&opt)?;
