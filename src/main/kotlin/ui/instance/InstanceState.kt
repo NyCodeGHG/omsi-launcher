@@ -63,6 +63,7 @@ class ApplicationInstanceState {
         val oldInstance = internalInstances.first { it.id == id }
         val oldInstances = internalInstances - oldInstance
         val newInstance = oldInstance.copy(
+            name = state.name,
             options = InstanceOptions(state.saveLogs, state.useDebugMode, state.logLevel, state.screenMode),
             uses4GBPatch = state.use4gbPatch,
             patchVersion = state.patchVersion,
