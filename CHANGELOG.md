@@ -12,6 +12,9 @@
 ### Removed
 
 ### Fixed
+- Disable re-sync button, when OMSI is running
+- Add ability to use hard-links for OMSI.exe
+- Use hard-links for omninavigation configs
 - Also save name when editing
 
 ### Security
