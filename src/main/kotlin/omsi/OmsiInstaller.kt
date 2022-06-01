@@ -28,12 +28,20 @@ private const val UAC_CANCELLED = 1223
 
 private val releaseMode = System.getProperty("dev.nycode.omsi_launcher.release") != null
 
+private val linkingFlag
+    get() = if (config.useHardLinks) {
+        "--hard-link-binary"
+    } else {
+        ""
+    }
+
 suspend fun createInstance(instance: Instance) {
     doNativeCall(
         "clone-omsi.exe",
         config.gameDirectory.absolutePathString(),
         instance.directory.absolutePathString(),
-        getOmsiBinary(instance).absolutePathString()
+        getOmsiBinary(instance).absolutePathString(),
+        linkingFlag
     )
 }
 
@@ -43,7 +51,8 @@ suspend fun reLinkOmsiExecutable(instance: Instance) {
         config.gameDirectory.absolutePathString(),
         instance.directory.absolutePathString(),
         getOmsiBinary(instance).absolutePathString(),
-        "--only-link-binary"
+        "--only-link-binary",
+        linkingFlag
     )
 }
 
@@ -100,7 +109,9 @@ suspend fun activateInstallationSafe(
             logger.debug { "Backing up $currentManifest to current installation ${instance.directory}" }
             currentManifest.copyTo(instance.directory / "manifest.acf", true)
             val currentBinary = instance.directory / "Omsi.exe"
-            if (currentBinary.exists() && currentBinary.isSymbolicLink() && currentBinary.readSymbolicLink() == binary) {
+            if (currentBinary.exists() && (currentBinary.isSymbolicLink() && currentBinary.readSymbolicLink() == binary)
+                || (config.useHardLinks xor currentBinary.isSymbolicLink())
+            ) {
                 return true
             }
         }
@@ -112,7 +123,8 @@ suspend fun activateInstallationSafe(
             "activate-omsi.exe",
             omsi.absolutePathString(),
             instance.directory.absolutePathString(),
-            binary.absolutePathString()
+            binary.absolutePathString(),
+            linkingFlag
         )
         if (isSteamRunning && startSteam) {
             withContext(Dispatchers.IO) {

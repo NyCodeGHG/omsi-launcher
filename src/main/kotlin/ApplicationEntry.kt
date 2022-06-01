@@ -42,7 +42,7 @@ fun runLauncher(
                 else -> MainApplicationRoute
             }
         }
-        val lyricist = rememberStrings(Locale.current.toLanguageTag())
+        val lyricist = rememberStrings(configuration?.locale ?: Locale.current.toLanguageTag())
         val closeSetup = {
             routerState.currentRoute = MainApplicationRoute
         }

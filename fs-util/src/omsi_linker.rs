@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 
 use log::{info, warn};
 
-pub fn link_omsi(instance_folder: &Path, binary_path: &PathBuf) -> std::io::Result<()> {
+pub fn link_omsi(instance_folder: &Path, binary_path: &PathBuf, hard_link: bool) -> std::io::Result<()> {
     let omsi_executable = &instance_folder.join("Omsi.exe");
     if omsi_executable.exists() {
         // Delete old OMSI.exe for relink
@@ -20,5 +20,9 @@ pub fn link_omsi(instance_folder: &Path, binary_path: &PathBuf) -> std::io::Resu
         &omsi_executable.to_str().unwrap()
     );
 
-    windows_fs::symlink_file(&binary_path, omsi_executable)
+    if hard_link {
+        fs::hard_link(&binary_path, omsi_executable)
+    } else {
+        windows_fs::symlink_file(&binary_path, omsi_executable)
+    }
 }

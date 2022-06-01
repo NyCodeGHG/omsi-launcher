@@ -33,6 +33,9 @@ struct Opt {
         parse(from_os_str)
     )]
     omsi_executable_path: Option<PathBuf>,
+
+    #[structopt(short, long, help = "Use hard links to link Omsi.exe")]
+    hard_link_binary: bool
 }
 
 fn main() {
@@ -73,10 +76,10 @@ fn run() -> std::io::Result<()> {
         Some(path) => {
             let current_executable = opt.omsi_installation_folder.join("Omsi.exe");
             if !current_executable.exists()
-                || !current_executable.is_symlink()
-                || &current_executable.read_link()? != path
+                || (current_executable.is_symlink() && &current_executable.read_link()? != path)
+                || (current_executable.is_symlink() ^ opt.hard_link_binary)
             {
-                link_omsi(&opt.omsi_instance_folder, path)?;
+                link_omsi(&opt.omsi_instance_folder, path, opt.hard_link_binary)?;
             }
         }
     }
