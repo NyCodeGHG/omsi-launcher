@@ -4,6 +4,19 @@
 ### Added
 
 ### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [0.5.3] - 2022-06-01
+### Added
+
+### Changed
 - Only prompt UAC once when relinking base instance
 - Also check if Omsi.exe links to correct patch and not only if it exists
 
@@ -20,18 +33,8 @@
 ### Security
 
 ## [0.5.2] - 2022-05-30
-### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
-
 ### Fixed
 - Fix error when re-linking base instance
-
-### Security
 
 ## [0.5.1] - 2022-05-30
 ### Fixed
