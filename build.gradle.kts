@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "dev.nycode"
-version = "0.5.3"
+version = "0.6.0"
 
 repositories {
     google()
