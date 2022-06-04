@@ -2,14 +2,19 @@
 
 ## [Unreleased]
 ### Added
+- Add option to change the instance icon
+- Implement Settings tab
 
 ### Changed
+- Revert compose to `1.2.0-alpha01-dev686`
 
 ### Deprecated
 
 ### Removed
 
 ### Fixed
+- No longer display base instance name and path when creating new instance
+- Fix ClassNotFoundException when trying to call native picker
 
 ### Security
 
