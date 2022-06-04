@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [0.6.0] - 2022-06-04
+### Added
 - Add option to change the instance icon
 - Implement Settings tab
 - App icon
@@ -20,23 +33,15 @@
 ### Security
 
 ## [0.5.3] - 2022-06-01
-### Added
-
 ### Changed
 - Only prompt UAC once when relinking base instance
 - Also check if Omsi.exe links to correct patch and not only if it exists
-
-### Deprecated
-
-### Removed
 
 ### Fixed
 - Disable re-sync button, when OMSI is running
 - Add ability to use hard-links for OMSI.exe
 - Use hard-links for omninavigation configs
 - Also save name when editing
-
-### Security
 
 ## [0.5.2] - 2022-05-30
 ### Fixed
