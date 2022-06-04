@@ -4,6 +4,7 @@
 ### Added
 - Add option to change the instance icon
 - Implement Settings tab
+- App icon
 
 ### Changed
 - Revert compose to `1.2.0-alpha01-dev686`
