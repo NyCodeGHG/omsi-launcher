@@ -103,5 +103,13 @@ val StringsDe = Strings(
     waitingForChanges = "Es wird auf Änderungen gewartet",
     save = "Speichern",
     editInstanceTitle = { name -> "Instanz $name bearbeiten" },
-    editBaseInstance = "Basis-Instanz bearbeiten"
+    editBaseInstance = "Basis-Instanz bearbeiten",
+    clickToChangeInstanceIcon = "Klicke um das Insanz-Symbol zu ändern",
+    eCitaro = "eCitaro",
+    instanceIcon = "Instanz-Symbol",
+    onlyImages = "Nur Bilddateien",
+    reset = "Zurücksetzen",
+    useHardLinks = "Hard-Links benutzen",
+    useHardLinksDescription = "Benutzt Hard anstelle von Soft links für Omsi.exe Dateien (benutze dies wenn du z.B. OmniNavigation benutzt)",
+    language = "Sprache"
 )

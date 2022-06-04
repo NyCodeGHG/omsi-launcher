@@ -85,5 +85,12 @@ data class Strings(
     val reLinkingInstances: String,
     val save: String,
     val editInstanceTitle: (name: String) -> String,
-    val editBaseInstance: String
+    val editBaseInstance: String,
+    val instanceIcon: String,
+    val clickToChangeInstanceIcon: String,
+    val onlyImages: String,
+    val reset: String,
+    val useHardLinks: String,
+    val useHardLinksDescription: String,
+    val language: String
 )

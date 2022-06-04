@@ -32,7 +32,7 @@ private val linkingFlag
     get() = if (config.useHardLinks) {
         "--hard-link-binary"
     } else {
-        ""
+        null
     }
 
 suspend fun createInstance(instance: Instance) {
@@ -71,13 +71,14 @@ suspend fun relinkBaseGame(instances: List<Instance>) {
 /**
  * Creates a new identical [Path] in [to], which will have the same directories and symlinks to the original items.
  */
-private suspend fun doNativeCall(name: String, vararg parameters: String) =
+private suspend fun doNativeCall(name: String, vararg parameters: String?) =
     withContext(Dispatchers.IO) {
-        logger.debug { "Attempting native call: $name ${parameters.joinToString(" ")}" }
+        val realParameters = parameters.filterNotNull().toTypedArray()
+        logger.debug { "Attempting native call: $name ${realParameters.joinToString(" ")}" }
         val basePath =
             if (releaseMode) Path("app") / "resources" else Path("fs-util") / "build" / "binaries" / "windows"
         val absoluteExecutable = (basePath / name).absolutePathString()
-        val process = ProcessBuilder().command(absoluteExecutable, *parameters)
+        val process = ProcessBuilder().command(absoluteExecutable, *realParameters)
             .redirectErrorStream(true)
             .start()
 

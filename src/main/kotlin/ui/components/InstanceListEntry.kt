@@ -1,7 +1,6 @@
 package dev.nycode.omsilauncher.ui.components
 
 import androidx.compose.foundation.ContextMenuArea
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -62,6 +61,8 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.nio.file.Path
+import kotlin.io.path.readBytes
 import org.jetbrains.skia.Image.Companion as SkiaImage
 
 @Composable
@@ -75,7 +76,6 @@ fun InstanceListEntry(
     instanceActive: Boolean,
     showUACDialog: () -> Unit,
 ) {
-    val image = remember { imageFromResource("ecitaro.jpg") }
     var deleteDialog by remember { mutableStateOf(false) }
     var editDialog by remember { mutableStateOf(false) }
     var syncInstanceDialog by remember { mutableStateOf(false) }
@@ -147,7 +147,7 @@ fun InstanceListEntry(
     Card(modifier, elevation = 3.dp) {
         InstanceContextMenuArea(context = context) {
             Row(Modifier.fillMaxWidth().height(125.dp)) {
-                Image(image, strings.eCitaro)
+                SafeInstanceIcon(path = instance.icon, contentDescription = strings.instanceIcon)
                 Spacer(Modifier.padding(5.dp))
                 Box(Modifier.fillMaxSize()) {
                     Row(modifier = Modifier.align(Alignment.TopStart).padding(10.dp)) {
@@ -421,3 +421,5 @@ private fun InstanceContextMenuArea(
 fun imageFromResource(path: String) =
     SkiaImage.makeFromEncoded(ClassLoader.getSystemResourceAsStream(path)!!.readAllBytes())
         .toComposeImageBitmap()
+
+fun imageFromPath(path: Path) = SkiaImage.makeFromEncoded(path.readBytes()).toComposeImageBitmap()

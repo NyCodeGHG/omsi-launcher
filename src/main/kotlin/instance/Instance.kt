@@ -24,7 +24,8 @@ data class Instance(
     val options: InstanceOptions = InstanceOptions(),
     val state: InstanceState,
     val uses4GBPatch: Boolean,
-    val isBaseInstance: Boolean = false
+    val isBaseInstance: Boolean = false,
+    val icon: Path? = null
 ) : PersistentValue<SavedInstance> {
     val manifest: Path get() = directory / "manifest.acf"
     val manifestBackup: Path get() = directory / "manifest.backup.acf"
@@ -63,7 +64,7 @@ data class Instance(
     }
 
     override fun toSavedData(): SavedInstance {
-        return SavedInstance(id, name, directory, patchVersion, options, uses4GBPatch, isBaseInstance)
+        return SavedInstance(id, name, directory, patchVersion, options, uses4GBPatch, isBaseInstance, icon = icon)
     }
 }
 

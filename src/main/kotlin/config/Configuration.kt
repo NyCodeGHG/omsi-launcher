@@ -17,4 +17,7 @@ data class Configuration(
 
     val instancesDirectory: Path
         get() = rootInstallation.resolve("instances")
+
+    val imagesDirectory: Path
+        get() = rootInstallation.resolve("images")
 }

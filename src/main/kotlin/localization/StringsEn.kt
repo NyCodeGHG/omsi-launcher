@@ -102,5 +102,13 @@ val StringsEn = Strings(
     waitingForChanges = "Waiting for changes",
     save = "Save",
     editInstanceTitle = { name -> "Edit instance $name" },
-    editBaseInstance = "Edit base-instance"
+    editBaseInstance = "Edit base-instance",
+    reset = "Reset",
+    onlyImages = "Only Images",
+    instanceIcon = "Instance icon",
+    eCitaro = "eCitaro",
+    clickToChangeInstanceIcon = "Click to change instance icon",
+    useHardLinks = "Use Hard Links",
+    useHardLinksDescription = "Use Hard Links for Omsi.exe files (use this if you use OmniNavigation)",
+    language = "Language"
 )
