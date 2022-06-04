@@ -113,7 +113,10 @@ compose.desktop {
         jvmArgs += listOf("-Ddev.nycode.omsi_launcher.release")
 
         nativeDistributions {
-            modules("java.naming")
+            modules(
+                "java.naming", // Needed by logback
+                "jdk.unsupported" // Needed by lwjgl NFD (sun.misc.Unsafe)
+            )
             targetFormats(TargetFormat.Msi)
 
             appResourcesRootDir.set(project("fs-util").buildDir.resolve("binaries"))
