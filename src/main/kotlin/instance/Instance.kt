@@ -64,7 +64,7 @@ data class Instance(
     }
 
     override fun toSavedData(): SavedInstance {
-        return SavedInstance(id, name, directory, patchVersion, options, uses4GBPatch, isBaseInstance)
+        return SavedInstance(id, name, directory, patchVersion, options, uses4GBPatch, isBaseInstance, icon = icon)
     }
 }
 
