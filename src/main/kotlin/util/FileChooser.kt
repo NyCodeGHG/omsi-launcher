@@ -1,5 +1,6 @@
 package dev.nycode.omsilauncher.util
 
+import dev.nycode.omsilauncher.localization.Strings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.lwjgl.system.MemoryUtil
@@ -13,7 +14,7 @@ import kotlin.io.path.absolutePathString
 
 private val logger = logger()
 
-suspend fun chooseImage(basePath: Path?): Path? = chooseFSItem(basePath, false, listOf("png", "jpg", "gif"), "Images")
+suspend fun chooseImage(basePath: Path?, strings: Strings): Path? = chooseFSItem(basePath, false, listOf("png", "jpg", "gif"), strings.onlyImages)
 suspend fun chooseDirectory(basePath: Path?): Path? = chooseFSItem(basePath, true, emptyList(), null)
 suspend fun chooseFSItem(
     basePath: Path?,

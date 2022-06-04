@@ -147,7 +147,7 @@ fun InstanceListEntry(
     Card(modifier, elevation = 3.dp) {
         InstanceContextMenuArea(context = context) {
             Row(Modifier.fillMaxWidth().height(125.dp)) {
-                SafeInstanceIcon(path = instance.icon, contentDescription = "Instance icon")
+                SafeInstanceIcon(path = instance.icon, contentDescription = strings.instanceIcon)
                 Spacer(Modifier.padding(5.dp))
                 Box(Modifier.fillMaxSize()) {
                     Row(modifier = Modifier.align(Alignment.TopStart).padding(10.dp)) {

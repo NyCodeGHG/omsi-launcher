@@ -103,16 +103,18 @@ private fun InstanceForm(
                 val changeImage = Modifier.pointerInput(icon) {
                     detectTapGestures(onTap = {
                         scope.launch {
-                            val image = chooseImage(null)
+                            val image = chooseImage(null, strings)
                             icon = image
                         }
                     })
                 }
 
-                SafeInstanceIcon(changeImage, icon, "")
+                TooltipWrapper(tooltip = { TooltipText(strings.clickToChangeInstanceIcon) }) {
+                    SafeInstanceIcon(changeImage, icon, strings.instanceIcon)
+                }
                 Column {
                     Button({ icon = null }) {
-                        Text("Reset")
+                        Text(strings.reset)
                     }
                 }
                 Row(Modifier.fillMaxWidth(.43f)) {
