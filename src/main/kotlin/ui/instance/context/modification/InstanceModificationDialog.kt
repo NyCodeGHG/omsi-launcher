@@ -18,6 +18,7 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -34,9 +35,12 @@ import dev.nycode.omsilauncher.localization.Strings
 import dev.nycode.omsilauncher.localization.Translatable
 import dev.nycode.omsilauncher.ui.components.DropdownInputField
 import dev.nycode.omsilauncher.ui.components.EmptyDirectoryPathField
+import dev.nycode.omsilauncher.ui.components.SafeInstanceIcon
 import dev.nycode.omsilauncher.ui.components.TooltipText
 import dev.nycode.omsilauncher.ui.components.TooltipWrapper
+import dev.nycode.omsilauncher.util.chooseImage
 import dev.nycode.omsilauncher.util.sanitize
+import kotlinx.coroutines.launch
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.div
 
@@ -52,7 +56,7 @@ fun InstanceDialog(
     onCloseRequest: () -> Unit,
     onUpdate: (InstanceModificationState) -> Unit,
 ) {
-    val dialogState = rememberDialogState(height = 620.dp, width = 700.dp)
+    val dialogState = rememberDialogState(height = 780.dp, width = 700.dp)
     val instanceModificationState = remember { InstanceModificationState(parentInstance) }
     Dialog(
         onCloseRequest = onCloseRequest,
@@ -79,6 +83,7 @@ private fun InstanceForm(
     disableNameInput: Boolean = false
 ) = with(instanceModificationState) {
     val strings = LocalStrings.current
+    val scope = rememberCoroutineScope()
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             modifier = Modifier.fillMaxWidth(),
@@ -95,6 +100,21 @@ private fun InstanceForm(
                 modifier = Modifier.padding(top = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val changeImage = Modifier.pointerInput(icon) {
+                    detectTapGestures(onTap = {
+                        scope.launch {
+                            val image = chooseImage(null)
+                            icon = image
+                        }
+                    })
+                }
+
+                SafeInstanceIcon(changeImage, icon, "")
+                Column {
+                    Button({ icon = null }) {
+                        Text("Reset")
+                    }
+                }
                 Row(Modifier.fillMaxWidth(.43f)) {
                     OutlinedTextField(
                         value = name,

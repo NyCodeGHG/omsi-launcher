@@ -4,19 +4,28 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.lwjgl.system.MemoryUtil
 import org.lwjgl.util.nfd.NativeFileDialog
+import java.io.File
 import java.nio.file.Path
 import javax.swing.JFileChooser
 import javax.swing.UIManager
+import javax.swing.filechooser.FileFilter
 import kotlin.io.path.absolutePathString
 
 private val logger = logger()
 
-suspend fun chooseDirectory(basePath: Path? = null): Path? {
-    return runCatching { chooseDirectoryNative(basePath) }
+suspend fun chooseImage(basePath: Path?): Path? = chooseFSItem(basePath, false, listOf("png", "jpg", "gif"), "Images")
+suspend fun chooseDirectory(basePath: Path?): Path? = chooseFSItem(basePath, true, emptyList(), null)
+suspend fun chooseFSItem(
+    basePath: Path?,
+    chooseDirectory: Boolean,
+    types: List<String>,
+    filterDescription: String?
+): Path? {
+    return runCatching { chooseFSItemNative(basePath, chooseDirectory, types) }
         .onFailure { nativeException ->
             logger.error("A call to chooseDirectoryNative failed.", nativeException)
 
-            return runCatching { chooseDirectorySwing(basePath) }
+            return runCatching { chooseFSItemSwing(basePath, chooseDirectory, types, filterDescription) }
                 .onFailure { swingException ->
                     logger.error("A call to chooseDirectorySwing failed.", swingException)
                 }
@@ -27,33 +36,50 @@ suspend fun chooseDirectory(basePath: Path? = null): Path? {
         ?.asPath()
 }
 
-private suspend fun chooseDirectoryNative(basePath: Path?) = withContext(Dispatchers.IO) {
-    val pathPointer = MemoryUtil.memAllocPointer(1)
-    try {
-        return@withContext when (
-            val code =
-                NativeFileDialog.NFD_PickFolder(basePath?.absolutePathString(), pathPointer)
-        ) {
-            NativeFileDialog.NFD_OKAY -> {
-                val path = pathPointer.stringUTF8
-                NativeFileDialog.nNFD_Free(pathPointer[0])
+private suspend fun chooseFSItemNative(basePath: Path?, chooseDirectory: Boolean, types: List<String>) =
+    withContext(Dispatchers.IO) {
+        val pathPointer = MemoryUtil.memAllocPointer(1)
+        try {
+            val basePathString = basePath?.absolutePathString()
+            return@withContext when (
+                val code = if (chooseDirectory) {
+                    NativeFileDialog.NFD_PickFolder(basePathString, pathPointer)
+                } else {
+                    NativeFileDialog.NFD_OpenDialog(types.joinToString(","), basePathString, pathPointer)
+                }
+            ) {
+                NativeFileDialog.NFD_OKAY -> {
+                    val path = pathPointer.stringUTF8
+                    NativeFileDialog.nNFD_Free(pathPointer[0])
 
-                path
+                    path
+                }
+                NativeFileDialog.NFD_CANCEL -> null
+                NativeFileDialog.NFD_ERROR -> error("An error occurred while executing NativeFileDialog.NFD_PickFolder")
+                else -> error("Unknown return code '$code' from NativeFileDialog.NFD_PickFolder")
             }
-            NativeFileDialog.NFD_CANCEL -> null
-            NativeFileDialog.NFD_ERROR -> error("An error occurred while executing NativeFileDialog.NFD_PickFolder")
-            else -> error("Unknown return code '$code' from NativeFileDialog.NFD_PickFolder")
+        } finally {
+            MemoryUtil.memFree(pathPointer)
         }
-    } finally {
-        MemoryUtil.memFree(pathPointer)
     }
-}
 
-private suspend fun chooseDirectorySwing(basePath: Path?) = withContext(Dispatchers.IO) {
+private suspend fun chooseFSItemSwing(
+    basePath: Path?,
+    chooseDirectory: Boolean,
+    types: List<String>,
+    filterDescription: String?
+) = withContext(Dispatchers.IO) {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
 
     val chooser = JFileChooser().apply {
-        fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+        fileSelectionMode = if (chooseDirectory) JFileChooser.DIRECTORIES_ONLY else JFileChooser.FILES_ONLY
+        if (types.isNotEmpty()) {
+            fileFilter = object : FileFilter() {
+                override fun accept(f: File?): Boolean = f?.extension in types
+
+                override fun getDescription(): String? = filterDescription
+            }
+        }
         isVisible = true
         currentDirectory = basePath?.toFile()
     }

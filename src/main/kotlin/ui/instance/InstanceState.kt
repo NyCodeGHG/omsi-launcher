@@ -13,6 +13,8 @@ import java.util.*
 import kotlin.io.path.createDirectories
 import kotlin.io.path.createFile
 import kotlin.io.path.deleteExisting
+import kotlin.io.path.deleteIfExists
+import kotlin.io.path.moveTo
 import kotlin.io.path.notExists
 import kotlin.streams.asSequence
 
@@ -39,6 +41,7 @@ class ApplicationInstanceState {
         patchVersion: Instance.PatchVersion,
         options: InstanceOptions = InstanceOptions(),
         uses4GBPatch: Boolean,
+        icon: Path?
     ) = withContext(Dispatchers.IO) {
         val instance = Instance(
             id,
@@ -54,6 +57,7 @@ class ApplicationInstanceState {
             directory.createDirectories()
         }
         directory.resolve("launcher.lock").createFile()
+        icon?.moveTo(instance.icon)
         createInstance(instance)
         internalInstances = internalInstances - instance + instance.copy(state = InstanceState.READY)
         persistInstances(internalInstances)
@@ -73,6 +77,11 @@ class ApplicationInstanceState {
 
         if (oldInstance.patchVersion != newInstance.patchVersion || oldInstance.uses4GBPatch != newInstance.uses4GBPatch) {
             reLinkOmsiExecutable(newInstance)
+        }
+        if (state.icon == null) {
+            newInstance.icon.deleteIfExists()
+        } else {
+            state.icon?.moveTo(newInstance.icon)
         }
 
         internalInstances = persistInstances(oldInstances + newInstance.copy(state = InstanceState.READY))

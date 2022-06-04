@@ -28,6 +28,7 @@ data class Instance(
 ) : PersistentValue<SavedInstance> {
     val manifest: Path get() = directory / "manifest.acf"
     val manifestBackup: Path get() = directory / "manifest.backup.acf"
+    val icon: Path get() = directory / "logo.png"
 
     suspend fun start(editor: Boolean = false, awaitSteamDeath: suspend () -> Boolean = { true }) {
         val flags = buildList {

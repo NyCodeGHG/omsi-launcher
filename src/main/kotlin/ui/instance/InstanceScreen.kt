@@ -108,7 +108,8 @@ fun InstanceScreen() {
                                 useDebugMode,
                                 logLevel,
                                 screenMode
-                            )
+                            ),
+                            icon = icon
                         )
                     }
                 }
