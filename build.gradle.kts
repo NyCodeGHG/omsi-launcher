@@ -120,6 +120,7 @@ compose.desktop {
             licenseFile.set(project.file("LICENSE"))
             vendor = "omsi-launcher Contributors"
             windows {
+                iconFile.set(project.file("src/main/resources/ecitaro.jpg"))
                 menu = true
                 dirChooser = true
             }
