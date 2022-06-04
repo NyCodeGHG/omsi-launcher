@@ -60,7 +60,7 @@ fun runLauncher(
                             Setup(closeSetup, configuration)
                         }
                         route(MainApplicationRoute) {
-                            Application()
+                            Application(lyricist)
                         }
                         route(OmsiNotInstalledRoute) {
                             ErrorDialog(

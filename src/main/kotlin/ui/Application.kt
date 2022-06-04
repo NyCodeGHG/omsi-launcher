@@ -11,11 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.sp
 import cafe.adriel.lyricist.LocalStrings
+import cafe.adriel.lyricist.Lyricist
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Settings
 import compose.icons.tablericons.Stack
+import dev.nycode.omsilauncher.localization.Strings
 import dev.nycode.omsilauncher.ui.instance.InstanceScreen
 import dev.nycode.omsilauncher.ui.routing.Router
 import dev.nycode.omsilauncher.ui.routing.RouterKey
@@ -32,7 +33,7 @@ private class ApplicationRoute(
 )
 
 @Composable
-fun Application() {
+fun Application(lyricist: Lyricist<Strings>) {
     val routerState = rememberRouterState(InstanceRoute)
     val strings = LocalStrings.current
     val routes = remember {
@@ -49,7 +50,7 @@ fun Application() {
                     InstanceScreen()
                 }
                 route(SettingsRoute) {
-                    Text(strings.settings, fontSize = 40.sp)
+                    SettingsPage(lyricist)
                 }
             }
         }

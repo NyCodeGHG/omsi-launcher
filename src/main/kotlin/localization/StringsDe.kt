@@ -108,5 +108,8 @@ val StringsDe = Strings(
     eCitaro = "eCitaro",
     instanceIcon = "Instanz-Symbol",
     onlyImages = "Nur Bilddateien",
-    reset = "Zurücksetzen"
+    reset = "Zurücksetzen",
+    useHardLinks = "Hard-Links benutzen",
+    useHardLinksDescription = "Benutzt Hard anstelle von Soft links für Omsi.exe Dateien (benutze dies wenn du z.B. OmniNavigation benutzt)",
+    language = "Sprache"
 )

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
-import androidx.compose.material.Checkbox
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
@@ -33,6 +32,7 @@ import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.InstanceOptions
 import dev.nycode.omsilauncher.localization.Strings
 import dev.nycode.omsilauncher.localization.Translatable
+import dev.nycode.omsilauncher.ui.components.CheckboxRow
 import dev.nycode.omsilauncher.ui.components.DropdownInputField
 import dev.nycode.omsilauncher.ui.components.EmptyDirectoryPathField
 import dev.nycode.omsilauncher.ui.components.SafeInstanceIcon
@@ -218,26 +218,6 @@ private fun <E : Translatable> DropDownColumn(
             values = values
         ) {
             Text(it.translation(strings))
-        }
-    }
-}
-
-@Composable
-private fun CheckboxRow(
-    title: String,
-    tooltip: String,
-    value: Boolean,
-    onValueChange: (Boolean) -> Unit,
-) {
-    val pressIndicator = Modifier.pointerInput(value) {
-        detectTapGestures(onPress = {
-            onValueChange(!value)
-        })
-    }
-    TooltipWrapper(modifier = pressIndicator, tooltip = { TooltipText(tooltip) }) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(value, onCheckedChange = onValueChange)
-            Text(title)
         }
     }
 }

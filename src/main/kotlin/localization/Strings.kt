@@ -89,5 +89,8 @@ data class Strings(
     val instanceIcon: String,
     val clickToChangeInstanceIcon: String,
     val onlyImages: String,
-    val reset: String
+    val reset: String,
+    val useHardLinks: String,
+    val useHardLinksDescription: String,
+    val language: String
 )
