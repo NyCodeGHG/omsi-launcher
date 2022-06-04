@@ -70,7 +70,7 @@ tasks {
         kotlinOptions {
             freeCompilerArgs =
                 freeCompilerArgs + "-opt-in=kotlinx.serialization.ExperimentalSerializationApi" +
-                "-opt-in=kotlinx.serialization.InternalSerializationApi"
+                    "-opt-in=kotlinx.serialization.InternalSerializationApi"
             jvmTarget = "18"
         }
     }
@@ -120,6 +120,8 @@ compose.desktop {
             licenseFile.set(project.file("LICENSE"))
             vendor = "omsi-launcher Contributors"
             windows {
+                /// Generate icon file with: convert -resize x128 src/main/resources/ecitaro.jpg src/main/resources/drawables/windows.ico
+                iconFile.set(project.file("src/main/resources/drawables/windows.ico"))
                 menu = true
                 dirChooser = true
             }
