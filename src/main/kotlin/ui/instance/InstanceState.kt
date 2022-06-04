@@ -20,7 +20,6 @@ import kotlinx.coroutines.withContext
 import java.nio.file.Files
 import java.nio.file.Path
 import java.security.MessageDigest
-import java.util.Base64
 import java.util.UUID
 import kotlin.io.path.copyTo
 import kotlin.io.path.createDirectories
@@ -86,8 +85,9 @@ class ApplicationInstanceState {
             config.imagesDirectory.createDirectories()
             val extension = icon.extension
             val digest = MessageDigest.getInstance("SHA-256")
-            digest.update(icon.readBytes())
-            val hash = Base64.getEncoder().encodeToString(digest.digest())
+            val hash = digest.digest(icon.readBytes()).fold("") { str, it ->
+                str + "%02x".format(it)
+            }
             logger.info("Hash of $icon is $hash.")
             val fileName = "$hash.$extension"
             val path = config.imagesDirectory / fileName
