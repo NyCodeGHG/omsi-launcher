@@ -16,8 +16,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -84,6 +87,7 @@ private fun InstanceForm(
 ) = with(instanceModificationState) {
     val strings = LocalStrings.current
     val scope = rememberCoroutineScope()
+    var isChoosing by remember { mutableStateOf(false) }
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             modifier = Modifier.fillMaxWidth(),
@@ -102,9 +106,13 @@ private fun InstanceForm(
             ) {
                 val changeImage = Modifier.pointerInput(icon) {
                     detectTapGestures(onTap = {
-                        scope.launch {
-                            val image = chooseImage(null, strings)
-                            icon = image
+                        if (!isChoosing) {
+                            isChoosing = true
+                            scope.launch {
+                                val image = chooseImage(null, strings)
+                                isChoosing = false
+                                icon = image
+                            }
                         }
                     })
                 }
