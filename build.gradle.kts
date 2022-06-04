@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.serialization") version "1.6.21"
-    id("org.jetbrains.compose") version "1.2.0-alpha01-dev703"
+    id("org.jetbrains.compose") version "1.2.0-alpha01-dev686"
     id("com.github.gmazzo.buildconfig") version "3.0.3"
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
     id("com.google.devtools.ksp") version "1.6.21-1.0.5"
@@ -113,10 +113,7 @@ compose.desktop {
         jvmArgs += listOf("-Ddev.nycode.omsi_launcher.release")
 
         nativeDistributions {
-            modules(
-                "java.naming", // Needed by logback
-                "jdk.unsupported" // Needed by lwjgl NFD (sun.misc.Unsafe)
-            )
+            modules("java.naming")
             targetFormats(TargetFormat.Msi)
 
             appResourcesRootDir.set(project("fs-util").buildDir.resolve("binaries"))
