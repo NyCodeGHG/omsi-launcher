@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "dev.nycode"
-version = "0.6.0"
+version = "0.6.1"
 
 repositories {
     google()
@@ -113,7 +113,10 @@ compose.desktop {
         jvmArgs += listOf("-Ddev.nycode.omsi_launcher.release")
 
         nativeDistributions {
-            modules("java.naming")
+            modules(
+                "java.naming", // Logback
+                "jdk.unsupported" // LWJGL NFD
+            )
             targetFormats(TargetFormat.Msi)
 
             appResourcesRootDir.set(project("fs-util").buildDir.resolve("binaries"))
