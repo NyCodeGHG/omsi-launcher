@@ -10,6 +10,7 @@
 ### Removed
 
 ### Fixed
+- Add missing JDK modules
 
 ### Security
 
