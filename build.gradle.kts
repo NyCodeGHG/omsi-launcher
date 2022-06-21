@@ -7,7 +7,7 @@ plugins {
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.serialization") version "1.6.21"
     id("org.jetbrains.compose") version "1.2.0-alpha01-dev686"
-    id("com.github.gmazzo.buildconfig") version "3.0.3"
+    id("com.github.gmazzo.buildconfig") version "3.1.0"
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
     id("com.google.devtools.ksp") version "1.6.21-1.0.5"
     id("org.jetbrains.changelog") version "1.3.1"
