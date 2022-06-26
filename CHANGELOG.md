@@ -10,6 +10,19 @@
 ### Removed
 
 ### Fixed
+
+### Security
+
+## [0.6.2] - 2022-06-26
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
 - Add missing JDK modules
 
 ### Security
@@ -23,15 +36,9 @@
 ### Changed
 - Revert compose to `1.2.0-alpha01-dev686`
 
-### Deprecated
-
-### Removed
-
 ### Fixed
 - No longer display base instance name and path when creating new instance
 - Fix ClassNotFoundException when trying to call native picker
-
-### Security
 
 ## [0.5.3] - 2022-06-01
 ### Changed
