@@ -23,7 +23,7 @@ pub fn mirror_folder(from: &PathBuf, to: &Path) -> std::io::Result<()> {
             let name = target.file_name().unwrap().to_str().unwrap();
             if HARD_LINK_FILES.contains(&name) {
                 fs::hard_link(path, target)?
-            } else {
+            } else if !IGNORED_FILES.contains(&name) {
                 windows_fs::symlink_file(path, target)?
             }
         }

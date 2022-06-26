@@ -10,6 +10,7 @@
 ### Removed
 
 ### Fixed
+- Fix exception when creating a new instance
 
 ### Security
 
