@@ -10,6 +10,7 @@
 ### Removed
 
 ### Fixed
+- Fix clone-omsi not creating symlinks
 
 ### Security
 
