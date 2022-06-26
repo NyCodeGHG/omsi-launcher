@@ -23,9 +23,12 @@
 ### Removed
 
 ### Fixed
-- Add missing JDK modules
 
 ### Security
+
+## [0.6.2] - 2022-06-26
+### Fixed
+- Add missing JDK modules
 
 ## [0.6.0] - 2022-06-04
 ### Added
