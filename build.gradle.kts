@@ -29,7 +29,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx", "kotlinx-cli", "0.3.4")
     implementation("io.github.microutils", "kotlin-logging", "2.1.23")
     runtimeOnly("ch.qos.logback", "logback-classic", "1.2.11")
-    implementation("net.java.dev.jna", "jna-platform", "5.11.0")
+    implementation("net.java.dev.jna", "jna-platform", "5.12.1")
     implementation("org.lwjgl", "lwjgl", "3.3.1")
     implementation("org.lwjgl", "lwjgl", "3.3.1", classifier = "natives-windows")
     implementation("org.lwjgl", "lwjgl-nfd", "3.3.1")
