@@ -10,11 +10,10 @@
 ### Removed
 
 ### Fixed
-- Fix clone-omsi not creating symlinks
 
 ### Security
 
-## [0.6.3] - 2022-06-26
+## [0.6.4] - 2022-08-07
 ### Added
 
 ### Changed
@@ -24,9 +23,13 @@
 ### Removed
 
 ### Fixed
-- Fix exception when creating a new instance
+- Fix clone-omsi not creating symlinks
 
 ### Security
+
+## [0.6.3] - 2022-06-26
+### Fixed
+- Fix exception when creating a new instance
 
 ## [0.6.2] - 2022-06-26
 ### Fixed
