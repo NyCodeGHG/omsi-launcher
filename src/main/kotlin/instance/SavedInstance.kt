@@ -27,7 +27,8 @@ data class SavedInstance(
             InstanceState.READY,
             uses4GBPatch,
             isBaseInstance,
-            icon = icon
+            icon = icon,
+            baseInstance
         )
     }
 }
