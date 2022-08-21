@@ -85,14 +85,17 @@ data class Instance(
 val List<Instance>.baseInstance: Instance
     get() = firstOrNull { it.isBaseInstance } ?: error("Base instance not found")
 
-fun List<Instance>.calculateReLinkRoundsFor(instance: Instance): List<List<Instance>> {
+fun List<Instance>.calculateReLinkRoundsFor(instance: Instance): Map<Instance, List<Instance>> {
     val directDependencies =
         filter { it.baseInstance == instance.id || (instance.isBaseInstance && it.baseInstance == null && !it.isBaseInstance) }
-    val childDependencies = directDependencies.flatMap {
-        calculateReLinkRoundsFor(it)
-    }
+    val childDependencies = directDependencies.map {
+        it to calculateReLinkRoundsFor(it).values.flatten()
+    }.filterNot { (_, children) -> children.isEmpty() }
 
-    return listOf(directDependencies, *childDependencies.toTypedArray()).filterNot(Collection<*>::isEmpty)
+    return buildMap {
+        this[instance] = directDependencies
+        putAll(childDependencies.toMap())
+    }
 }
 
 fun List<Instance>.findDependenciesFor(instance: Instance) = filter {

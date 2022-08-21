@@ -84,7 +84,7 @@ data class Strings(
     val waitingForChanges: String,
     val iAmDone: String,
     val mergingSteamManifest: (name: String) -> String,
-    val reLinkingInstances: String,
+    val reLinkingInstances: (current: Int, total: Int) -> String,
     val save: String,
     val editInstanceTitle: (name: String) -> String,
     val editBaseInstance: String,

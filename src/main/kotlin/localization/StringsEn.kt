@@ -32,7 +32,7 @@ val StringsEn = Strings(
             dependencies.joinToString(
                 "\n",
                 prefix = "\n",
-            ) {" - ${it.name}"}
+            ) { " - ${it.name}" }
         }"
     },
     instanceName = "Instance name",
@@ -106,7 +106,7 @@ val StringsEn = Strings(
     iAmDone = "I am done",
     mergingSteamManifest = { name -> "Merging Steam manifest of $name" },
     preparingReSynchronisation = "Preparing re-synchronisation",
-    reLinkingInstances = "Relinking instances",
+    reLinkingInstances = { current: Int, total: Int -> "Relinking instanced, round $current/$total" },
     waitingForChanges = "Waiting for changes",
     save = "Save",
     editInstanceTitle = { name -> "Edit instance $name" },

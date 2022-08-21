@@ -32,7 +32,7 @@ val StringsDe = Strings(
             dependencies.joinToString(
                 "\n",
                 prefix = "\n",
-            ) {" - ${it.name}"}
+            ) { " - ${it.name}" }
         }"
     },
     instanceName = "Instanzname",
@@ -107,7 +107,7 @@ val StringsDe = Strings(
     iAmDone = "Ich bin fertig",
     mergingSteamManifest = { name -> "Steam Manifest von $name wird neu-zusammengefasst" },
     preparingReSynchronisation = "Neu-Synchronisation wird vorbereitet",
-    reLinkingInstances = "Instanzen werden neu gelinkt",
+    reLinkingInstances = { current, total -> "Instanzen werden neu gelinkt. Schritt $current/$total" },
     waitingForChanges = "Es wird auf Änderungen gewartet",
     save = "Speichern",
     editInstanceTitle = { name -> "Instanz $name bearbeiten" },

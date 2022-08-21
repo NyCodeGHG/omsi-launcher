@@ -58,14 +58,14 @@ suspend fun reLinkOmsiExecutable(instance: Instance) {
     )
 }
 
-suspend fun relinkBaseGame(instances: List<Instance>) {
+suspend fun relinkBaseGame(instances: List<Instance>, baseInstance: Path) {
     val instanceCliArguments = instances.flatMap {
         listOf("--omsi-instance-folder", it.directory.absolutePathString())
     }
 
     doNativeCall(
         "relink-omsi.exe",
-        config.gameDirectory.absolutePathString(),
+        baseInstance.absolutePathString(),
         *instanceCliArguments.toTypedArray()
     )
 }

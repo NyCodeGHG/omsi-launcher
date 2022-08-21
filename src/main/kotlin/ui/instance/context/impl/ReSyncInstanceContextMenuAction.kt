@@ -6,7 +6,7 @@ import dev.nycode.omsilauncher.ui.instance.context.InstanceContextMenuAction
 
 object ReSyncInstanceContextMenuAction : InstanceContextMenuAction {
     override fun isAvailable(context: InstanceActionContext): Boolean =
-        context.instance.isBaseInstance && context.instanceActive && context.omsiState != OmsiProcessState.RUNNING
+        context.instanceActive && context.omsiState != OmsiProcessState.RUNNING
 
     override fun buildItemLabel(context: InstanceActionContext): String = context.strings.reSyncInstance
 

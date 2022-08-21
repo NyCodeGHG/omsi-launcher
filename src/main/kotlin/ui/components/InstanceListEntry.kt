@@ -309,10 +309,8 @@ private fun InstanceButtonRow(
         InstanceStartEditorButton(context)
         Spacer(Modifier.width(5.dp))
         InstanceActivateButton(context)
-        if (instance.isBaseInstance) {
-            Spacer(Modifier.width(5.dp))
-            InstanceReSyncButton(context)
-        }
+        Spacer(Modifier.width(5.dp))
+        InstanceReSyncButton(context)
         Spacer(Modifier.width(5.dp))
         InstancePatchVersionIcon(
             modifier = Modifier.align(Alignment.Bottom),

@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import cafe.adriel.lyricist.LocalStrings
 import dev.nycode.omsilauncher.instance.Instance
+import dev.nycode.omsilauncher.instance.calculateReLinkRoundsFor
 import dev.nycode.omsilauncher.omsi.relinkBaseGame
 import dev.nycode.omsilauncher.steam.mergeManifestWith
 import dev.nycode.omsilauncher.ui.routing.Router
@@ -132,20 +133,26 @@ private fun ActionScreen(instances: List<Instance>, instance: Instance, onCloseR
         scope.launch(Dispatchers.IO) {
             val vdf = VDF()
             val backupMainManifest = vdf.decodeToVDFObject(instance.manifestBackup.readText())
-            val newMainManifest = vdf.decodeToVDFObject(getOmsiSteamManifest().readText())
 
-            instances.forEach {
-                step = strings.mergingSteamManifest(it.name)
-                val instanceManifest = vdf.decodeToVDFObject(it.manifest.readText())
-                val merge = instanceManifest.mergeManifestWith(newMainManifest, backupMainManifest)
-                logger.debug { "Merging manifest of ${it.name}, diff: ${merge == instanceManifest}" }
-                val encodedManifest = vdf.encodeFromVDFElement(merge)
-                it.manifest.writeText(encodedManifest)
+            val rounds = instances.calculateReLinkRoundsFor(instance)
+            var round = 0
+
+            suspend fun Instance.relink(children: List<Instance>) {
+                step = strings.reLinkingInstances(++round, rounds.size)
+                val newMainManifest = vdf.decodeToVDFObject(manifest.readText())
+                children.forEach {
+                    val instanceManifest = vdf.decodeToVDFObject(it.manifest.readText())
+                    val merge = instanceManifest.mergeManifestWith(newMainManifest, backupMainManifest)
+                    logger.debug { "Merging manifest of ${it.name}, diff: ${merge == instanceManifest}" }
+                    val encodedManifest = vdf.encodeFromVDFElement(merge)
+                    it.manifest.writeText(encodedManifest)
+                }
+
+                logger.info { "Re-linking all OMSI child instances" }
+                relinkBaseGame(children, directory)
             }
 
-            step = strings.reLinkingInstances
-            logger.info { "Re-linking all OMSI child instances" }
-            relinkBaseGame(instances.filterNot(Instance::isBaseInstance))
+            rounds.forEach { (instance, children) -> instance.relink(children) }
             onCloseRequest()
         }
 
