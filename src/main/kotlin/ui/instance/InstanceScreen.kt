@@ -110,7 +110,8 @@ fun InstanceScreen() {
                                 logLevel,
                                 screenMode
                             ),
-                            icon = icon
+                            icon = icon,
+                            baseInstance = parentInstance
                         )
                     }
                 }

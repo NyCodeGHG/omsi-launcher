@@ -35,13 +35,15 @@ private val linkingFlag
         null
     }
 
-suspend fun createInstance(instance: Instance) {
+
+suspend fun createInstance(instance: Instance, basePath: Path? = null, doMultiLink: Boolean = false) {
     doNativeCall(
         "clone-omsi.exe",
-        config.gameDirectory.absolutePathString(),
+        (basePath ?: config.gameDirectory).absolutePathString(),
         instance.directory.absolutePathString(),
         getOmsiBinary(instance).absolutePathString(),
-        linkingFlag
+        linkingFlag,
+        "--do-multi-symlink".takeIf { doMultiLink }
     )
 }
 

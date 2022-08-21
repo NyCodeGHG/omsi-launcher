@@ -9,6 +9,7 @@ import dev.nycode.omsilauncher.config.config
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.InstanceOptions
 import dev.nycode.omsilauncher.instance.InstanceState
+import dev.nycode.omsilauncher.instance.baseInstance
 import dev.nycode.omsilauncher.instance.loadInstances
 import dev.nycode.omsilauncher.instance.saveInstances
 import dev.nycode.omsilauncher.omsi.createInstance
@@ -57,7 +58,8 @@ class ApplicationInstanceState {
         patchVersion: Instance.PatchVersion,
         options: InstanceOptions = InstanceOptions(),
         uses4GBPatch: Boolean,
-        icon: Path?
+        icon: Path?,
+        baseInstance: UUID?
     ) = withContext(Dispatchers.IO) {
         val iconPath = checkImageInIconStore(icon)
         val instance = Instance(
@@ -68,14 +70,16 @@ class ApplicationInstanceState {
             options,
             InstanceState.CREATING,
             uses4GBPatch,
-            icon = iconPath
+            icon = iconPath,
+            baseInstance = baseInstance
         )
         internalInstances = internalInstances + instance
         if (directory.notExists()) {
             directory.createDirectories()
         }
         directory.resolve("launcher.lock").createFile()
-        createInstance(instance)
+        val parentInstance = instances.firstOrNull { it.id == instance.baseInstance }?.directory
+        createInstance(instance, parentInstance, baseInstance != instances.baseInstance.id)
         internalInstances = internalInstances - instance + instance.copy(state = InstanceState.READY)
         persistInstances(internalInstances)
     }

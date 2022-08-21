@@ -43,7 +43,7 @@ fn run() -> io::Result<()> {
 
         info!("Relinking instance {}", instance.to_str().unwrap());
         // Re-link non existent files
-        mirror_folder(&opt.base_game_folder, &instance)?;
+        mirror_folder(&opt.base_game_folder, &instance, None)?;
     }
 
     Ok(())
