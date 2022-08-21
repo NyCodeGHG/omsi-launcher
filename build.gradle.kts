@@ -20,6 +20,7 @@ repositories {
     google()
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
 }
 
 dependencies {
@@ -35,12 +36,20 @@ dependencies {
     implementation("org.lwjgl", "lwjgl-nfd", "3.3.1")
     implementation("org.lwjgl", "lwjgl-nfd", "3.3.1", classifier = "natives-windows")
     implementation("br.com.devsrsouza.compose.icons.jetbrains", "tabler-icons", "1.0.0")
-
     implementation("cafe.adriel.lyricist", "lyricist", "1.2.2")
 
+    implementation(platform("io.ktor:ktor-bom:2.0.3"))
+    implementation("io.ktor", "ktor-client-okhttp")
+    implementation("io.ktor", "ktor-client-content-negotiation")
+    implementation("io.ktor", "ktor-serialization-kotlinx-json")
+
+    implementation("com.vdurmont", "semver4j", "3.1.0")
+
     ksp("cafe.adriel.lyricist", "lyricist-processor", "1.2.2")
+
     implementation(platform("dev.schlaubi:stdx-bom:1.2.1"))
     implementation("dev.schlaubi", "stdx-serialization")
+    implementation("dev.schlaubi", "stdx-logging")
 
     implementation("io.sigpipe", "jbsdiff", "1.0")
 }

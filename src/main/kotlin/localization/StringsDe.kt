@@ -113,5 +113,9 @@ val StringsDe = Strings(
     useHardLinksDescription = "Benutzt Hard anstelle von Soft links für Omsi.exe Dateien (benutze dies wenn du z.B. OmniNavigation benutzt)",
     language = "Sprache",
     checkForUpdates = "Auf Updates überprüfen",
-    checkForUpdatesDescription = "Beim Programstart auf Updates überprüfen"
+    checkForUpdatesDescription = "Beim  Programstart auf Updates überprüfen",
+    newVersionAvailableTitle = "Es ist eine neue Version vefügbar!",
+    newVersionDescription = {version -> "Die Version $version steht zum Download bereit"},
+    viewReleaseOnGithub = "Änderungen auf GitHub anschauen",
+    downloadNewVersion = "Version herunterladen"
 )

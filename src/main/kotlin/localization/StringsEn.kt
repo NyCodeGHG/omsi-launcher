@@ -112,5 +112,9 @@ val StringsEn = Strings(
     useHardLinksDescription = "Use Hard Links for Omsi.exe files (use this if you use OmniNavigation)",
     language = "Language",
     checkForUpdates = "Check for Updates",
-    checkForUpdatesDescription = "Check for updates on startup"
+    checkForUpdatesDescription = "Check for updates on startup",
+    newVersionAvailableTitle = "A new version is available",
+    newVersionDescription = { version -> "The version $version is ready for download" },
+    viewReleaseOnGithub = "View change log on GitHub",
+    downloadNewVersion = "Download Version"
 )

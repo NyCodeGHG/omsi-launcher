@@ -17,6 +17,7 @@ import dev.nycode.omsilauncher.ui.routing.Router
 import dev.nycode.omsilauncher.ui.routing.RouterKey
 import dev.nycode.omsilauncher.ui.routing.rememberRouterState
 import dev.nycode.omsilauncher.ui.setup.Setup
+import dev.nycode.omsilauncher.util.VersionChecker
 import dev.nycode.omsilauncher.util.getApplicationTitle
 import dev.nycode.omsilauncher.util.getOmsiInstallPathOrNull
 import dev.nycode.omsilauncher.util.getSteamInstallPathOrNull
@@ -55,6 +56,7 @@ fun runLauncher(
                     title = getApplicationTitle(),
                     state = windowState
                 ) {
+                    VersionChecker()
                     Router(routerState) {
                         route(SetupRoute) {
                             Setup(closeSetup, configuration)

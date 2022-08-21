@@ -1,7 +1,7 @@
 package dev.nycode.omsilauncher.config
 
 import dev.nycode.omsilauncher.util.appDataDir
-import dev.nycode.omsilauncher.util.logger
+import dev.schlaubi.stdx.logging.logger
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

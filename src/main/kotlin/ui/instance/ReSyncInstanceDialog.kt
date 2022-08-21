@@ -34,7 +34,7 @@ import dev.nycode.omsilauncher.ui.routing.RouterKey
 import dev.nycode.omsilauncher.ui.routing.RouterState
 import dev.nycode.omsilauncher.ui.routing.rememberRouterState
 import dev.nycode.omsilauncher.util.getOmsiSteamManifest
-import dev.nycode.omsilauncher.util.logger
+import dev.schlaubi.stdx.logging.logger
 import dev.nycode.omsilauncher.vdf.VDF
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
