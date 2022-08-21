@@ -85,6 +85,30 @@ data class Instance(
 val List<Instance>.baseInstance: Instance
     get() = firstOrNull { it.isBaseInstance } ?: error("Base instance not found")
 
+fun List<Instance>.calculateReLinkRoundsFor(instance: Instance): List<List<Instance>> {
+    val directDependencies =
+        filter { it.baseInstance == instance.id || (instance.isBaseInstance && it.baseInstance == null && !it.isBaseInstance) }
+    val childDependencies = directDependencies.flatMap {
+        calculateReLinkRoundsFor(it)
+    }
+
+    return listOf(directDependencies, *childDependencies.toTypedArray()).filterNot(Collection<*>::isEmpty)
+}
+
+fun List<Instance>.findDependenciesFor(instance: Instance) = filter {
+    it.hasDependencyTo(instance, this)
+}
+
+fun Instance.hasDependencyTo(instance: Instance, instances: List<Instance>): Boolean {
+    if (baseInstance == null) return instance.isBaseInstance && !isBaseInstance
+    val parent = instances.first { it.id == baseInstance }
+    return if (parent.id == instance.id) {
+        true
+    } else {
+        parent.hasDependencyTo(instance, instances)
+    }
+}
+
 @Serializable
 enum class LaunchFlag(val cliName: String) {
     EDITOR("editor"),
