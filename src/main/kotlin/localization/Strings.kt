@@ -1,6 +1,7 @@
 package dev.nycode.omsilauncher.localization
 
 import androidx.compose.ui.text.AnnotatedString
+import dev.nycode.omsilauncher.instance.Instance
 
 data class Strings(
     val ok: String,
@@ -20,6 +21,7 @@ data class Strings(
     val yes: String,
     val no: String,
     val confirmDeletion: (instance: String) -> String,
+    val confirmDeletionWithDependencies: (instance: String, dependencies: List<Instance>) -> String,
     val instanceName: String,
     val activateInstance: String,
     val activate: String,

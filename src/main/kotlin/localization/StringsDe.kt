@@ -27,6 +27,14 @@ val StringsDe = Strings(
     confirmDeletion = { instance ->
         "Bist du dir sicher, das du $instance löschen willst?"
     },
+    confirmDeletionWithDependencies = { instance, dependencies ->
+        "Bist du dir sicher, dass du $instance und die folgenden weiteren Instanzen löschen willst: ${
+            dependencies.joinToString(
+                "\n",
+                prefix = "\n",
+            ) {" - ${it.name}"}
+        }"
+    },
     instanceName = "Instanzname",
     activateInstance = "Aktiviert eine Instanz",
     activate = "Aktivieren",

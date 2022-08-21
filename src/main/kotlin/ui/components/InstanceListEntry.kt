@@ -42,6 +42,7 @@ import compose.icons.tablericons.Refresh
 import compose.icons.tablericons.Tools
 import compose.icons.tablericons.Trash
 import dev.nycode.omsilauncher.instance.Instance
+import dev.nycode.omsilauncher.instance.findDependenciesFor
 import dev.nycode.omsilauncher.omsi.OmsiProcessState
 import dev.nycode.omsilauncher.omsi.UserAccessControlCancelledException
 import dev.nycode.omsilauncher.ui.CustomColors
@@ -191,13 +192,23 @@ fun InstanceListEntry(
         }
     }
     if (deleteDialog) {
+        val dependencies = instances.findDependenciesFor(instance)
+        val text = if (dependencies.isEmpty()) {
+            strings.confirmDeletion(instance.name)
+        } else {
+            strings.confirmDeletionWithDependencies(instance.name, dependencies)
+        }
         ConfirmationDialog(
-            strings.confirmDeletion(instance.name),
+            text,
             { delete ->
                 deleteDialog = false
                 if (delete) {
                     scope.launch(Dispatchers.IO) {
-                        instanceState.deleteInstance(instance)
+                        (dependencies + instance).forEach {
+                            launch {
+                                instanceState.deleteInstance(it)
+                            }
+                        }
                     }
                 }
             },
