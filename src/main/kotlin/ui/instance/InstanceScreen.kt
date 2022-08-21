@@ -91,6 +91,7 @@ fun InstanceScreen() {
     if (showCreationDialog) {
         InstanceCreationDialog(
             instances.baseInstance,
+            instances,
             {
                 showCreationDialog = false
             },

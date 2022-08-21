@@ -25,10 +25,14 @@ data class Instance(
     val state: InstanceState,
     val uses4GBPatch: Boolean,
     val isBaseInstance: Boolean = false,
-    val icon: Path? = null
-) : PersistentValue<SavedInstance> {
+    val icon: Path? = null,
+    val baseInstance: SerializableUUID? = null
+) : PersistentValue<SavedInstance>, Translatable {
     val manifest: Path get() = directory / "manifest.acf"
     val manifestBackup: Path get() = directory / "manifest.backup.acf"
+
+    override val translation: Strings.() -> String
+        get() = { if (isBaseInstance) baseInstance else name }
 
     suspend fun start(editor: Boolean = false, awaitSteamDeath: suspend () -> Boolean = { true }) {
         val flags = buildList {
@@ -64,7 +68,17 @@ data class Instance(
     }
 
     override fun toSavedData(): SavedInstance {
-        return SavedInstance(id, name, directory, patchVersion, options, uses4GBPatch, isBaseInstance, icon = icon)
+        return SavedInstance(
+            id,
+            name,
+            directory,
+            patchVersion,
+            options,
+            uses4GBPatch,
+            isBaseInstance,
+            icon = icon,
+            baseInstance = baseInstance
+        )
     }
 }
 

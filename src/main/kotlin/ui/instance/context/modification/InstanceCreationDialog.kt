@@ -11,6 +11,7 @@ import kotlin.io.path.notExists
 @Composable
 fun InstanceCreationDialog(
     mainInstance: Instance,
+    instances: List<Instance>,
     onCloseRequest: () -> Unit,
     createInstance: (InstanceModificationState) -> Unit,
 ) {
@@ -28,6 +29,8 @@ fun InstanceCreationDialog(
         mainInstance,
         disableFolderInput = false,
         disableNameInput = false,
+        disableParentInput = false,
+        instances = instances,
         isValid = { isValid() },
         saveButtonLabel = { Text(strings.createInstance) },
         onCloseRequest = onCloseRequest,

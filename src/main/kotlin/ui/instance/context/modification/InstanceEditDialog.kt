@@ -4,10 +4,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import cafe.adriel.lyricist.LocalStrings
 import dev.nycode.omsilauncher.instance.Instance
+import dev.nycode.omsilauncher.util.getBaseInstance
 
 @Composable
 fun InstanceEditDialog(
     instance: Instance,
+    instances: List<Instance>,
     onCloseRequest: () -> Unit,
     saveInstance: (InstanceModificationState) -> Unit,
 ) {
@@ -20,9 +22,14 @@ fun InstanceEditDialog(
     InstanceDialog(
         title,
         title,
+        instance.getBaseInstance(instances),
         instance,
         true,
         instance.isBaseInstance,
+        instances = instances,
+        isEdit = true,
+        disableParentInput = true,
+        hideParentInput = instance.isBaseInstance,
         onCloseRequest = onCloseRequest,
         saveButtonLabel = {
             Text(strings.save)

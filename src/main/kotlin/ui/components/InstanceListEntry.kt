@@ -215,7 +215,7 @@ fun InstanceListEntry(
         val onClose = {
             editDialog = false
         }
-        InstanceEditDialog(instance, onClose) {
+        InstanceEditDialog(instance, instances, onClose) {
             scope.launch {
                 onClose()
                 instanceState.updateInstance(instance.id, it)
