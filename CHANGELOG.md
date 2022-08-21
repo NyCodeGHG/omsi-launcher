@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Add ability to choose a different parent instance
 
 ### Changed
 
