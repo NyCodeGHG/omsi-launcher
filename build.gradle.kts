@@ -137,4 +137,5 @@ buildConfig {
     buildConfigField("String", "APP_VERSION", "\"${project.version}\"")
     buildConfigField("String", "APP_BRANCH", "\"${project.getGitBranch()}\"")
     buildConfigField("String", "APP_COMMIT", "\"${project.getGitCommit()}\"")
+    buildConfigField("String", "REPOSITORY", "\"${System.getenv("GITHUB_REPOSITORY") ?: "NyCodeGHG/omsi-launcher"}\"")
 }
