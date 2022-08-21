@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Notification about launcher updates
 
 ### Changed
 
