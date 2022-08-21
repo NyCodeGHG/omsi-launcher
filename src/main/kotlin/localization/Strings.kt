@@ -92,5 +92,7 @@ data class Strings(
     val reset: String,
     val useHardLinks: String,
     val useHardLinksDescription: String,
-    val language: String
+    val language: String,
+    val checkForUpdates: String,
+    val checkForUpdatesDescription: String
 )

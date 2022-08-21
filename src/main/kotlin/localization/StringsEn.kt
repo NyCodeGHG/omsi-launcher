@@ -110,5 +110,7 @@ val StringsEn = Strings(
     clickToChangeInstanceIcon = "Click to change instance icon",
     useHardLinks = "Use Hard Links",
     useHardLinksDescription = "Use Hard Links for Omsi.exe files (use this if you use OmniNavigation)",
-    language = "Language"
+    language = "Language",
+    checkForUpdates = "Check for Updates",
+    checkForUpdatesDescription = "Check for updates on startup"
 )
