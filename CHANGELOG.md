@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Added
 - Add ability to choose a different parent instance
+- Notification about launcher updates
 
 ### Changed
 

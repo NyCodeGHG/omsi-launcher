@@ -94,5 +94,11 @@ data class Strings(
     val reset: String,
     val useHardLinks: String,
     val useHardLinksDescription: String,
-    val language: String
+    val language: String,
+    val checkForUpdates: String,
+    val checkForUpdatesDescription: String,
+    val newVersionAvailableTitle: String,
+    val newVersionDescription: (version: String) -> String,
+    val viewReleaseOnGithub: String,
+    val downloadNewVersion: String
 )

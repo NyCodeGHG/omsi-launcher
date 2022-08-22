@@ -15,7 +15,7 @@ import dev.nycode.omsilauncher.instance.saveInstances
 import dev.nycode.omsilauncher.omsi.createInstance
 import dev.nycode.omsilauncher.omsi.reLinkOmsiExecutable
 import dev.nycode.omsilauncher.ui.instance.context.modification.InstanceModificationState
-import dev.nycode.omsilauncher.util.logger
+import dev.schlaubi.stdx.logging.logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.nio.file.Files

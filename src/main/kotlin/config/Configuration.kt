@@ -8,7 +8,8 @@ import java.nio.file.Path
 data class Configuration(
     val rootInstallation: SerializablePath,
     val locale: String? = null,
-    val useHardLinks: Boolean = false
+    val useHardLinks: Boolean = false,
+    val checkForUpdates: Boolean = true
 ) : PersistentValue<Configuration> {
     override fun toSavedData(): Configuration = this
 

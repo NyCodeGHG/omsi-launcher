@@ -4,12 +4,12 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.6.21"
-    kotlin("plugin.serialization") version "1.6.21"
-    id("org.jetbrains.compose") version "1.2.0-alpha01-dev686"
-    id("com.github.gmazzo.buildconfig") version "3.0.3"
+    kotlin("jvm") version "1.7.0"
+    kotlin("plugin.serialization") version "1.7.0"
+    id("org.jetbrains.compose") version "1.2.0-alpha01-dev755"
+    id("com.github.gmazzo.buildconfig") version "3.1.0"
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
-    id("com.google.devtools.ksp") version "1.6.21-1.0.5"
+    id("com.google.devtools.ksp") version "1.7.0-1.0.6"
     id("org.jetbrains.changelog") version "1.3.1"
 }
 
@@ -20,13 +20,14 @@ repositories {
     google()
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
 }
 
 dependencies {
     implementation(compose.desktop.currentOs)
     implementation("org.jetbrains.kotlinx", "kotlinx-serialization-json", "1.3.3")
-    implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.6.2")
-    implementation("org.jetbrains.kotlinx", "kotlinx-cli", "0.3.4")
+    implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.6.4")
+    implementation("org.jetbrains.kotlinx", "kotlinx-cli", "0.3.5")
     implementation("io.github.microutils", "kotlin-logging", "2.1.23")
     runtimeOnly("ch.qos.logback", "logback-classic", "1.2.11")
     implementation("net.java.dev.jna", "jna-platform", "5.12.1")
@@ -35,12 +36,20 @@ dependencies {
     implementation("org.lwjgl", "lwjgl-nfd", "3.3.1")
     implementation("org.lwjgl", "lwjgl-nfd", "3.3.1", classifier = "natives-windows")
     implementation("br.com.devsrsouza.compose.icons.jetbrains", "tabler-icons", "1.0.0")
-
     implementation("cafe.adriel.lyricist", "lyricist", "1.2.2")
 
+    implementation(platform("io.ktor:ktor-bom:2.0.3"))
+    implementation("io.ktor", "ktor-client-okhttp")
+    implementation("io.ktor", "ktor-client-content-negotiation")
+    implementation("io.ktor", "ktor-serialization-kotlinx-json")
+
+    implementation("com.vdurmont", "semver4j", "3.1.0")
+
     ksp("cafe.adriel.lyricist", "lyricist-processor", "1.2.2")
-    implementation(platform("dev.schlaubi:stdx-bom:1.1.0"))
+
+    implementation(platform("dev.schlaubi:stdx-bom:1.2.1"))
     implementation("dev.schlaubi", "stdx-serialization")
+    implementation("dev.schlaubi", "stdx-logging")
 
     implementation("io.sigpipe", "jbsdiff", "1.0")
 }
@@ -137,4 +146,5 @@ buildConfig {
     buildConfigField("String", "APP_VERSION", "\"${project.version}\"")
     buildConfigField("String", "APP_BRANCH", "\"${project.getGitBranch()}\"")
     buildConfigField("String", "APP_COMMIT", "\"${project.getGitCommit()}\"")
+    buildConfigField("String", "REPOSITORY", "\"${System.getenv("GITHUB_REPOSITORY") ?: "NyCodeGHG/omsi-launcher"}\"")
 }

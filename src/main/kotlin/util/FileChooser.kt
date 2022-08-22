@@ -1,6 +1,7 @@
 package dev.nycode.omsilauncher.util
 
 import dev.nycode.omsilauncher.localization.Strings
+import dev.schlaubi.stdx.logging.logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.lwjgl.system.MemoryUtil
