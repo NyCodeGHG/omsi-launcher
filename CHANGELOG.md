@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [0.7.0] - 2022-08-22
+### Added
 - Add ability to choose a different parent instance
 - Notification about launcher updates
 
@@ -16,18 +29,8 @@
 ### Security
 
 ## [0.6.4] - 2022-08-07
-### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
-
 ### Fixed
 - Fix clone-omsi not creating symlinks
-
-### Security
 
 ## [0.6.3] - 2022-06-26
 ### Fixed
