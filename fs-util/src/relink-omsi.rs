@@ -1,5 +1,5 @@
-use std::{fs, io};
 use std::path::{Path, PathBuf};
+use std::{fs, io};
 
 use log::info;
 use structopt::StructOpt;
@@ -38,12 +38,15 @@ fn run() -> io::Result<()> {
     let opt = Opt::from_args();
 
     for instance in opt.omsi_instance_folder {
-        info!("Checking dead symlinks for instance {}", instance.to_str().unwrap());
+        info!(
+            "Checking dead symlinks for instance {}",
+            instance.to_str().unwrap()
+        );
         delete_dead_symlinks(&opt.base_game_folder, &instance)?;
 
         info!("Relinking instance {}", instance.to_str().unwrap());
         // Re-link non existent files
-        mirror_folder(&opt.base_game_folder, &instance)?;
+        mirror_folder(&opt.base_game_folder, &instance, None)?;
     }
 
     Ok(())
@@ -55,13 +58,11 @@ fn delete_dead_symlinks(base_game_folder: &PathBuf, instance: &PathBuf) -> io::R
         if path.is_symlink() {
             let symlink_destination = path.read_link()?;
             // Do check if links to omsi main
-            if !symlink_destination.exists()
-                && symlink_destination.part_of(base_game_folder)
-            {
+            if !symlink_destination.exists() && symlink_destination.part_of(base_game_folder) {
                 info!(
-                        "Deleting old symlink {}, because it links to nowhere",
-                        path.to_str().unwrap()
-                    );
+                    "Deleting old symlink {}, because it links to nowhere",
+                    path.to_str().unwrap()
+                );
 
                 fs::remove_file(path)?;
             }

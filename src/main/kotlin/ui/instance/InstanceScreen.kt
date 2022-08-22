@@ -91,6 +91,7 @@ fun InstanceScreen() {
     if (showCreationDialog) {
         InstanceCreationDialog(
             instances.baseInstance,
+            instances,
             {
                 showCreationDialog = false
             },
@@ -109,7 +110,8 @@ fun InstanceScreen() {
                                 logLevel,
                                 screenMode
                             ),
-                            icon = icon
+                            icon = icon,
+                            baseInstance = parentInstance
                         )
                     }
                 }

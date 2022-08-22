@@ -42,6 +42,7 @@ import compose.icons.tablericons.Refresh
 import compose.icons.tablericons.Tools
 import compose.icons.tablericons.Trash
 import dev.nycode.omsilauncher.instance.Instance
+import dev.nycode.omsilauncher.instance.findDependenciesFor
 import dev.nycode.omsilauncher.omsi.OmsiProcessState
 import dev.nycode.omsilauncher.omsi.UserAccessControlCancelledException
 import dev.nycode.omsilauncher.ui.CustomColors
@@ -191,13 +192,23 @@ fun InstanceListEntry(
         }
     }
     if (deleteDialog) {
+        val dependencies = instances.findDependenciesFor(instance)
+        val text = if (dependencies.isEmpty()) {
+            strings.confirmDeletion(instance.name)
+        } else {
+            strings.confirmDeletionWithDependencies(instance.name, dependencies)
+        }
         ConfirmationDialog(
-            strings.confirmDeletion(instance.name),
+            text,
             { delete ->
                 deleteDialog = false
                 if (delete) {
                     scope.launch(Dispatchers.IO) {
-                        instanceState.deleteInstance(instance)
+                        (dependencies + instance).forEach {
+                            launch {
+                                instanceState.deleteInstance(it)
+                            }
+                        }
                     }
                 }
             },
@@ -215,7 +226,7 @@ fun InstanceListEntry(
         val onClose = {
             editDialog = false
         }
-        InstanceEditDialog(instance, onClose) {
+        InstanceEditDialog(instance, instances, onClose) {
             scope.launch {
                 onClose()
                 instanceState.updateInstance(instance.id, it)
@@ -298,10 +309,8 @@ private fun InstanceButtonRow(
         InstanceStartEditorButton(context)
         Spacer(Modifier.width(5.dp))
         InstanceActivateButton(context)
-        if (instance.isBaseInstance) {
-            Spacer(Modifier.width(5.dp))
-            InstanceReSyncButton(context)
-        }
+        Spacer(Modifier.width(5.dp))
+        InstanceReSyncButton(context)
         Spacer(Modifier.width(5.dp))
         InstancePatchVersionIcon(
             modifier = Modifier.align(Alignment.Bottom),

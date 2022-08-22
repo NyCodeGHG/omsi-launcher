@@ -27,6 +27,14 @@ val StringsDe = Strings(
     confirmDeletion = { instance ->
         "Bist du dir sicher, das du $instance löschen willst?"
     },
+    confirmDeletionWithDependencies = { instance, dependencies ->
+        "Bist du dir sicher, dass du $instance und die folgenden weiteren Instanzen löschen willst: ${
+            dependencies.joinToString(
+                "\n",
+                prefix = "\n",
+            ) { " - ${it.name}" }
+        }"
+    },
     instanceName = "Instanzname",
     activateInstance = "Aktiviert eine Instanz",
     activate = "Aktivieren",
@@ -99,7 +107,7 @@ val StringsDe = Strings(
     iAmDone = "Ich bin fertig",
     mergingSteamManifest = { name -> "Steam Manifest von $name wird neu-zusammengefasst" },
     preparingReSynchronisation = "Neu-Synchronisation wird vorbereitet",
-    reLinkingInstances = "Instanzen werden neu gelinkt",
+    reLinkingInstances = { current, total -> "Instanzen werden neu gelinkt. Schritt $current/$total" },
     waitingForChanges = "Es wird auf Änderungen gewartet",
     save = "Speichern",
     editInstanceTitle = { name -> "Instanz $name bearbeiten" },

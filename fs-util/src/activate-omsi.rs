@@ -35,7 +35,7 @@ struct Opt {
     omsi_executable_path: Option<PathBuf>,
 
     #[structopt(short, long, help = "Use hard links to link Omsi.exe")]
-    hard_link_binary: bool
+    hard_link_binary: bool,
 }
 
 fn main() {

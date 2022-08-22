@@ -35,13 +35,15 @@ private val linkingFlag
         null
     }
 
-suspend fun createInstance(instance: Instance) {
+
+suspend fun createInstance(instance: Instance, basePath: Path? = null, doMultiLink: Boolean = false) {
     doNativeCall(
         "clone-omsi.exe",
-        config.gameDirectory.absolutePathString(),
+        (basePath ?: config.gameDirectory).absolutePathString(),
         instance.directory.absolutePathString(),
         getOmsiBinary(instance).absolutePathString(),
-        linkingFlag
+        linkingFlag,
+        "--do-multi-symlink".takeIf { doMultiLink }
     )
 }
 
@@ -56,14 +58,14 @@ suspend fun reLinkOmsiExecutable(instance: Instance) {
     )
 }
 
-suspend fun relinkBaseGame(instances: List<Instance>) {
+suspend fun relinkBaseGame(instances: List<Instance>, baseInstance: Path) {
     val instanceCliArguments = instances.flatMap {
         listOf("--omsi-instance-folder", it.directory.absolutePathString())
     }
 
     doNativeCall(
         "relink-omsi.exe",
-        config.gameDirectory.absolutePathString(),
+        baseInstance.absolutePathString(),
         *instanceCliArguments.toTypedArray()
     )
 }

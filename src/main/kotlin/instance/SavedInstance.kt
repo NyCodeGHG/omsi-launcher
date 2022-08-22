@@ -14,7 +14,8 @@ data class SavedInstance(
     val uses4GBPatch: Boolean,
     val isBaseInstance: Boolean = false,
     val manifestHash: String? = null,
-    val icon: SerializablePath? = null
+    val icon: SerializablePath? = null,
+    val baseInstance: SerializableUUID? = null
 ) {
     fun toInstance(): Instance {
         return Instance(
@@ -26,7 +27,8 @@ data class SavedInstance(
             InstanceState.READY,
             uses4GBPatch,
             isBaseInstance,
-            icon = icon
+            icon = icon,
+            baseInstance
         )
     }
 }

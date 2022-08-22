@@ -16,6 +16,7 @@ fun <T : Any> DropdownInputField(
     value: T,
     onValueChange: (T) -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     values: Collection<T>,
     valueToMenuItem: @Composable (T) -> Unit = {
         Text(it.toString())
@@ -46,7 +47,7 @@ fun <T : Any> DropdownInputField(
                     DropdownMenuItem({
                         onValueChange(menuValue)
                         expanded = false
-                    }) {
+                    }, enabled = enabled || menuValue == value) {
                         valueToMenuItem(menuValue)
                     }
                 }

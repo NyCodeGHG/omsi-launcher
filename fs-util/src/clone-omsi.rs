@@ -35,7 +35,10 @@ struct Opt {
     only_link_binary: bool,
 
     #[structopt(short, long, help = "Use hard links to link Omsi.exe")]
-    hard_link_binary: bool
+    hard_link_binary: bool,
+
+    #[structopt(short, long, help = "Do multi sym-linking")]
+    do_multi_symlink: bool,
 }
 
 fn main() {
@@ -52,12 +55,20 @@ fn run() -> std::io::Result<()> {
             &opt.base_game_folder.to_str().unwrap(),
             &opt.omsi_instance_folder.to_str().unwrap()
         );
-        mirror_folder(&opt.base_game_folder, &opt.omsi_instance_folder)?;
+        mirror_folder(
+            &opt.base_game_folder,
+            &opt.omsi_instance_folder,
+            Some(opt.do_multi_symlink),
+        )?;
     } else {
         info!("Only link binary flag present, skipping clone")
     }
 
-    link_omsi(&opt.omsi_instance_folder, &opt.binary_path, opt.hard_link_binary)?;
+    link_omsi(
+        &opt.omsi_instance_folder,
+        &opt.binary_path,
+        opt.hard_link_binary,
+    )?;
 
     if !opt.only_link_binary {
         let base_manifest = opt.base_game_folder.join("manifest.acf");

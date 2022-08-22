@@ -33,6 +33,7 @@ import cafe.adriel.lyricist.LocalStrings
 import dev.nycode.omsilauncher.config.config
 import dev.nycode.omsilauncher.instance.Instance
 import dev.nycode.omsilauncher.instance.InstanceOptions
+import dev.nycode.omsilauncher.instance.baseInstance
 import dev.nycode.omsilauncher.localization.Strings
 import dev.nycode.omsilauncher.localization.Translatable
 import dev.nycode.omsilauncher.ui.components.CheckboxRow
@@ -52,22 +53,35 @@ fun InstanceDialog(
     dialogTitle: String,
     formTitle: String,
     parentInstance: Instance,
+    stateParent: Instance = parentInstance,
     disableFolderInput: Boolean = false,
     disableNameInput: Boolean = false,
+    disableParentInput: Boolean = false,
+    isEdit: Boolean = false,
+    hideParentInput: Boolean = false,
+    instances: List<Instance>,
     isValid: InstanceModificationState.() -> Boolean = { true },
     saveButtonLabel: @Composable () -> Unit,
     onCloseRequest: () -> Unit,
     onUpdate: (InstanceModificationState) -> Unit,
 ) {
     val dialogState = rememberDialogState(height = 780.dp, width = 700.dp)
-    val instanceModificationState = remember { InstanceModificationState(parentInstance) }
+    val instanceModificationState = remember { InstanceModificationState(stateParent, isEdit) }
     Dialog(
         onCloseRequest = onCloseRequest,
         title = dialogTitle,
         state = dialogState
     ) {
         Box(modifier = Modifier.padding(16.dp).fillMaxSize()) {
-            InstanceForm(formTitle, instanceModificationState, disableFolderInput, disableNameInput)
+            InstanceForm(
+                formTitle,
+                instanceModificationState,
+                disableFolderInput,
+                disableNameInput,
+                disableParentInput,
+                hideParentInput,
+                instances
+            )
             Button({
                 onCloseRequest()
                 onUpdate(instanceModificationState)
@@ -83,7 +97,10 @@ private fun InstanceForm(
     title: String,
     instanceModificationState: InstanceModificationState,
     disableFolderInput: Boolean = false,
-    disableNameInput: Boolean = false
+    disableNameInput: Boolean = false,
+    disableParentInput: Boolean = false,
+    hideParentInput: Boolean = false,
+    instances: List<Instance>
 ) = with(instanceModificationState) {
     val strings = LocalStrings.current
     val scope = rememberCoroutineScope()
@@ -156,6 +173,18 @@ private fun InstanceForm(
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
+                if (!hideParentInput) {
+                    DropDownColumn(
+                        title = "Parent instance",
+                        strings = strings,
+                        enabled = !disableParentInput,
+                        value = parentInstance?.let { id -> instances.firstOrNull { it.id == id } }
+                            ?: instances.baseInstance,
+                        onValueChange = { parentInstance = it.id },
+                        values = instances
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
                 DropDownColumn(
                     title = strings.patchVersion,
                     strings = strings,
@@ -206,6 +235,7 @@ private fun InstanceForm(
 private fun <E : Translatable> DropDownColumn(
     title: String,
     strings: Strings,
+    enabled: Boolean = true,
     value: E,
     onValueChange: (E) -> Unit,
     values: Collection<E>,
@@ -223,7 +253,8 @@ private fun <E : Translatable> DropDownColumn(
             value = value,
             onValueChange = onValueChange,
             modifier = Modifier.width(280.dp),
-            values = values
+            values = values,
+            enabled = enabled
         ) {
             Text(it.translation(strings))
         }
