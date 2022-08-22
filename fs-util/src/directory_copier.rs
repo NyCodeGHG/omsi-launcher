@@ -7,7 +7,11 @@ use log::info;
 const HARD_LINK_FILES: [&str; 2] = ["omninavigation.cfg", "omsinavigation.cfg"];
 const IGNORED_FILES: [&str; 1] = ["manifest.acf"];
 
-pub fn mirror_folder(from: &PathBuf, to: &Path, do_multi_symlink: Option<bool>) -> std::io::Result<()> {
+pub fn mirror_folder(
+    from: &PathBuf,
+    to: &Path,
+    do_multi_symlink: Option<bool>,
+) -> std::io::Result<()> {
     if !to.exists() {
         fs::create_dir_all(to)?;
     }
