@@ -45,6 +45,10 @@ fun SettingsPage(lyricist: Lyricist<Strings>) {
             currentConfig = currentConfig.copy(useHardLinks = it)
         }
         Spacer(Modifier.height(8.dp))
+        CheckboxRow(strings.checkForUpdates, strings.checkForUpdatesDescription, currentConfig.checkForUpdates) {
+            currentConfig = currentConfig.copy(checkForUpdates = it)
+        }
+        Spacer(Modifier.height(8.dp))
         val title = if (strings != StringsEn) "${strings.language} (${StringsEn.language})" else strings.language
         Text(title)
         DropdownInputField(Locale.forLanguageTag(lyricist.languageTag), {

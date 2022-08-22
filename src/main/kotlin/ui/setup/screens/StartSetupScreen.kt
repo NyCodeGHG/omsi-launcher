@@ -27,7 +27,7 @@ import dev.nycode.omsilauncher.ui.setup.SetupState
 import dev.nycode.omsilauncher.ui.setup.components.SetupContinueButton
 import dev.nycode.omsilauncher.util.getOmsiInstallPath
 import dev.nycode.omsilauncher.util.getOmsiSteamManifest
-import dev.nycode.omsilauncher.util.logger
+import dev.schlaubi.stdx.logging.logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.io.path.copyTo

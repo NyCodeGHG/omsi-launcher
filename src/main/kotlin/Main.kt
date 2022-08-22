@@ -2,7 +2,7 @@ package dev.nycode.omsilauncher
 
 import dev.nycode.omsilauncher.config.readConfig
 import dev.nycode.omsilauncher.util.getApplicationTitle
-import dev.nycode.omsilauncher.util.logger
+import dev.schlaubi.stdx.logging.logger
 import kotlinx.cli.ArgParser
 import kotlinx.cli.ArgType
 import kotlinx.cli.default

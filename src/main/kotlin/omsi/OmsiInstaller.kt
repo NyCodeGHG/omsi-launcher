@@ -6,7 +6,7 @@ import dev.nycode.omsilauncher.instance.LaunchFlag
 import dev.nycode.omsilauncher.util.getOmsiInstallPath
 import dev.nycode.omsilauncher.util.getOmsiSteamManifest
 import dev.nycode.omsilauncher.util.isSteamRunning
-import dev.nycode.omsilauncher.util.logger
+import dev.schlaubi.stdx.logging.logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.future.await
 import kotlinx.coroutines.launch
