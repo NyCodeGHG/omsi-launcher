@@ -13,7 +13,8 @@
                 "WINGETCREATE_VERSION: v(?<currentValue>.*)"
             ],
             "datasourceTemplate": "github-releases",
-            "depNameTemplate": "microsoft/winget-create"
+            "depNameTemplate": "microsoft/winget-create",
+            "versioningTemplate": "loose"
         }
     ],
     "packageRules": [
