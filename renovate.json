@@ -7,7 +7,7 @@
     {
       "description": "Update winget-create",
       "fileMatch": [
-        "^\\.github\\/workflows\\/release\\.yaml$"
+        "\\.yaml$"
       ],
       "matchStrings": [
         "WINGETCREATE_VERSION: (?<currentValue>.*)"
