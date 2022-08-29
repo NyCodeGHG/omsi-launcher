@@ -8,7 +8,7 @@ plugins {
     kotlin("plugin.serialization") version "1.7.10"
     id("org.jetbrains.compose") version "1.2.0-alpha01-dev770"
     id("com.github.gmazzo.buildconfig") version "3.1.0"
-    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     id("com.google.devtools.ksp") version "1.7.10-1.0.6"
     id("org.jetbrains.changelog") version "1.3.1"
 }
