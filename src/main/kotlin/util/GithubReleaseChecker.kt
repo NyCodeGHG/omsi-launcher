@@ -23,7 +23,6 @@ import androidx.compose.ui.window.Dialog
 import cafe.adriel.lyricist.LocalStrings
 import com.vdurmont.semver4j.Semver
 import dev.nycode.omsilauncher.build.BuildConfig
-import dev.nycode.omsilauncher.config.config
 import dev.schlaubi.stdx.logging.logger
 import dev.schlaubi.stdx.logging.warnInlined
 import io.ktor.client.HttpClient
@@ -110,7 +109,6 @@ private suspend fun HttpClient.fetchPossiblyNewerRelease(): Release? {
 
 @Composable
 fun VersionChecker() {
-    if (config.checkForUpdates) {
         val scope = rememberCoroutineScope()
         val client = rememberHttpClient()
         var newRelease by remember { mutableStateOf<Release?>(null) }
@@ -143,5 +141,4 @@ fun VersionChecker() {
                 }
             }
         }
-    }
 }

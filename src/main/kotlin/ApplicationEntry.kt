@@ -56,7 +56,9 @@ fun runLauncher(
                     title = getApplicationTitle(),
                     state = windowState
                 ) {
-                    VersionChecker()
+                    if (configuration?.checkForUpdates == true) {
+                        VersionChecker()
+                    }
                     Router(routerState) {
                         route(SetupRoute) {
                             Setup(closeSetup, configuration)
