@@ -13,10 +13,8 @@
 
 ### Security
 
-## [0.7.0] - 2022-08-22
+## [0.7.1] - 2022-09-22
 ### Added
-- Add ability to choose a different parent instance
-- Notification about launcher updates
 
 ### Changed
 
@@ -27,6 +25,11 @@
 ### Fixed
 
 ### Security
+
+## [0.7.0] - 2022-08-22
+### Added
+- Add ability to choose a different parent instance
+- Notification about launcher updates
 
 ## [0.6.4] - 2022-08-07
 ### Fixed
