@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.7.10"
-    kotlin("plugin.serialization") version "1.7.10"
+    kotlin("plugin.serialization") version "1.7.20"
     id("org.jetbrains.compose") version "1.2.0-alpha01-dev770"
     id("com.github.gmazzo.buildconfig") version "3.1.0"
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
