@@ -38,7 +38,7 @@ dependencies {
     implementation("br.com.devsrsouza.compose.icons.jetbrains", "tabler-icons", "1.0.0")
     implementation("cafe.adriel.lyricist", "lyricist", "1.2.2")
 
-    implementation(platform("io.ktor:ktor-bom:2.1.0"))
+    implementation(platform("io.ktor:ktor-bom:2.1.2"))
     implementation("io.ktor", "ktor-client-okhttp")
     implementation("io.ktor", "ktor-client-content-negotiation")
     implementation("io.ktor", "ktor-serialization-kotlinx-json")
