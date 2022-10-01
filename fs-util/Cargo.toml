@@ -18,7 +18,7 @@ name = "relink-omsi"
 path = "src/relink-omsi.rs"
 
 [dependencies]
-structopt = "0.3"
 deelevate = { git = "https://github.com/NyCodeGHG/omsi-elevate" }
 log = "0.4"
 simple_logger = "2.3"
+clap = { version = "4.0.7", features = ["derive"] }

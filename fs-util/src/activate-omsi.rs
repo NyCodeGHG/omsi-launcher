@@ -7,8 +7,8 @@ use std::os::windows::fs as windows_fs;
 use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 
+use clap::Parser;
 use log::{info, warn};
-use structopt::*;
 
 use crate::launcher::with_symlink_permission;
 use crate::omsi_linker::link_omsi;
@@ -16,25 +16,19 @@ use crate::omsi_linker::link_omsi;
 mod launcher;
 mod omsi_linker;
 
-#[derive(Debug, StructOpt)]
-#[structopt(name = "activate-omsi", about = "Activates a specific Omsi instance")]
+#[derive(Debug, Parser)]
+#[command(name = "activate-omsi", about = "Activates a specific Omsi instance")]
 struct Opt {
-    #[structopt(help = "The Steam installation folder of OMSI", parse(from_os_str))]
+    #[arg(help = "The Steam installation folder of OMSI")]
     omsi_installation_folder: PathBuf,
 
-    #[structopt(
-        help = "The folder of the instance you want to activate",
-        parse(from_os_str)
-    )]
+    #[arg(help = "The folder of the instance you want to activate")]
     omsi_instance_folder: PathBuf,
 
-    #[structopt(
-        help = "The path to the Omsi.exe patch to validate",
-        parse(from_os_str)
-    )]
+    #[arg(help = "The path to the Omsi.exe patch to validate")]
     omsi_executable_path: Option<PathBuf>,
 
-    #[structopt(short, long, help = "Use hard links to link Omsi.exe")]
+    #[arg(short, long, help = "Use hard links to link Omsi.exe")]
     hard_link_binary: bool,
 }
 
@@ -46,7 +40,7 @@ fn main() {
 const OMSI_APP_ID: i32 = 252530;
 
 fn run() -> std::io::Result<()> {
-    let opt: Opt = Opt::from_args();
+    let opt = Opt::parse();
 
     let current_manifest = opt
         .omsi_installation_folder
