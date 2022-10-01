@@ -4,6 +4,7 @@
 ### Added
 
 ### Changed
+- Adjusted fs-util project to rust conventions.
 
 - Migrated from structopt to clap.
 
