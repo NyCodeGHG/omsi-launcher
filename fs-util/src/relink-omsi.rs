@@ -1,8 +1,8 @@
 use std::path::{Path, PathBuf};
 use std::{fs, io};
 
+use clap::Parser;
 use log::info;
-use structopt::StructOpt;
 
 use crate::directory_copier::mirror_folder;
 use crate::launcher::with_symlink_permission;
@@ -10,21 +10,16 @@ use crate::launcher::with_symlink_permission;
 mod directory_copier;
 mod launcher;
 
-#[derive(Debug, StructOpt)]
-#[structopt(
+#[derive(Debug, Parser)]
+#[command(
     name = "relink-omsi",
     about = "Clones the base game into a new instance folder"
 )]
 struct Opt {
-    #[structopt(help = "The base game installation", parse(from_os_str))]
+    #[arg(help = "The base game installation")]
     base_game_folder: PathBuf,
 
-    #[structopt(
-        short,
-        long,
-        help = "A path to a instance to relink",
-        parse(from_os_str)
-    )]
+    #[arg(short, long, help = "A path to a instance to relink")]
     omsi_instance_folder: Vec<PathBuf>,
 }
 
@@ -35,7 +30,7 @@ fn main() {
 }
 
 fn run() -> io::Result<()> {
-    let opt = Opt::from_args();
+    let opt = Opt::parse();
 
     for instance in opt.omsi_instance_folder {
         info!(
