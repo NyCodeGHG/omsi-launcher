@@ -1,5 +1,6 @@
 [package]
 name = "fs-util"
+publish = false
 version = "0.1.0"
 edition = "2021"
 
@@ -7,15 +8,15 @@ edition = "2021"
 
 [[bin]]
 name = "clone-omsi"
-path = "src/clone-omsi.rs"
+path = "src/bin/clone-omsi.rs"
 
 [[bin]]
 name = "activate-omsi"
-path = "src/activate-omsi.rs"
+path = "src/bin/activate-omsi.rs"
 
 [[bin]]
 name = "relink-omsi"
-path = "src/relink-omsi.rs"
+path = "src/bin/relink-omsi.rs"
 
 [dependencies]
 deelevate = { git = "https://github.com/NyCodeGHG/omsi-elevate" }

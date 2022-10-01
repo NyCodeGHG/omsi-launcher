@@ -1,5 +1,3 @@
-extern crate core;
-
 use std::fmt::Debug;
 use std::fs;
 use std::fs::File;
@@ -8,13 +6,9 @@ use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use clap::Parser;
+use fs_util::launcher::with_symlink_permission;
+use fs_util::omsi_linker::link_omsi;
 use log::{info, warn};
-
-use crate::launcher::with_symlink_permission;
-use crate::omsi_linker::link_omsi;
-
-mod launcher;
-mod omsi_linker;
 
 #[derive(Debug, Parser)]
 #[command(name = "activate-omsi", about = "Activates a specific Omsi instance")]
@@ -104,7 +98,7 @@ fn symlink_global_omsi_entry_point(opt: &Opt) -> std::io::Result<()> {
                 .unwrap()
                 .as_millis()
         ));
-        fs::rename(&target, &backup_name)?;
+        fs::rename(target, &backup_name)?;
         info!(
             "Backup has been created at {}",
             &backup_name.to_str().unwrap()
@@ -123,5 +117,5 @@ fn symlink_global_omsi_entry_point(opt: &Opt) -> std::io::Result<()> {
         &opt.omsi_instance_folder.to_str().unwrap(),
         &target.to_str().unwrap()
     );
-    windows_fs::symlink_dir(&opt.omsi_instance_folder, &target)
+    windows_fs::symlink_dir(&opt.omsi_instance_folder, target)
 }

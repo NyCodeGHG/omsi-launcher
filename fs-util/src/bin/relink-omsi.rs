@@ -2,13 +2,9 @@ use std::path::{Path, PathBuf};
 use std::{fs, io};
 
 use clap::Parser;
+use fs_util::directory_copier::mirror_folder;
+use fs_util::launcher::with_symlink_permission;
 use log::info;
-
-use crate::directory_copier::mirror_folder;
-use crate::launcher::with_symlink_permission;
-
-mod directory_copier;
-mod launcher;
 
 #[derive(Debug, Parser)]
 #[command(
@@ -48,7 +44,7 @@ fn run() -> io::Result<()> {
 }
 
 fn delete_dead_symlinks(base_game_folder: &PathBuf, instance: &PathBuf) -> io::Result<()> {
-    for item in fs::read_dir(&instance)? {
+    for item in fs::read_dir(instance)? {
         let path = item?.path();
         if path.is_symlink() {
             let symlink_destination = path.read_link()?;
