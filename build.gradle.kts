@@ -28,8 +28,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx", "kotlinx-serialization-json", "1.4.0")
     implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.6.4")
     implementation("org.jetbrains.kotlinx", "kotlinx-cli", "0.3.5")
-    implementation("io.github.microutils", "kotlin-logging", "2.1.23")
-    runtimeOnly("ch.qos.logback", "logback-classic", "1.4.0")
+    implementation("io.github.microutils", "kotlin-logging", "3.0.0")
+    runtimeOnly("ch.qos.logback", "logback-classic", "1.4.1")
     implementation("net.java.dev.jna", "jna-platform", "5.12.1")
     implementation("org.lwjgl", "lwjgl", "3.3.1")
     implementation("org.lwjgl", "lwjgl", "3.3.1", classifier = "natives-windows")
@@ -92,7 +92,7 @@ tasks {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(18))
+        languageVersion.set(JavaLanguageVersion.of(19))
     }
 }
 

@@ -8,6 +8,8 @@
 
 - Migrated from structopt to clap.
 
+- Upgraded to JDK 19
+
 ### Deprecated
 
 ### Removed
