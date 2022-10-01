@@ -5,6 +5,8 @@
 
 ### Changed
 
+- Migrated from structopt to clap.
+
 ### Deprecated
 
 ### Removed
@@ -111,7 +113,7 @@
   1.3.3 ([#17](https://github.com/NyCodeGHG/omsi-launcher/pull/17))
 - Upgrade lyricst to 1.2.1 ([#19](https://github.com/NyCodeGHG/omsi-launcher/pull/19)
   , [#18](https://github.com/NyCodeGHG/omsi-launcher/pull/18))
-- Check whether directories are empty in setup 
+- Check whether directories are empty in setup
   and creation dialogs ([#33](https://github.com/NyCodeGHG/omsi-launcher/pull/33))
 - Make launcher suggest directories based on instance names
   ([#33](https://github.com/NyCodeGHG/omsi-launcher/pull/33))
