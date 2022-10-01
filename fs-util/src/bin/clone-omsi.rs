@@ -4,15 +4,10 @@ use std::fs;
 use std::path::PathBuf;
 
 use clap::Parser;
+use fs_util::directory_copier::mirror_folder;
+use fs_util::launcher::with_symlink_permission;
+use fs_util::omsi_linker::link_omsi;
 use log::info;
-
-use crate::directory_copier::mirror_folder;
-use crate::launcher::with_symlink_permission;
-use crate::omsi_linker::link_omsi;
-
-mod directory_copier;
-mod launcher;
-mod omsi_linker;
 
 #[derive(Debug, Parser)]
 #[command(

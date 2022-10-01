@@ -16,7 +16,7 @@ pub fn link_omsi(
             "Deleting old executable {}",
             &omsi_executable.to_str().unwrap()
         );
-        fs::remove_file(&omsi_executable)?;
+        fs::remove_file(omsi_executable)?;
     }
     info!(
         "Linking {} to {}",
@@ -25,8 +25,8 @@ pub fn link_omsi(
     );
 
     if hard_link {
-        fs::hard_link(&binary_path, omsi_executable)
+        fs::hard_link(binary_path, omsi_executable)
     } else {
-        windows_fs::symlink_file(&binary_path, omsi_executable)
+        windows_fs::symlink_file(binary_path, omsi_executable)
     }
 }
