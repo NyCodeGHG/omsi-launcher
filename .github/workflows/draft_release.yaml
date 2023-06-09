@@ -27,7 +27,7 @@ jobs:
       changelog: ${{ steps.properties.outputs.changelog }}
     steps:
       - name: Fetch Sources
-        uses: actions/checkout@v3.0.2
+        uses: actions/checkout@v3.5.3
       - name: Setup Java
         uses: actions/setup-java@v3.5.1
         with:
