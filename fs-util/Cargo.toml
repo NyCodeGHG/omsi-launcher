@@ -22,4 +22,4 @@ path = "src/bin/relink-omsi.rs"
 deelevate = { git = "https://github.com/NyCodeGHG/omsi-elevate" }
 log = "0.4"
 simple_logger = "2.3"
-clap = { version = "4.0.7", features = ["derive"] }
+clap = { version = "4.3.17", features = ["derive"] }
