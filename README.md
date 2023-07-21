@@ -1,10 +1,12 @@
 # omsi-launcher
 
+**Archived: This project is not maintained anymore, feel free to fork and maintain further while respecting the [license](LICENSE)**
+
 WIP [OMSI 2](https://store.steampowered.com/app/252530/OMSI_2_Steam_Edition/) game launcher &
 manager built using [Kotlin](https://kotlinlang.org)
 and [Compose](https://github.com/JetBrains/compose-jb).
 
-**WARNING: This is unstable software right now. Create Backups of your game files before you use
+**WARNING: This is unstable software. Create Backups of your game files before you use
 it.**
 
 # Why use this?
